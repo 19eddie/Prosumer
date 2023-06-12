@@ -49,13 +49,12 @@
                                                    :Continua
                                                  )
                                    ] ;
-               rdfs:subClassOf :Storage ;
+               rdfs:subClassOf ic-dev:Storage ;
                rdfs:comment "può assorbire energia (essere  caricato) anche direttamente dalla rete di distribuzione (ad es., per comprare energia quando questa ha un  prezzo più basso e riutilizzarla in un secondo momento quando il prezzo di acquisto sarebbe più alto)"@it .
 
 
 ###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Consumo
 :Consumo rdf:type owl:Class ;
-         rdfs:subClassOf :Prosumer ;
          rdfs:comment "Profilo di carico equivalente"@it .
 
 
@@ -65,8 +64,7 @@
 
 
 ###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Generatore
-:Generatore rdf:type owl:Class ;
-            rdfs:subClassOf :Prosumer .
+:Generatore rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/M1
@@ -89,7 +87,7 @@
 
 ###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Monodirezionale
 :Monodirezionale rdf:type owl:Class ;
-                 rdfs:subClassOf :Storage ;
+                 rdfs:subClassOf ic-dev:Storage ;
                  rdfs:comment "assorbe energia esclusivamente dall’impianto di produzione (es., può essere utilizzato per assorbire l’energia prodotta dal generatore in eccesso rispetto al carico)"@it .
 
 
@@ -102,15 +100,8 @@
 • Due o più contatori (detti anche punti di misura)"""@it .
 
 
-###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Storage
-:Storage rdf:type owl:Class ;
-         rdfs:subClassOf :Prosumer ;
-         rdfs:comment "Sistema di accumulo dell'energia"@it .
-
-
 ###  http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Contatore/Contatore/PuntoDiMisura
 <http://www.semanticweb.org/eddie/ontologies/2023/5/prosumer/Contatore/Contatore/PuntoDiMisura> rdf:type owl:Class ;
-                                                                                                rdfs:subClassOf :Prosumer ;
                                                                                                 rdfs:comment "Dispositivo che misura l'energia assorbita o immessa." ;
                                                                                                 rdfs:label "Contatore"@it ,
                                                                                                            "Punto di misura"@it .
