@@ -29,7 +29,8 @@
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasMeter
-:hasMeter rdf:type owl:ObjectProperty .
+:hasMeter rdf:type owl:ObjectProperty ;
+          rdfs:domain :EnergyMeter .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasModeOfOperation
@@ -109,13 +110,13 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig01
 :ofTypeConfig01 rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :hasConfiguration ;
-                rdfs:range :DC ,
-                           :Production .
+                rdfs:domain :Prosumer .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig02
 :ofTypeConfig02 rdf:type owl:ObjectProperty ;
-                rdfs:subPropertyOf :hasConfiguration .
+                rdfs:subPropertyOf :hasConfiguration ;
+                rdfs:domain :Prosumer .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig03
@@ -123,8 +124,7 @@
                 rdfs:subPropertyOf :hasConfiguration ;
                 rdf:type owl:FunctionalProperty ,
                          owl:SymmetricProperty ;
-                rdfs:range :DC ,
-                           :Post-Production .
+                rdfs:domain :Prosumer .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeM1
