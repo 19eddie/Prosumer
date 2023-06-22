@@ -63,19 +63,22 @@
 :isDC rdf:type owl:ObjectProperty ;
       rdfs:subPropertyOf :hasPowerType ;
       rdfs:domain :PowerType ;
-      rdfs:range :DC .
+      rdfs:range :DC ;
+      owl:propertyDisjointWith :ofTypeConfig02 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isModeOfOperationBidirectional
 :isModeOfOperationBidirectional rdf:type owl:ObjectProperty ;
                                 rdfs:subPropertyOf :hasModeOfOperation ;
                                 owl:inverseOf :isModeOfOperationMonodirectional ;
+                                rdfs:domain :EnergyStorage ;
                                 rdfs:range :Bidirectional .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isModeOfOperationMonodirectional
 :isModeOfOperationMonodirectional rdf:type owl:ObjectProperty ;
                                   rdfs:subPropertyOf :hasModeOfOperation ;
+                                  rdfs:domain :EnergyStorage ;
                                   rdfs:range :Monodirectional .
 
 
@@ -331,6 +334,14 @@
                 :Load
                 :PowerType
                 :Prosumer
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointProperties ;
+  owl:members ( :isAC
+                :ofTypeConfig01
+                :ofTypeConfig03
               )
 ] .
 
