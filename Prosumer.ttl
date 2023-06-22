@@ -13,7 +13,8 @@
 #################################################################
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
-:composedBy rdf:type owl:ObjectProperty ;
+:composedBy rdf:type owl:ObjectProperty ,
+                     owl:FunctionalProperty ;
             rdfs:domain :Prosumer ;
             rdfs:range :EnergyMeter ,
                        :EnergyStorage ,
@@ -53,6 +54,7 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isAC
 :isAC rdf:type owl:ObjectProperty ;
       rdfs:subPropertyOf :hasPowerType ;
+      owl:inverseOf :isDC ;
       rdfs:domain :PowerType ;
       rdfs:range :AC .
 
@@ -67,6 +69,7 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isModeOfOperationBidirectional
 :isModeOfOperationBidirectional rdf:type owl:ObjectProperty ;
                                 rdfs:subPropertyOf :hasModeOfOperation ;
+                                owl:inverseOf :isModeOfOperationMonodirectional ;
                                 rdfs:range :Bidirectional .
 
 
@@ -78,7 +81,8 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isPostProduction
 :isPostProduction rdf:type owl:ObjectProperty ;
-                  rdfs:subPropertyOf :hasPosition .
+                  rdfs:subPropertyOf :hasPosition ;
+                  owl:inverseOf :isProduction .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isProduction
@@ -89,41 +93,24 @@
               rdfs:range :Production .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/measureDistributionNetwork
-:measureDistributionNetwork rdf:type owl:ObjectProperty ;
-                            rdfs:subPropertyOf :measureEnergyExchanged ;
-                            rdf:type owl:SymmetricProperty ;
-                            rdfs:range :DistributionNetwork .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/measureEnergyExchanged
-:measureEnergyExchanged rdf:type owl:ObjectProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/measureLoad
-:measureLoad rdf:type owl:ObjectProperty ;
-             rdfs:subPropertyOf :measureEnergyExchanged ;
-             rdf:type owl:SymmetricProperty ;
-             rdfs:range :Load .
-
-
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig01
 :ofTypeConfig01 rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :hasConfiguration ;
+                rdf:type owl:FunctionalProperty ;
                 rdfs:domain :Prosumer .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig02
 :ofTypeConfig02 rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :hasConfiguration ;
+                rdf:type owl:FunctionalProperty ;
                 rdfs:domain :Prosumer .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeConfig03
 :ofTypeConfig03 rdf:type owl:ObjectProperty ;
                 rdfs:subPropertyOf :hasConfiguration ;
-                rdf:type owl:FunctionalProperty ,
-                         owl:SymmetricProperty ;
+                rdf:type owl:FunctionalProperty ;
                 rdfs:domain :Prosumer .
 
 
@@ -146,17 +133,9 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeM3
 :ofTypeM3 rdf:type owl:ObjectProperty ;
           rdfs:subPropertyOf :hasMeter ;
-          rdf:type owl:FunctionalProperty ,
-                   owl:SymmetricProperty ;
+          rdf:type owl:FunctionalProperty ;
           rdfs:domain :Prosumer ;
           rdfs:range :M3 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/producedByGenerator
-:producedByGenerator rdf:type owl:ObjectProperty ;
-                     rdfs:subPropertyOf :measureEnergyExchanged ;
-                     rdf:type owl:SymmetricProperty ;
-                     rdfs:range :Generator .
 
 
 #################################################################
@@ -175,24 +154,53 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#M3
 :M3 rdf:type owl:Class ;
+    owl:equivalentClass [ owl:intersectionOf ( :Prosumer
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty :ofTypeConfig03 ;
+                                                 owl:someValuesFrom :Configuration
+                                               ]
+                                             ) ;
+                          rdf:type owl:Class
+                        ] ;
     rdfs:subClassOf :EnergyMeter .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#01
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#01> rdf:type owl:Class ;
-                                                                  rdfs:subClassOf :Configuration ;
-                                                                  owl:disjointWith <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#02> ,
-                                                                                   <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03> .
+                                                                  owl:equivalentClass [ owl:intersectionOf ( :Prosumer
+                                                                                                             [ rdf:type owl:Restriction ;
+                                                                                                               owl:onProperty :isModeOfOperationMonodirectional ;
+                                                                                                               owl:someValuesFrom :EnergyDirection
+                                                                                                             ]
+                                                                                                           ) ;
+                                                                                        rdf:type owl:Class
+                                                                                      ] ;
+                                                                  rdfs:subClassOf :Configuration .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#02
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#02> rdf:type owl:Class ;
-                                                                  rdfs:subClassOf :Configuration ;
-                                                                  owl:disjointWith <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03> .
+                                                                  owl:equivalentClass [ owl:intersectionOf ( :Prosumer
+                                                                                                             [ rdf:type owl:Restriction ;
+                                                                                                               owl:onProperty :isAC ;
+                                                                                                               owl:someValuesFrom :PowerType
+                                                                                                             ]
+                                                                                                           ) ;
+                                                                                        rdf:type owl:Class
+                                                                                      ] ;
+                                                                  rdfs:subClassOf :Configuration .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03> rdf:type owl:Class ;
+                                                                  owl:equivalentClass [ owl:intersectionOf ( :Prosumer
+                                                                                                             [ rdf:type owl:Restriction ;
+                                                                                                               owl:onProperty :ofTypeM3 ;
+                                                                                                               owl:someValuesFrom :EnergyMeter
+                                                                                                             ]
+                                                                                                           ) ;
+                                                                                        rdf:type owl:Class
+                                                                                      ] ;
                                                                   rdfs:subClassOf :Configuration .
 
 
@@ -203,14 +211,6 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Bidirectional
 :Bidirectional rdf:type owl:Class ;
-               owl:equivalentClass [ owl:intersectionOf ( :EnergyDirection
-                                                          [ rdf:type owl:Restriction ;
-                                                            owl:onProperty :isModeOfOperationBidirectional ;
-                                                            owl:someValuesFrom :EnergyStorage
-                                                          ]
-                                                        ) ;
-                                     rdf:type owl:Class
-                                   ] ;
                rdfs:subClassOf :EnergyDirection .
 
 
@@ -222,7 +222,10 @@
                                                    <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03>
                                                  )
                                    ] ;
-               owl:disjointWith :Prosumer .
+               owl:disjointUnionOf ( <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#01>
+                                     <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#02>
+                                     <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03>
+                                   ) .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DC
@@ -239,26 +242,26 @@
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyMeter
-:EnergyMeter rdf:type owl:Class .
+:EnergyMeter rdf:type owl:Class ;
+             owl:disjointUnionOf ( :M1
+                                   :M2
+                                   :M3
+                                 ) .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorage
-:EnergyStorage rdf:type owl:Class ;
-               owl:disjointWith :Prosumer .
+:EnergyStorage rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorageLocation
 :EnergyStorageLocation rdf:type owl:Class ;
-                       owl:equivalentClass [ rdf:type owl:Class ;
-                                             owl:unionOf ( :Post-Production
-                                                           :Production
-                                                         )
-                                           ] .
+                       owl:disjointUnionOf ( :Post-Production
+                                             :Production
+                                           ) .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Generator
-:Generator rdf:type owl:Class ;
-           owl:disjointWith :Prosumer .
+:Generator rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Load
@@ -267,20 +270,13 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Monodirectional
 :Monodirectional rdf:type owl:Class ;
-                 owl:equivalentClass [ owl:intersectionOf ( :EnergyDirection
-                                                            [ rdf:type owl:Restriction ;
-                                                              owl:onProperty :isModeOfOperationMonodirectional ;
-                                                              owl:someValuesFrom :EnergyStorage
-                                                            ]
-                                                          ) ;
-                                       rdf:type owl:Class
-                                     ] ;
                  rdfs:subClassOf :EnergyDirection .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Post-Production
 :Post-Production rdf:type owl:Class ;
-                 rdfs:subClassOf :EnergyStorageLocation .
+                 rdfs:subClassOf :EnergyStorageLocation ;
+                 owl:disjointWith :Production .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/PowerType
@@ -289,7 +285,10 @@
                                  owl:unionOf ( :AC
                                                :DC
                                              )
-                               ] .
+                               ] ;
+           owl:disjointUnionOf ( :AC
+                                 :DC
+                               ) .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Production
@@ -306,6 +305,22 @@
 #################################################################
 
 [ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :M1
+                :M2
+                :M3
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#01>
+                <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#02>
+                <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#03>
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
   owl:members ( :Configuration
                 :DistributionNetwork
                 :EnergyDirection
@@ -315,51 +330,6 @@
                 :Generator
                 :Load
                 :PowerType
-                :Prosumer
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Configuration
-                :EnergyDirection
-                :EnergyStorageLocation
-                :PowerType
-                :Prosumer
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Configuration
-                :EnergyStorageLocation
-                :PowerType
-                :Prosumer
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Configuration
-                :EnergyStorageLocation
-                :Prosumer
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :EnergyMeter
-                :EnergyStorage
-                :Generator
-                :Load
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :EnergyStorage
-                :Generator
-                :Load
                 :Prosumer
               )
 ] .
