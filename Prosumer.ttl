@@ -36,7 +36,10 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#ofTypeConfig03
 :ofTypeConfig03 rdf:type owl:ObjectProperty ;
-                rdfs:subPropertyOf :hasConfiguration .
+                owl:equivalentProperty :ofTypeM3 ;
+                rdfs:subPropertyOf :hasConfiguration ;
+                rdf:type owl:FunctionalProperty ,
+                         owl:SymmetricProperty .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
@@ -117,7 +120,8 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/ofTypeM3
 :ofTypeM3 rdf:type owl:ObjectProperty ;
           rdfs:subPropertyOf :hasMeter ;
-          rdf:type owl:FunctionalProperty ;
+          rdf:type owl:FunctionalProperty ,
+                   owl:SymmetricProperty ;
           rdfs:domain :Prosumer ;
           rdfs:range :M6 .
 
