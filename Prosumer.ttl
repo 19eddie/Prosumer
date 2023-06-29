@@ -30,10 +30,6 @@
              rdfs:range :EnergyStorageLocation .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasMeter
-:hasMeter rdf:type owl:ObjectProperty .
-
-
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasModeOfOperation
 :hasModeOfOperation rdf:type owl:ObjectProperty ,
                              owl:FunctionalProperty ;
@@ -81,6 +77,10 @@
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
                                                        owl:someValuesFrom [ owl:intersectionOf ( :EnergyStorage
+                                                                                                 [ rdf:type owl:Restriction ;
+                                                                                                   owl:onProperty :hasLocation ;
+                                                                                                   owl:someValuesFrom :Production
+                                                                                                 ]
                                                                                                  [ rdf:type owl:Restriction ;
                                                                                                    owl:onProperty :hasModeOfOperation ;
                                                                                                    owl:someValuesFrom :Monodirectional
@@ -280,19 +280,34 @@
 #    Individuals
 #################################################################
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#Bidirectional03
-:Bidirectional03 rdf:type owl:NamedIndividual ,
-                          :Bidirectional .
-
-
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#DC03
 :DC03 rdf:type owl:NamedIndividual ,
                :DC .
 
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyDirection02
+:EnergyDirection02 rdf:type owl:NamedIndividual ,
+                            :Bidirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyDirection03
+:EnergyDirection03 rdf:type owl:NamedIndividual ,
+                            :Bidirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterM102
+:EnergyMeterM102 rdf:type owl:NamedIndividual ,
+                          :M1 .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterM103
 :EnergyMeterM103 rdf:type owl:NamedIndividual ,
                           :M1 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterM202
+:EnergyMeterM202 rdf:type owl:NamedIndividual ,
+                          :M2 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterM203
@@ -304,7 +319,7 @@
 :EnergyStorage03 rdf:type owl:NamedIndividual ,
                           :EnergyStorage ;
                  :hasLocation :Location03 ;
-                 :hasModeOfOperation :Bidirectional03 ;
+                 :hasModeOfOperation :EnergyDirection03 ;
                  :hasPowerType :DC03 .
 
 
@@ -343,11 +358,6 @@
                :AC .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Bidirectional02
-:Bidirectional02 rdf:type owl:NamedIndividual ,
-                          :Bidirectional .
-
-
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DC01
 :DC01 rdf:type owl:NamedIndividual ,
                :DC .
@@ -383,7 +393,7 @@
 :EnergyStorage01 rdf:type owl:NamedIndividual ,
                           :EnergyStorage ;
                  :hasLocation :Location01 ;
-                 :hasModeOfOperation :Monodirectional01 ;
+                 :hasModeOfOperation :EnergyDirection01 ;
                  :hasPowerType :DC01 .
 
 
@@ -391,7 +401,7 @@
 :EnergyStorage02 rdf:type owl:NamedIndividual ,
                           :EnergyStorage ;
                  :hasLocation :Location02 ;
-                 :hasModeOfOperation :Bidirectional02 ;
+                 :hasModeOfOperation :EnergyDirection02 ;
                  :hasPowerType :AC02 .
 
 
@@ -410,11 +420,6 @@
                      :Production .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Monodirectional01
-:Monodirectional01 rdf:type owl:NamedIndividual ,
-                            :Monodirectional .
-
-
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Prosumer01
 :Prosumer01 rdf:type owl:NamedIndividual ,
                      :Prosumer ;
@@ -428,10 +433,10 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Prosumer02
 :Prosumer02 rdf:type owl:NamedIndividual ,
                      :Prosumer ;
-            :composedBy :Generator02 ,
+            :composedBy :EnergyMeterM102 ,
+                        :EnergyMeterM202 ,
+                        :Generator02 ,
                         :Load02 ,
-                        :EnergyMeterM101 ,
-                        :EnergyMeterM201 ,
                         :EnergyStorage02 .
 
 
