@@ -70,21 +70,6 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config01
 :Config01 rdf:type owl:Class ;
           owl:equivalentClass [ owl:intersectionOf ( :Prosumer
-                                                     [ owl:intersectionOf ( [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty :composedBy ;
-                                                                              owl:someValuesFrom :EnergyStorage
-                                                                            ]
-                                                                            [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty :hasModeOfOperation ;
-                                                                              owl:someValuesFrom :Monodirectional
-                                                                            ]
-                                                                            [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty :hasPowerType ;
-                                                                              owl:someValuesFrom :DC
-                                                                            ]
-                                                                          ) ;
-                                                       rdf:type owl:Class
-                                                     ]
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
                                                        owl:someValuesFrom :M1
@@ -92,6 +77,21 @@
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
                                                        owl:someValuesFrom :M2
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom [ owl:intersectionOf ( :EnergyStorage
+                                                                                                 [ rdf:type owl:Restriction ;
+                                                                                                   owl:onProperty :hasModeOfOperation ;
+                                                                                                   owl:someValuesFrom :Monodirectional
+                                                                                                 ]
+                                                                                                 [ rdf:type owl:Restriction ;
+                                                                                                   owl:onProperty :hasPowerType ;
+                                                                                                   owl:someValuesFrom :DC
+                                                                                                 ]
+                                                                                               ) ;
+                                                                            rdf:type owl:Class
+                                                                          ]
                                                      ]
                                                    ) ;
                                 rdf:type owl:Class
@@ -226,6 +226,16 @@
 #    Individuals
 #################################################################
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#DC01
+:DC01 rdf:type owl:NamedIndividual ,
+               :DC .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#Monodirectional01
+:Monodirectional01 rdf:type owl:NamedIndividual ,
+                            :Monodirectional .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork01
 :DistributionNetwork01 rdf:type owl:NamedIndividual ,
                                 :DistributionNetwork .
@@ -254,7 +264,9 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorage01
 :EnergyStorage01 rdf:type owl:NamedIndividual ,
-                          :EnergyStorage .
+                          :EnergyStorage ;
+                 :hasModeOfOperation :Monodirectional01 ;
+                 :hasPowerType :DC01 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Generator01
