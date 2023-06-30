@@ -16,8 +16,7 @@
 :composedBy rdf:type owl:ObjectProperty ;
             rdfs:domain :Prosumer ;
             rdfs:range [ rdf:type owl:Class ;
-                         owl:unionOf ( :EnergyMeter
-                                       :EnergyStorage
+                         owl:unionOf ( :EnergyStorage
                                        :Generator
                                        :Load
                                      )
@@ -51,6 +50,61 @@
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isConnected
 :isConnected rdf:type owl:ObjectProperty ,
                       owl:SymmetricProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/SOC
+:SOC rdf:type owl:DatatypeProperty ;
+     rdfs:subPropertyOf :stateOfCharge .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/capacity
+:capacity rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/efficiency
+:efficiency rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyAbsorbed
+:energyAbsorbed rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyProduced
+:energyProduced rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasValue
+:hasValue rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/losses
+:losses rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxPower
+:maxPower rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxSOC
+:maxSOC rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf :stateOfCharge .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/minSOC
+:minSOC rdf:type owl:DatatypeProperty ;
+        rdfs:subPropertyOf :stateOfCharge .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/stateOfCharge
+:stateOfCharge rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/time
+:time rdf:type owl:DatatypeProperty .
 
 
 #################################################################
@@ -140,6 +194,14 @@
                                                                             rdf:type owl:Class
                                                                           ]
                                                      ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :hasMeter ;
+                                                       owl:someValuesFrom :M1
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :hasMeter ;
+                                                       owl:someValuesFrom :M2
+                                                     ]
                                                    ) ;
                                 rdf:type owl:Class
                               ] ;
@@ -177,6 +239,14 @@
                                                                                                ) ;
                                                                             rdf:type owl:Class
                                                                           ]
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :hasMeter ;
+                                                       owl:someValuesFrom :M1
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :hasMeter ;
+                                                       owl:someValuesFrom :M2
                                                      ]
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :hasMeter ;
