@@ -4,9 +4,12 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix saref: <https://saref.etsi.org/core/> .
+@prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
 @base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
 
-<http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> rdf:type owl:Ontology .
+<http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> rdf:type owl:Ontology ;
+                                                                owl:imports <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery> .
 
 #################################################################
 #    Object Properties
@@ -16,95 +19,51 @@
 :composedBy rdf:type owl:ObjectProperty ;
             rdfs:domain :Prosumer ;
             rdfs:range [ rdf:type owl:Class ;
-                         owl:unionOf ( :EnergyStorage
+                         owl:unionOf ( :EnergyMeter
                                        :Generator
                                        :Load
+                                       [ rdf:type owl:Class ;
+                                         owl:unionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery>
+                                                       <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
+                                                     )
+                                       ]
                                      )
                        ] .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasDirection
 :hasDirection rdf:type owl:ObjectProperty ;
-              rdfs:domain :EnergyStorage ;
+              rdfs:domain [ rdf:type owl:Class ;
+                            owl:unionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
+                                          <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem>
+                                        )
+                          ] ;
               rdfs:range :EnergyDirection .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasLocation
 :hasLocation rdf:type owl:ObjectProperty ;
-             rdfs:domain :EnergyStorage ;
+             rdfs:domain [ rdf:type owl:Class ;
+                           owl:unionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
+                                         <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem>
+                                       )
+                         ] ;
              rdfs:range :EnergyStorageLocation .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasMeter
-:hasMeter rdf:type owl:ObjectProperty ;
-          rdfs:domain :Prosumer ;
-          rdfs:range :EnergyMeter .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasPowerType
 :hasPowerType rdf:type owl:ObjectProperty ;
-              rdfs:domain :EnergyStorage ;
+              rdfs:domain [ rdf:type owl:Class ;
+                            owl:unionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
+                                          <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem>
+                                        )
+                          ] ;
               rdfs:range :PowerType .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isConnected
 :isConnected rdf:type owl:ObjectProperty ,
                       owl:SymmetricProperty .
-
-
-#################################################################
-#    Data properties
-#################################################################
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/SOC
-:SOC rdf:type owl:DatatypeProperty ;
-     rdfs:subPropertyOf :stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/capacity
-:capacity rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/efficiency
-:efficiency rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyAbsorbed
-:energyAbsorbed rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyProduced
-:energyProduced rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasValue
-:hasValue rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/losses
-:losses rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxPower
-:maxPower rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxSOC
-:maxSOC rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf :stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/minSOC
-:minSOC rdf:type owl:DatatypeProperty ;
-        rdfs:subPropertyOf :stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/stateOfCharge
-:stateOfCharge rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/time
-:time rdf:type owl:DatatypeProperty .
 
 
 #################################################################
@@ -127,7 +86,23 @@
           owl:equivalentClass [ owl:intersectionOf ( :Prosumer
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
-                                                       owl:someValuesFrom [ owl:intersectionOf ( :EnergyStorage
+                                                       owl:someValuesFrom :Generator
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :Load
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M1
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M2
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom [ owl:intersectionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
                                                                                                  [ rdf:type owl:Restriction ;
                                                                                                    owl:onProperty :hasDirection ;
                                                                                                    owl:someValuesFrom :Monodirectional
@@ -144,14 +119,6 @@
                                                                             rdf:type owl:Class
                                                                           ]
                                                      ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M1
-                                                     ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M2
-                                                     ]
                                                    ) ;
                                 rdf:type owl:Class
                               ] ;
@@ -159,7 +126,7 @@
                           [ owl:intersectionOf ( :Prosumer
                                                  [ rdf:type owl:Class ;
                                                    owl:complementOf [ rdf:type owl:Restriction ;
-                                                                      owl:onProperty :hasMeter ;
+                                                                      owl:onProperty :composedBy ;
                                                                       owl:someValuesFrom :M3
                                                                     ]
                                                  ]
@@ -173,7 +140,23 @@
           owl:equivalentClass [ owl:intersectionOf ( :Prosumer
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
-                                                       owl:someValuesFrom [ owl:intersectionOf ( :EnergyStorage
+                                                       owl:someValuesFrom :Generator
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :Load
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M1
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M2
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom [ owl:intersectionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
                                                                                                  [ rdf:type owl:Restriction ;
                                                                                                    owl:onProperty :hasDirection ;
                                                                                                    owl:someValuesFrom :Bidirectional
@@ -194,14 +177,6 @@
                                                                             rdf:type owl:Class
                                                                           ]
                                                      ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M1
-                                                     ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M2
-                                                     ]
                                                    ) ;
                                 rdf:type owl:Class
                               ] ;
@@ -209,7 +184,7 @@
                           [ owl:intersectionOf ( :Prosumer
                                                  [ rdf:type owl:Class ;
                                                    owl:complementOf [ rdf:type owl:Restriction ;
-                                                                      owl:onProperty :hasMeter ;
+                                                                      owl:onProperty :composedBy ;
                                                                       owl:someValuesFrom :M3
                                                                     ]
                                                  ]
@@ -223,7 +198,27 @@
           owl:equivalentClass [ owl:intersectionOf ( :Prosumer
                                                      [ rdf:type owl:Restriction ;
                                                        owl:onProperty :composedBy ;
-                                                       owl:someValuesFrom [ owl:intersectionOf ( :EnergyStorage
+                                                       owl:someValuesFrom :Generator
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :Load
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M1
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M2
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom :M3
+                                                     ]
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty :composedBy ;
+                                                       owl:someValuesFrom [ owl:intersectionOf ( <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage>
                                                                                                  [ rdf:type owl:Restriction ;
                                                                                                    owl:onProperty :hasDirection ;
                                                                                                    owl:someValuesFrom :Bidirectional
@@ -239,18 +234,6 @@
                                                                                                ) ;
                                                                             rdf:type owl:Class
                                                                           ]
-                                                     ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M1
-                                                     ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M2
-                                                     ]
-                                                     [ rdf:type owl:Restriction ;
-                                                       owl:onProperty :hasMeter ;
-                                                       owl:someValuesFrom :M3
                                                      ]
                                                    ) ;
                                 rdf:type owl:Class
@@ -295,10 +278,6 @@
                                                  :M3
                                                )
                                  ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorage
-:EnergyStorage rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorageLocation
@@ -378,10 +357,17 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-EnergyStorage
 :I-EnergyStorage rdf:type owl:NamedIndividual ,
-                          :EnergyStorage ;
+                          <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery> ;
                  :hasDirection :I-EnergyDirection ;
                  :hasLocation :I-Location ;
-                 :hasPowerType :I-PowerType .
+                 :hasPowerType :I-PowerType ;
+                 <https://saref.etsi.org/measuresProperty> <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC> ;
+                 saref:makesMeasurement <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M1> ,
+                                        <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M2> ,
+                                        <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M3> ;
+                 <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMaximumStateOfCharge> 0.9 ;
+                 <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMinimumStateOfCharge> 0.1 ;
+                 <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasStorageCapacity> 100.0 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Generator
@@ -419,9 +405,9 @@
                      :Prosumer ;
             :composedBy :I-EnergyStorage ,
                         :I-Generator ,
-                        :I-Load ;
-            :hasMeter :I-M1 ,
-                      :I-M2 .
+                        :I-Load ,
+                        :I-M1 ,
+                        :I-M2 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyDirection
@@ -431,10 +417,17 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyStorage
 :II-EnergyStorage rdf:type owl:NamedIndividual ,
-                           :EnergyStorage ;
+                           <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery> ;
                   :hasDirection :II-EnergyDirection ;
                   :hasLocation :II-Location ;
-                  :hasPowerType :II-PowerType .
+                  :hasPowerType :II-PowerType ;
+                  <https://saref.etsi.org/measuresProperty> <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC> ;
+                  saref:makesMeasurement <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M1> ,
+                                         <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M2> ,
+                                         <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M3> ;
+                  <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMaximumStateOfCharge> 0.8 ;
+                  <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMinimumStateOfCharge> 0.2 ;
+                  <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasStorageCapacity> 100 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Generator
@@ -472,9 +465,9 @@
                       :Prosumer ;
              :composedBy :II-EnergyStorage ,
                          :II-Generator ,
-                         :II-Load ;
-             :hasMeter :II-M1 ,
-                       :II-M2 .
+                         :II-Load ,
+                         :II-M1 ,
+                         :II-M2 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyDirection
@@ -484,7 +477,7 @@
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyStorage
 :III-EnergyStorage rdf:type owl:NamedIndividual ,
-                            :EnergyStorage ;
+                            <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery> ;
                    :hasDirection :III-EnergyDirection ;
                    :hasLocation :III-Location ;
                    :hasPowerType :III-PowerType .
@@ -530,10 +523,17 @@
                        :Prosumer ;
               :composedBy :III-EnergyStorage ,
                           :III-Generator ,
-                          :III-Load ;
-              :hasMeter :III-M1 ,
-                        :III-M2 ,
-                        :III-M3 .
+                          :III-Load ,
+                          :III-M1 ,
+                          :III-M2 ,
+                          :III-M3 .
+
+
+###  https://saref.etsi.org/core/hasTimestamp#test
+<https://saref.etsi.org/core/hasTimestamp#test> rdf:type owl:NamedIndividual ,
+                                                         <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem> ;
+                                                saref:consistsOf :I-EnergyStorage ,
+                                                                 :II-EnergyStorage .
 
 
 #################################################################
@@ -544,34 +544,6 @@
   owl:members ( :Config01
                 :Config02
                 :Config03
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :Configuration
-                :DistributionNetwork
-                :EnergyDirection
-                :EnergyMeter
-                :EnergyStorage
-                :EnergyStorageLocation
-                :Generator
-                :Load
-                :PowerType
-              )
-] .
-
-
-[ rdf:type owl:AllDisjointClasses ;
-  owl:members ( :DistributionNetwork
-                :EnergyDirection
-                :EnergyMeter
-                :EnergyStorage
-                :EnergyStorageLocation
-                :Generator
-                :Load
-                :PowerType
-                :Prosumer
               )
 ] .
 
