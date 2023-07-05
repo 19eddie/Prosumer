@@ -1,0 +1,45 @@
+\documentclass[12pt,a4paper,openright]{report}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{url}
+%\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{listings}
+\usepackage[square,numbers,sort]{natbib}
+\usepackage{tabularx}
+\usepackage{float}
+
+% version
+\newcommand{\versionmajor}{0}
+\newcommand{\versionminor}{1}
+\newcommand{\versionpatch}{2}
+\newcommand{\version}{\versionmajor.\versionminor.\versionpatch}
+\typeout{Document version: \version}
+
+\title{\LARGE
+    Ontologie nel dominio energetico \\ \small Secondo e terzo assignment per il corso di Web Semantico
+}
+
+\author{
+    Eddie Barzi \\ \small eddie.barzi@studio.unibo.it
+    \and
+    Angela Cortecchia \\ \small angela.cortecchia@studio.unibo.it
+}
+
+\date{\small Anno Accademico 2022-2023}
+\makeindex
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\input{sections/sec01.tex}
+
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
