@@ -9,18 +9,99 @@
 @prefix saref: <https://saref.etsi.org/core/> .
 @prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
 @prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
+@prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
 @prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
+@prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
+@prefix flexibility: <http://ontology.tno.nl/interconnect/flexibility#> .
 @prefix saref4bldg: <https://saref.etsi.org/saref4bldg/> .
 @prefix saref4ener: <https://saref.etsi.org/saref4ener/> .
 @prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
-@prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
-@base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> .
+@base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
 
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> rdf:type owl:Ontology .
 
 #################################################################
+#    Annotation properties
+#################################################################
+
+###  http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled
+<http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
 #    Object Properties
 #################################################################
+
+###  http://ontology.tno.nl/interconnect/datapoint#belongsToTimeSeries
+ic-data:belongsToTimeSeries rdf:type owl:ObjectProperty ;
+                            owl:inverseOf ic-data:hasDataPoint ;
+                            rdfs:domain ic-data:DataPoint ;
+                            rdfs:range ic-data:TimeSeries ;
+                            rdfs:comment "The relationship that connects a data point to a time series."@en ;
+                            rdfs:label "belongs to time series"@en .
+
+###  http://ontology.tno.nl/interconnect/datapoint#hasDataPoint
+ic-data:hasDataPoint rdf:type owl:ObjectProperty ;
+                     rdfs:domain ic-data:TimeSeries ;
+                     rdfs:range ic-data:DataPoint ;
+                     rdfs:comment "This relationship connects a time series to data point."@en ;
+                     rdfs:label "has data point"@en .
+
+###  http://ontology.tno.nl/interconnect/datapoint#producedBy
+ic-data:producedBy rdf:type owl:ObjectProperty ;
+                   rdfs:domain [ rdf:type owl:Class ;
+                                 owl:unionOf ( ic-data:DataPoint
+                                               ic-data:Message
+                                               ic-data:TimeSeries
+                                               flexibility:FlexInstruction
+                                               flexibility:FlexOffer
+                                               flexibility:FlexRequest
+                                               <http://ontology.tno.nl/interconnect/forecast#Forecast>
+                                             )
+                               ] ;
+                   rdfs:range [ rdf:type owl:Class ;
+                                owl:unionOf ( foaf:Agent
+                                              saref:Device
+                                            )
+                              ] ;
+                   rdfs:comment "A relation between an entity (datapoint, message, timeseries, etc) that has been produced by a device or other agent." ,
+                                "TODO: finalize discussion on domain" ;
+                   rdfs:label "produced by" .
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
+prosumer:composedBy rdf:type owl:ObjectProperty ;
+                    rdfs:domain prosumer:Prosumer ;
+                    rdfs:range [ rdf:type owl:Class ;
+                                 owl:unionOf ( prosumer:EnergyMeter
+                                               prosumer:Generator
+                                               prosumer:Load
+                                               kyrillos-es:StorageSystem
+                                             )
+                               ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasDirection
+prosumer:hasDirection rdf:type owl:ObjectProperty ;
+                      rdfs:domain kyrillos-es:StorageSystem ;
+                      rdfs:range prosumer:EnergyDirection .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasLocation
+prosumer:hasLocation rdf:type owl:ObjectProperty ;
+                     rdfs:domain kyrillos-es:StorageSystem ;
+                     rdfs:range prosumer:EnergyStorageLocation .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasPowerType
+prosumer:hasPowerType rdf:type owl:ObjectProperty ;
+                      rdfs:domain kyrillos-es:StorageSystem ;
+                      rdfs:range prosumer:PowerType .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isConnected
+prosumer:isConnected rdf:type owl:ObjectProperty ,
+                              owl:SymmetricProperty .
+
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/basedOnStateOfCharge
 kyrillos-es:basedOnStateOfCharge rdf:type owl:ObjectProperty ;
@@ -130,7 +211,8 @@ saref:isOfferedBy rdf:type owl:ObjectProperty ;
 
 ###  https://saref.etsi.org/core/makesMeasurement
 saref:makesMeasurement rdf:type owl:ObjectProperty ;
-                       owl:inverseOf saref:measurmentMadeBy .
+                       owl:inverseOf saref:measurmentMadeBy ;
+                       rdfs:domain saref:Device .
 
 
 ###  https://saref.etsi.org/core/makesMeasurment
@@ -166,49 +248,24 @@ saref:represents rdf:type owl:ObjectProperty ;
                  rdfs:range saref:Function .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
-prosumer:composedBy rdf:type owl:ObjectProperty ;
-                    rdfs:domain prosumer:Prosumer ;
-                    rdfs:range [ rdf:type owl:Class ;
-                                 owl:unionOf ( prosumer:EnergyStorage
-                                               prosumer:Generator
-                                               prosumer:Load
-                                             )
-                               ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasDirection
-prosumer:hasDirection rdf:type owl:ObjectProperty ;
-                      rdfs:domain prosumer:EnergyStorage ;
-                      rdfs:range prosumer:EnergyDirection .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasLocation
-prosumer:hasLocation rdf:type owl:ObjectProperty ;
-                     rdfs:domain prosumer:EnergyStorage ;
-                     rdfs:range prosumer:EnergyStorageLocation .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasMeter
-prosumer:hasMeter rdf:type owl:ObjectProperty ;
-                  rdfs:domain prosumer:Prosumer ;
-                  rdfs:range prosumer:EnergyMeter .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasPowerType
-prosumer:hasPowerType rdf:type owl:ObjectProperty ;
-                      rdfs:domain prosumer:EnergyStorage ;
-                      rdfs:range prosumer:PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/isConnected
-prosumer:isConnected rdf:type owl:ObjectProperty ,
-                              owl:SymmetricProperty .
-
-
 #################################################################
 #    Data properties
 #################################################################
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasEfficiency
+:hasEfficiency rdf:type owl:DatatypeProperty ;
+               rdfs:domain kyrillos-es:EnergyStorage .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasMaxChargingPower
+:hasMaxChargingPower rdf:type owl:DatatypeProperty ;
+                     rdfs:domain kyrillos-es:EnergyStorage .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasMaxDischargingPower
+:hasMaxDischargingPower rdf:type owl:DatatypeProperty ;
+                        rdfs:domain kyrillos-es:EnergyStorage .
+
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasDurabilityInCycles
 kyrillos-es:hasDurabilityInCycles rdf:type owl:DatatypeProperty ;
@@ -311,60 +368,42 @@ saref:hasValue rdf:type owl:DatatypeProperty ;
                           ] .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/SOC
-prosumer:SOC rdf:type owl:DatatypeProperty ;
-             rdfs:subPropertyOf prosumer:stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/capacity
-prosumer:capacity rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/efficiency
-prosumer:efficiency rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyAbsorbed
-prosumer:energyAbsorbed rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/energyProduced
-prosumer:energyProduced rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/hasValue
-prosumer:hasValue rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/losses
-prosumer:losses rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxPower
-prosumer:maxPower rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/maxSOC
-prosumer:maxSOC rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf prosumer:stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/minSOC
-prosumer:minSOC rdf:type owl:DatatypeProperty ;
-                rdfs:subPropertyOf prosumer:stateOfCharge .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/stateOfCharge
-prosumer:stateOfCharge rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/time
-prosumer:time rdf:type owl:DatatypeProperty .
-
-
 #################################################################
 #    Classes
 #################################################################
+
+###  http://ontology.tno.nl/interconnect/datapoint#TimeSeries
+ic-data:TimeSeries rdf:type owl:Class ;
+                   rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasEffectivePeriod ;
+                                     owl:allValuesFrom time:Interval
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasUsage ;
+                                     owl:allValuesFrom ic-data:Usage
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasDataPoint ;
+                                     owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                     owl:onClass ic-data:DataPoint
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasCreationTime ;
+                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                     owl:onClass time:Instant
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasTemporalResolution ;
+                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                     owl:onClass time:TemporalDuration
+                                   ] ,
+                                   [ rdf:type owl:Restriction ;
+                                     owl:onProperty ic-data:hasUpdateRate ;
+                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                     owl:onClass time:TemporalDuration
+                                   ] ;
+                   rdfs:comment "An ordered sequence of data points of a quantity observed at spaced time intervals is referred to as a time series. Time series can be a result of prediction algorithm."@en ;
+                   rdfs:label "Time series" .
 
 ###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
 <http://ontology.tno.nl/interconnect/datapoint#DataPoint> rdf:type owl:Class ;
@@ -402,6 +441,147 @@ ic-tplg:TopologicalLocation rdf:type owl:Class .
 ###  http://www.ontology-of-units-of-measure.org/resource/om-2/PowerUnit
 <http://www.ontology-of-units-of-measure.org/resource/om-2/PowerUnit> rdf:type owl:Class ;
                                                                       rdfs:subClassOf saref:UnitOfMeasure .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterMeasurement
+:EnergyMeterMeasurement rdf:type owl:Class ;
+                        rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty saref:measurementMadeBy ;
+                                          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                          owl:onClass prosumer:EnergyMeter
+                                        ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/AC
+prosumer:AC rdf:type owl:Class ;
+            rdfs:subClassOf prosumer:PowerType .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Bidirectional
+prosumer:Bidirectional rdf:type owl:Class ;
+                       rdfs:subClassOf prosumer:EnergyDirection ;
+                       owl:disjointWith prosumer:Monodirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config01
+prosumer:Config01 rdf:type owl:Class ;
+                  rdfs:subClassOf prosumer:Configuration .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config02
+prosumer:Config02 rdf:type owl:Class ;
+                  rdfs:subClassOf prosumer:Configuration .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config03
+prosumer:Config03 rdf:type owl:Class ;
+                  rdfs:subClassOf prosumer:Configuration .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Configuration
+prosumer:Configuration rdf:type owl:Class ;
+                       owl:equivalentClass [ rdf:type owl:Class ;
+                                             owl:unionOf ( prosumer:Config01
+                                                           prosumer:Config02
+                                                           prosumer:Config03
+                                                         )
+                                           ] ;
+                       rdfs:subClassOf prosumer:Prosumer .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DC
+prosumer:DC rdf:type owl:Class ;
+            rdfs:subClassOf prosumer:PowerType .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork
+prosumer:DistributionNetwork rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyDirection
+prosumer:EnergyDirection rdf:type owl:Class ;
+                         owl:equivalentClass [ rdf:type owl:Class ;
+                                               owl:unionOf ( prosumer:Bidirectional
+                                                             prosumer:Monodirectional
+                                                           )
+                                             ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyMeter
+prosumer:EnergyMeter rdf:type owl:Class ;
+                     owl:equivalentClass [ rdf:type owl:Class ;
+                                           owl:unionOf ( prosumer:M1
+                                                         prosumer:M2
+                                                         prosumer:M3
+                                                       )
+                                         ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorage
+prosumer:EnergyStorage rdf:type owl:Class ;
+                       owl:equivalentClass kyrillos-es:Battery .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorageLocation
+prosumer:EnergyStorageLocation rdf:type owl:Class ;
+                               owl:equivalentClass [ rdf:type owl:Class ;
+                                                     owl:unionOf ( prosumer:Post-Production
+                                                                   prosumer:Production
+                                                                 )
+                                                   ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Generator
+prosumer:Generator rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Load
+prosumer:Load rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M1
+prosumer:M1 rdf:type owl:Class ;
+            rdfs:subClassOf prosumer:EnergyMeter .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M2
+prosumer:M2 rdf:type owl:Class ;
+            rdfs:subClassOf prosumer:EnergyMeter .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M3
+prosumer:M3 rdf:type owl:Class ;
+            rdfs:subClassOf prosumer:EnergyMeter .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Monodirectional
+prosumer:Monodirectional rdf:type owl:Class ;
+                         rdfs:subClassOf prosumer:EnergyDirection .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Post-Production
+prosumer:Post-Production rdf:type owl:Class ;
+                         rdfs:subClassOf prosumer:EnergyStorageLocation ;
+                         owl:disjointWith prosumer:Production .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/PowerType
+prosumer:PowerType rdf:type owl:Class ;
+                   owl:equivalentClass [ rdf:type owl:Class ;
+                                         owl:unionOf ( prosumer:AC
+                                                       prosumer:DC
+                                                     )
+                                       ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Production
+prosumer:Production rdf:type owl:Class ;
+                    rdfs:subClassOf prosumer:EnergyStorageLocation .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Prosumer
+prosumer:Prosumer rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery
@@ -811,260 +991,199 @@ saref4ener:Power rdf:type owl:Class ;
                  rdfs:subClassOf saref:Power .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/AC
-prosumer:AC rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Bidirectional
-prosumer:Bidirectional rdf:type owl:Class ;
-                       rdfs:subClassOf prosumer:EnergyDirection ;
-                       owl:disjointWith prosumer:Monodirectional .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config01
-prosumer:Config01 rdf:type owl:Class ;
-                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:composedBy ;
-                                                               owl:someValuesFrom [ owl:intersectionOf ( prosumer:EnergyStorage
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasDirection ;
-                                                                                                           owl:someValuesFrom prosumer:Monodirectional
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasLocation ;
-                                                                                                           owl:someValuesFrom prosumer:Production
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasPowerType ;
-                                                                                                           owl:someValuesFrom prosumer:DC
-                                                                                                         ]
-                                                                                                       ) ;
-                                                                                    rdf:type owl:Class
-                                                                                  ]
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M1
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M2
-                                                             ]
-                                                           ) ;
-                                        rdf:type owl:Class
-                                      ] ;
-                  rdfs:subClassOf prosumer:Configuration ,
-                                  [ owl:intersectionOf ( prosumer:Prosumer
-                                                         [ rdf:type owl:Class ;
-                                                           owl:complementOf [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty prosumer:hasMeter ;
-                                                                              owl:someValuesFrom prosumer:M3
-                                                                            ]
-                                                         ]
-                                                       ) ;
-                                    rdf:type owl:Class
-                                  ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config02
-prosumer:Config02 rdf:type owl:Class ;
-                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:composedBy ;
-                                                               owl:someValuesFrom [ owl:intersectionOf ( prosumer:EnergyStorage
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasDirection ;
-                                                                                                           owl:someValuesFrom prosumer:Bidirectional
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasLocation ;
-                                                                                                           owl:someValuesFrom prosumer:Production
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasPowerType ;
-                                                                                                           owl:someValuesFrom [ rdf:type owl:Class ;
-                                                                                                                                owl:unionOf ( prosumer:AC
-                                                                                                                                              prosumer:DC
-                                                                                                                                            )
-                                                                                                                              ]
-                                                                                                         ]
-                                                                                                       ) ;
-                                                                                    rdf:type owl:Class
-                                                                                  ]
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M1
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M2
-                                                             ]
-                                                           ) ;
-                                        rdf:type owl:Class
-                                      ] ;
-                  rdfs:subClassOf prosumer:Configuration ,
-                                  [ owl:intersectionOf ( prosumer:Prosumer
-                                                         [ rdf:type owl:Class ;
-                                                           owl:complementOf [ rdf:type owl:Restriction ;
-                                                                              owl:onProperty prosumer:hasMeter ;
-                                                                              owl:someValuesFrom prosumer:M3
-                                                                            ]
-                                                         ]
-                                                       ) ;
-                                    rdf:type owl:Class
-                                  ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config03
-prosumer:Config03 rdf:type owl:Class ;
-                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:composedBy ;
-                                                               owl:someValuesFrom [ owl:intersectionOf ( prosumer:EnergyStorage
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasDirection ;
-                                                                                                           owl:someValuesFrom prosumer:Bidirectional
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasLocation ;
-                                                                                                           owl:someValuesFrom prosumer:Post-Production
-                                                                                                         ]
-                                                                                                         [ rdf:type owl:Restriction ;
-                                                                                                           owl:onProperty prosumer:hasPowerType ;
-                                                                                                           owl:someValuesFrom prosumer:AC
-                                                                                                         ]
-                                                                                                       ) ;
-                                                                                    rdf:type owl:Class
-                                                                                  ]
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M1
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M2
-                                                             ]
-                                                             [ rdf:type owl:Restriction ;
-                                                               owl:onProperty prosumer:hasMeter ;
-                                                               owl:someValuesFrom prosumer:M3
-                                                             ]
-                                                           ) ;
-                                        rdf:type owl:Class
-                                      ] ;
-                  rdfs:subClassOf prosumer:Configuration .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Configuration
-prosumer:Configuration rdf:type owl:Class ;
-                       owl:equivalentClass [ rdf:type owl:Class ;
-                                             owl:unionOf ( prosumer:Config01
-                                                           prosumer:Config02
-                                                           prosumer:Config03
-                                                         )
-                                           ] ;
-                       rdfs:subClassOf prosumer:Prosumer .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DC
-prosumer:DC rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork
-prosumer:DistributionNetwork rdf:type owl:Class .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyDirection
-prosumer:EnergyDirection rdf:type owl:Class ;
-                         owl:equivalentClass [ rdf:type owl:Class ;
-                                               owl:unionOf ( prosumer:Bidirectional
-                                                             prosumer:Monodirectional
-                                                           )
-                                             ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyMeter
-prosumer:EnergyMeter rdf:type owl:Class ;
-                     owl:equivalentClass [ rdf:type owl:Class ;
-                                           owl:unionOf ( prosumer:M1
-                                                         prosumer:M2
-                                                         prosumer:M3
-                                                       )
-                                         ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorage
-prosumer:EnergyStorage rdf:type owl:Class .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/EnergyStorageLocation
-prosumer:EnergyStorageLocation rdf:type owl:Class ;
-                               owl:equivalentClass [ rdf:type owl:Class ;
-                                                     owl:unionOf ( prosumer:Post-Production
-                                                                   prosumer:Production
-                                                                 )
-                                                   ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Generator
-prosumer:Generator rdf:type owl:Class .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Load
-prosumer:Load rdf:type owl:Class .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M1
-prosumer:M1 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M2
-prosumer:M2 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/M3
-prosumer:M3 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Monodirectional
-prosumer:Monodirectional rdf:type owl:Class ;
-                         rdfs:subClassOf prosumer:EnergyDirection .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Post-Production
-prosumer:Post-Production rdf:type owl:Class ;
-                         rdfs:subClassOf prosumer:EnergyStorageLocation ;
-                         owl:disjointWith prosumer:Production .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/PowerType
-prosumer:PowerType rdf:type owl:Class ;
-                   owl:equivalentClass [ rdf:type owl:Class ;
-                                         owl:unionOf ( prosumer:AC
-                                                       prosumer:DC
-                                                     )
-                                       ] .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Production
-prosumer:Production rdf:type owl:Class ;
-                    rdfs:subClassOf prosumer:EnergyStorageLocation .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Prosumer
-prosumer:Prosumer rdf:type owl:Class .
-
-
 #################################################################
 #    Individuals
 #################################################################
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-Measurement
+:I-M1-Measurement rdf:type owl:NamedIndividual ,
+                           :EnergyMeterMeasurement .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value01
+:I-M1-value01 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value02
+:I-M1-value02 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value03
+:I-M1-value03 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork01
+prosumer:DistributionNetwork01 rdf:type owl:NamedIndividual ,
+                                        prosumer:DistributionNetwork .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-EnergyDirection
+prosumer:I-EnergyDirection rdf:type owl:NamedIndividual ,
+                                    prosumer:Monodirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-EnergyStorage
+prosumer:I-EnergyStorage rdf:type owl:NamedIndividual ,
+                                  kyrillos-es:StorageSystem ;
+                         prosumer:hasDirection prosumer:I-EnergyDirection ;
+                         prosumer:hasLocation prosumer:I-Location ;
+                         prosumer:hasPowerType prosumer:I-PowerType ;
+                         saref:consistsOf kyrillos-es:Battery-1 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Generator
+prosumer:I-Generator rdf:type owl:NamedIndividual ,
+                              prosumer:Generator .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Load
+prosumer:I-Load rdf:type owl:NamedIndividual ,
+                         prosumer:Load .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Location
+prosumer:I-Location rdf:type owl:NamedIndividual ,
+                             prosumer:Production .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-M1
+prosumer:I-M1 rdf:type owl:NamedIndividual ,
+                       prosumer:M1 ;
+              <https://saref.etsi.org/measuresProperty> :I-M1-Measurement ;
+              saref:makesMeasurement :I-M1-value01 ,
+                                     :I-M1-value02 ,
+                                     :I-M1-value03 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-M2
+prosumer:I-M2 rdf:type owl:NamedIndividual ,
+                       prosumer:M2 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-PowerType
+prosumer:I-PowerType rdf:type owl:NamedIndividual ,
+                              prosumer:DC .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Prosumer
+prosumer:I-Prosumer rdf:type owl:NamedIndividual ,
+                             prosumer:Prosumer ;
+                    prosumer:composedBy prosumer:I-EnergyStorage ,
+                                        prosumer:I-Generator ,
+                                        prosumer:I-Load ,
+                                        prosumer:I-M1 ,
+                                        prosumer:I-M2 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyDirection
+prosumer:II-EnergyDirection rdf:type owl:NamedIndividual ,
+                                     prosumer:Bidirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyStorage
+prosumer:II-EnergyStorage rdf:type owl:NamedIndividual ,
+                                   prosumer:EnergyStorage ;
+                          prosumer:hasDirection prosumer:II-EnergyDirection ;
+                          prosumer:hasLocation prosumer:II-Location ;
+                          prosumer:hasPowerType prosumer:II-PowerType .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Generator
+prosumer:II-Generator rdf:type owl:NamedIndividual ,
+                               prosumer:Generator .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Load
+prosumer:II-Load rdf:type owl:NamedIndividual ,
+                          prosumer:Load .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Location
+prosumer:II-Location rdf:type owl:NamedIndividual ,
+                              prosumer:Production .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-M1
+prosumer:II-M1 rdf:type owl:NamedIndividual ,
+                        prosumer:M1 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-M2
+prosumer:II-M2 rdf:type owl:NamedIndividual ,
+                        prosumer:M2 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-PowerType
+prosumer:II-PowerType rdf:type owl:NamedIndividual ,
+                               prosumer:AC .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Prosumer
+prosumer:II-Prosumer rdf:type owl:NamedIndividual ,
+                              prosumer:Prosumer ;
+                     prosumer:composedBy prosumer:II-EnergyStorage ,
+                                         prosumer:II-Generator ,
+                                         prosumer:II-Load .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyDirection
+prosumer:III-EnergyDirection rdf:type owl:NamedIndividual ,
+                                      prosumer:Bidirectional .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyStorage
+prosumer:III-EnergyStorage rdf:type owl:NamedIndividual ,
+                                    prosumer:EnergyStorage ;
+                           prosumer:hasDirection prosumer:III-EnergyDirection ;
+                           prosumer:hasLocation prosumer:III-Location ;
+                           prosumer:hasPowerType prosumer:III-PowerType .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Generator
+prosumer:III-Generator rdf:type owl:NamedIndividual ,
+                                prosumer:Generator .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Load
+prosumer:III-Load rdf:type owl:NamedIndividual ,
+                           prosumer:Load .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Location
+prosumer:III-Location rdf:type owl:NamedIndividual ,
+                               prosumer:Post-Production .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M1
+prosumer:III-M1 rdf:type owl:NamedIndividual ,
+                         prosumer:M1 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M2
+prosumer:III-M2 rdf:type owl:NamedIndividual ,
+                         prosumer:M2 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M3
+prosumer:III-M3 rdf:type owl:NamedIndividual ,
+                         prosumer:M3 .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-PowerType
+prosumer:III-PowerType rdf:type owl:NamedIndividual ,
+                                prosumer:AC .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Prosumer
+prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
+                               prosumer:Prosumer ;
+                      prosumer:composedBy prosumer:III-EnergyStorage ,
+                                          prosumer:III-Generator ,
+                                          prosumer:III-Load .
+
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1
 kyrillos-es:Battery-1 rdf:type owl:NamedIndividual ,
@@ -1073,6 +1192,10 @@ kyrillos-es:Battery-1 rdf:type owl:NamedIndividual ,
                       saref:makesMeasurement kyrillos-es:Battery-1-SOC-M1 ,
                                              kyrillos-es:Battery-1-SOC-M2 ,
                                              kyrillos-es:Battery-1-SOC-M3 ;
+                      :hasEfficiency 100 ;
+                      :hasMaxChargingPower 60 ;
+                      :hasMaxDischargingPower 50 ;
+                      kyrillos-es:hasLosses 5 ;
                       kyrillos-es:hasMaximumStateOfCharge 0.9 ;
                       kyrillos-es:hasMinimumStateOfCharge 0.1 ;
                       kyrillos-es:hasStorageCapacity 100.0 .
@@ -1218,186 +1341,25 @@ kyrillos-es:StorageSystem-3 rdf:type owl:NamedIndividual ,
                             saref:consistsOf kyrillos-es:HBattery-2 .
 
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork01
-prosumer:DistributionNetwork01 rdf:type owl:NamedIndividual ,
-                                        prosumer:DistributionNetwork .
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean
+] .
 
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean
+ ] .
 
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-EnergyDirection
-prosumer:I-EnergyDirection rdf:type owl:NamedIndividual ,
-                                    prosumer:Monodirectional .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-EnergyStorage
-prosumer:I-EnergyStorage rdf:type owl:NamedIndividual ,
-                                  prosumer:EnergyStorage ;
-                         prosumer:hasDirection prosumer:I-EnergyDirection ;
-                         prosumer:hasLocation prosumer:I-Location ;
-                         prosumer:hasPowerType prosumer:I-PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Generator
-prosumer:I-Generator rdf:type owl:NamedIndividual ,
-                              prosumer:Generator .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Load
-prosumer:I-Load rdf:type owl:NamedIndividual ,
-                         prosumer:Load .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Location
-prosumer:I-Location rdf:type owl:NamedIndividual ,
-                             prosumer:Production .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-M1
-prosumer:I-M1 rdf:type owl:NamedIndividual ,
-                       prosumer:M1 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-M2
-prosumer:I-M2 rdf:type owl:NamedIndividual ,
-                       prosumer:M2 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-PowerType
-prosumer:I-PowerType rdf:type owl:NamedIndividual ,
-                              prosumer:DC .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Prosumer
-prosumer:I-Prosumer rdf:type owl:NamedIndividual ,
-                             prosumer:Prosumer ;
-                    prosumer:composedBy prosumer:I-EnergyStorage ,
-                                        prosumer:I-Generator ,
-                                        prosumer:I-Load ;
-                    prosumer:hasMeter prosumer:I-M1 ,
-                                      prosumer:I-M2 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyDirection
-prosumer:II-EnergyDirection rdf:type owl:NamedIndividual ,
-                                     prosumer:Bidirectional .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-EnergyStorage
-prosumer:II-EnergyStorage rdf:type owl:NamedIndividual ,
-                                   prosumer:EnergyStorage ;
-                          prosumer:hasDirection prosumer:II-EnergyDirection ;
-                          prosumer:hasLocation prosumer:II-Location ;
-                          prosumer:hasPowerType prosumer:II-PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Generator
-prosumer:II-Generator rdf:type owl:NamedIndividual ,
-                               prosumer:Generator .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Load
-prosumer:II-Load rdf:type owl:NamedIndividual ,
-                          prosumer:Load .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Location
-prosumer:II-Location rdf:type owl:NamedIndividual ,
-                              prosumer:Production .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-M1
-prosumer:II-M1 rdf:type owl:NamedIndividual ,
-                        prosumer:M1 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-M2
-prosumer:II-M2 rdf:type owl:NamedIndividual ,
-                        prosumer:M2 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-PowerType
-prosumer:II-PowerType rdf:type owl:NamedIndividual ,
-                               prosumer:AC .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/II-Prosumer
-prosumer:II-Prosumer rdf:type owl:NamedIndividual ,
-                              prosumer:Prosumer ;
-                     prosumer:composedBy prosumer:II-EnergyStorage ,
-                                         prosumer:II-Generator ,
-                                         prosumer:II-Load ;
-                     prosumer:hasMeter prosumer:II-M1 ,
-                                       prosumer:II-M2 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyDirection
-prosumer:III-EnergyDirection rdf:type owl:NamedIndividual ,
-                                      prosumer:Bidirectional .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyStorage
-prosumer:III-EnergyStorage rdf:type owl:NamedIndividual ,
-                                    prosumer:EnergyStorage ;
-                           prosumer:hasDirection prosumer:III-EnergyDirection ;
-                           prosumer:hasLocation prosumer:III-Location ;
-                           prosumer:hasPowerType prosumer:III-PowerType .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Generator
-prosumer:III-Generator rdf:type owl:NamedIndividual ,
-                                prosumer:Generator .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Load
-prosumer:III-Load rdf:type owl:NamedIndividual ,
-                           prosumer:Load .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Location
-prosumer:III-Location rdf:type owl:NamedIndividual ,
-                               prosumer:Post-Production .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M1
-prosumer:III-M1 rdf:type owl:NamedIndividual ,
-                         prosumer:M1 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M2
-prosumer:III-M2 rdf:type owl:NamedIndividual ,
-                         prosumer:M2 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-M3
-prosumer:III-M3 rdf:type owl:NamedIndividual ,
-                         prosumer:M3 .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-PowerType
-prosumer:III-PowerType rdf:type owl:NamedIndividual ,
-                                prosumer:AC .
-
-
-###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-Prosumer
-prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
-                               prosumer:Prosumer ;
-                      prosumer:composedBy prosumer:III-EnergyStorage ,
-                                          prosumer:III-Generator ,
-                                          prosumer:III-Load ;
-                      prosumer:hasMeter prosumer:III-M1 ,
-                                        prosumer:III-M2 ,
-                                        prosumer:III-M3 .
-
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean
+ ] .
 
 #################################################################
 #    General axioms
 #################################################################
 
 [ rdf:type owl:AllDisjointClasses ;
-  owl:members ( prosumer:Config01
-                prosumer:Config02
-                prosumer:Config03
-              )
-] .
+   owl:members ( prosumer:Config01
+                 prosumer:Config02
+                 prosumer:Config03
+               )
+ ] .
 
 
 [ rdf:type owl:AllDisjointClasses ;
@@ -1440,6 +1402,10 @@ prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
 #    Rules
 #################################################################
 
+:cluster rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
 kyrillos-es:cluster rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
 
 kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
@@ -1451,18 +1417,18 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
    <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
                                                        <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:StorageSystem ;
-                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :cluster
                                                      ] ;
                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
                                                                   <http://www.w3.org/2003/11/swrl#propertyPredicate> saref:consistsOf ;
-                                                                  <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster ;
-                                                                  <http://www.w3.org/2003/11/swrl#argument2> kyrillos-es:battery
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> :cluster ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> :battery
                                                                 ] ;
                                                       rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                                  rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
                                                                              <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:Battery ;
-                                                                             <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:battery
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> :battery
                                                                            ] ;
                                                                  rdf:rest rdf:nil
                                                                ]
@@ -1471,14 +1437,13 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
                                                        <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:BatteryStorageSystem ;
-                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                       <http://www.w3.org/2003/11/swrl#argument1> :cluster
                                                      ] ;
                                            rdf:rest rdf:nil
                                          ]
  ] .
 
-[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
-   rdfs:comment "" ;
+[ rdfs:comment "" ;
    rdfs:label "HeterogeneousStorageSystemRule" ;
    rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
    <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
@@ -1503,8 +1468,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ]
  ] .
 
-[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
-   rdfs:comment "" ;
+[ rdfs:comment "" ;
    rdfs:label "HydrogenStorageSystemRule" ;
    rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
    <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
