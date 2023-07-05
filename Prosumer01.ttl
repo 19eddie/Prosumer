@@ -1,9 +1,18 @@
 @prefix : <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
+@prefix gn: <https://www.geonames.org/ontology#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix saref: <https://saref.etsi.org/core/> .
+@prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
+@prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
+@prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
+@prefix saref4bldg: <https://saref.etsi.org/saref4bldg/> .
+@prefix saref4ener: <https://saref.etsi.org/saref4ener/> .
+@prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
 @prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
 @base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> .
 
@@ -12,6 +21,150 @@
 #################################################################
 #    Object Properties
 #################################################################
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/basedOnStateOfCharge
+kyrillos-es:basedOnStateOfCharge rdf:type owl:ObjectProperty ;
+                                 rdfs:domain kyrillos-es:EnergyEfficiency ;
+                                 rdfs:range kyrillos-es:StateOfChargeMeasurment .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/isLocatedIn
+kyrillos-es:isLocatedIn rdf:type owl:ObjectProperty ;
+                        rdfs:subPropertyOf owl:topObjectProperty ;
+                        rdfs:domain saref:Device ;
+                        rdfs:range [ rdf:type owl:Class ;
+                                     owl:unionOf ( ic-tplg:TopologicalLocation
+                                                   geo:SpatialThing
+                                                   saref4bldg:BuildingSpace
+                                                 )
+                                   ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/isProtectedBy
+kyrillos-es:isProtectedBy rdf:type owl:ObjectProperty ;
+                          rdfs:subPropertyOf owl:topObjectProperty ;
+                          rdfs:domain saref:Device ;
+                          rdfs:range ic-pwlm:NominalPowerLimit .
+
+
+###  https://saref.etsi.org/isMeasuredByDevice
+<https://saref.etsi.org/isMeasuredByDevice> rdf:type owl:ObjectProperty ;
+                                            owl:inverseOf <https://saref.etsi.org/measuresProperty> ;
+                                            rdfs:domain saref:Property ;
+                                            rdfs:range saref:Device .
+
+
+###  https://saref.etsi.org/isMeasuredIn
+<https://saref.etsi.org/isMeasuredIn> rdf:type owl:ObjectProperty ;
+                                      rdfs:range saref:UnitOfMeasure .
+
+
+###  https://saref.etsi.org/measuresProperty
+<https://saref.etsi.org/measuresProperty> rdf:type owl:ObjectProperty ;
+                                          rdfs:domain saref:Device ;
+                                          rdfs:range saref:Property .
+
+
+###  https://saref.etsi.org/relatesToMeasurment
+<https://saref.etsi.org/relatesToMeasurment> rdf:type owl:ObjectProperty ;
+                                             owl:inverseOf <https://saref.etsi.org/relatesToProperty> ;
+                                             rdfs:domain saref:Property .
+
+
+###  https://saref.etsi.org/relatesToProperty
+<https://saref.etsi.org/relatesToProperty> rdf:type owl:ObjectProperty ;
+                                           owl:inverseOf saref:relatesToMeasurement ;
+                                           rdfs:range saref:Property .
+
+
+###  https://saref.etsi.org/core/actsUpon
+saref:actsUpon rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain saref:Command ;
+               rdfs:range saref:State .
+
+
+###  https://saref.etsi.org/core/consistsOf
+saref:consistsOf rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 rdfs:domain saref:Device ;
+                 rdfs:range saref:Device .
+
+
+###  https://saref.etsi.org/core/hasCommand
+saref:hasCommand rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 owl:inverseOf saref:isCommandOf ;
+                 rdfs:domain saref:Function ;
+                 rdfs:range saref:Command .
+
+
+###  https://saref.etsi.org/core/hasFunction
+saref:hasFunction rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  rdfs:domain saref:Device ;
+                  rdfs:range saref:Function .
+
+
+###  https://saref.etsi.org/core/hasState
+saref:hasState rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain saref:Device ;
+               rdfs:range saref:State .
+
+
+###  https://saref.etsi.org/core/isCommandOf
+saref:isCommandOf rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  rdfs:domain saref:Command ;
+                  rdfs:range saref:Function .
+
+
+###  https://saref.etsi.org/core/isOfferedBy
+saref:isOfferedBy rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  owl:inverseOf saref:offers ;
+                  rdfs:domain saref:Service ;
+                  rdfs:range saref:Device .
+
+
+###  https://saref.etsi.org/core/makesMeasurement
+saref:makesMeasurement rdf:type owl:ObjectProperty ;
+                       owl:inverseOf saref:measurmentMadeBy .
+
+
+###  https://saref.etsi.org/core/makesMeasurment
+saref:makesMeasurment rdf:type owl:ObjectProperty ;
+                      owl:inverseOf saref:measurmentMadeBy ;
+                      rdfs:domain saref:Device .
+
+
+###  https://saref.etsi.org/core/measurementMadeBy
+saref:measurementMadeBy rdf:type owl:ObjectProperty .
+
+
+###  https://saref.etsi.org/core/measurmentMadeBy
+saref:measurmentMadeBy rdf:type owl:ObjectProperty ;
+                       rdfs:range saref:Device .
+
+
+###  https://saref.etsi.org/core/offers
+saref:offers rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf owl:topObjectProperty ;
+             rdfs:domain saref:Device ;
+             rdfs:range saref:Service .
+
+
+###  https://saref.etsi.org/core/relatesToMeasurement
+saref:relatesToMeasurement rdf:type owl:ObjectProperty .
+
+
+###  https://saref.etsi.org/core/represents
+saref:represents rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 rdfs:domain saref:Service ;
+                 rdfs:range saref:Function .
+
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
 prosumer:composedBy rdf:type owl:ObjectProperty ;
@@ -56,6 +209,107 @@ prosumer:isConnected rdf:type owl:ObjectProperty ,
 #################################################################
 #    Data properties
 #################################################################
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasDurabilityInCycles
+kyrillos-es:hasDurabilityInCycles rdf:type owl:DatatypeProperty ;
+                                  rdfs:subPropertyOf owl:topDataProperty .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasEnergyGeneratedFromHydrogen
+kyrillos-es:hasEnergyGeneratedFromHydrogen rdf:type owl:DatatypeProperty ;
+                                           rdfs:domain kyrillos-es:HydrogenEnergyStorage ;
+                                           rdfs:range [ rdf:type rdfs:Datatype ;
+                                                        owl:onDatatype xsd:decimal ;
+                                                        owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                               ]
+                                                                             )
+                                                      ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasEnergyRequiredForHydrogen
+kyrillos-es:hasEnergyRequiredForHydrogen rdf:type owl:DatatypeProperty ;
+                                         rdfs:domain kyrillos-es:HydrogenEnergyStorage ;
+                                         rdfs:range [ rdf:type rdfs:Datatype ;
+                                                      owl:onDatatype xsd:decimal ;
+                                                      owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                             ]
+                                                                           )
+                                                    ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasHesEfficiency
+kyrillos-es:hasHesEfficiency rdf:type owl:DatatypeProperty ;
+                             rdfs:domain kyrillos-es:HydrogenEnergyStorage ;
+                             rdfs:range [ rdf:type rdfs:Datatype ;
+                                          owl:onDatatype xsd:decimal ;
+                                          owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                 ]
+                                                               )
+                                        ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasLosses
+kyrillos-es:hasLosses rdf:type owl:DatatypeProperty ;
+                      rdfs:domain kyrillos-es:EnergyStorage ;
+                      rdfs:range [ rdf:type rdfs:Datatype ;
+                                   owl:onDatatype xsd:decimal ;
+                                   owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                          ]
+                                                        )
+                                 ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMaximumStateOfCharge
+kyrillos-es:hasMaximumStateOfCharge rdf:type owl:DatatypeProperty ;
+                                    rdfs:domain kyrillos-es:EnergyStorage ;
+                                    rdfs:range [ rdf:type rdfs:Datatype ;
+                                                 owl:onDatatype xsd:decimal ;
+                                                 owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                        ]
+                                                                        [ xsd:maxInclusive 100
+                                                                        ]
+                                                                      )
+                                               ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasMinimumStateOfCharge
+kyrillos-es:hasMinimumStateOfCharge rdf:type owl:DatatypeProperty ;
+                                    rdfs:domain kyrillos-es:EnergyStorage ;
+                                    rdfs:range [ rdf:type rdfs:Datatype ;
+                                                 owl:onDatatype xsd:decimal ;
+                                                 owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                        ]
+                                                                        [ xsd:maxInclusive 100
+                                                                        ]
+                                                                      )
+                                               ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasStorageCapacity
+kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
+                               rdfs:domain kyrillos-es:EnergyStorage ;
+                               rdfs:range [ rdf:type rdfs:Datatype ;
+                                            owl:onDatatype xsd:decimal ;
+                                            owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                   ]
+                                                                 )
+                                          ] .
+
+
+###  https://saref.etsi.org/core/hasTimestamp
+saref:hasTimestamp rdf:type owl:DatatypeProperty .
+
+
+###  https://saref.etsi.org/core/hasValue
+saref:hasValue rdf:type owl:DatatypeProperty ;
+               rdfs:domain kyrillos-es:StateOfChargeMeasurment ;
+               rdfs:range [ rdf:type rdfs:Datatype ;
+                            owl:onDatatype xsd:decimal ;
+                            owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                   ]
+                                                 )
+                          ] .
+
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/SOC
 prosumer:SOC rdf:type owl:DatatypeProperty ;
@@ -111,6 +365,451 @@ prosumer:time rdf:type owl:DatatypeProperty .
 #################################################################
 #    Classes
 #################################################################
+
+###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
+<http://ontology.tno.nl/interconnect/datapoint#DataPoint> rdf:type owl:Class ;
+                                                          rdfs:subClassOf saref:Measurment .
+
+
+###  http://ontology.tno.nl/interconnect/device#DeviceCluster
+ic-device:DeviceCluster rdf:type owl:Class ;
+                        rdfs:subClassOf saref:Device .
+
+
+###  http://ontology.tno.nl/interconnect/device#Storage
+ic-device:Storage rdf:type owl:Class ;
+                  rdfs:subClassOf saref:Device .
+
+
+###  http://ontology.tno.nl/interconnect/powerlimit#NominalPowerLimit
+ic-pwlm:NominalPowerLimit rdf:type owl:Class ;
+                          rdfs:subClassOf ic-pwlm:PowerLimit .
+
+
+###  http://ontology.tno.nl/interconnect/powerlimit#PowerLimit
+ic-pwlm:PowerLimit rdf:type owl:Class .
+
+
+###  http://ontology.tno.nl/interconnect/topology#TopologicalLocation
+ic-tplg:TopologicalLocation rdf:type owl:Class .
+
+
+###  http://www.ontology-of-units-of-measure.org/resource/om-2/ActivePower
+<http://www.ontology-of-units-of-measure.org/resource/om-2/ActivePower> rdf:type owl:Class ;
+                                                                        rdfs:subClassOf <http://www.ontology-of-units-of-measure.org/resource/om-2/PowerUnit> .
+
+
+###  http://www.ontology-of-units-of-measure.org/resource/om-2/PowerUnit
+<http://www.ontology-of-units-of-measure.org/resource/om-2/PowerUnit> rdf:type owl:Class ;
+                                                                      rdfs:subClassOf saref:UnitOfMeasure .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery
+kyrillos-es:Battery rdf:type owl:Class ;
+                    rdfs:subClassOf kyrillos-es:EnergyStorage ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty <https://saref.etsi.org/measuresProperty> ;
+                                      owl:someValuesFrom kyrillos-es:EnergyEfficiencyProperty
+                                    ] ,
+                                    [ rdf:type owl:Restriction ;
+                                      owl:onProperty saref:makesMeasurement ;
+                                      owl:someValuesFrom kyrillos-es:EnergyEfficiency
+                                    ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/BatteryStorageSystem
+kyrillos-es:BatteryStorageSystem rdf:type owl:Class ;
+                                 rdfs:subClassOf kyrillos-es:StorageSystem .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Charging
+kyrillos-es:Charging rdf:type owl:Class ;
+                     rdfs:subClassOf saref:State .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/ChargingCommand
+kyrillos-es:ChargingCommand rdf:type owl:Class ;
+                            rdfs:subClassOf saref:Command ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty saref:actsUpon ;
+                                              owl:someValuesFrom kyrillos-es:Charging
+                                            ] ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty saref:isCommandOf ;
+                                              owl:someValuesFrom kyrillos-es:ChargingFunction
+                                            ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/ChargingFunction
+kyrillos-es:ChargingFunction rdf:type owl:Class ;
+                             rdfs:subClassOf saref:Function ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty saref:hasCommand ;
+                                               owl:someValuesFrom kyrillos-es:ChargingCommand
+                                             ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/ChargingService
+kyrillos-es:ChargingService rdf:type owl:Class ;
+                            rdfs:subClassOf saref:Service ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty saref:isOfferedBy ;
+                                              owl:someValuesFrom kyrillos-es:EnergyStorage
+                                            ] ,
+                                            [ rdf:type owl:Restriction ;
+                                              owl:onProperty saref:represents ;
+                                              owl:someValuesFrom kyrillos-es:ChargingFunction
+                                            ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Discharging
+kyrillos-es:Discharging rdf:type owl:Class ;
+                        rdfs:subClassOf saref:State .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/DischargingCommand
+kyrillos-es:DischargingCommand rdf:type owl:Class ;
+                               rdfs:subClassOf saref:Command ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty saref:actsUpon ;
+                                                 owl:someValuesFrom kyrillos-es:Discharging
+                                               ] ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty saref:isCommandOf ;
+                                                 owl:someValuesFrom kyrillos-es:DischargingFunction
+                                               ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/DischargingFunction
+kyrillos-es:DischargingFunction rdf:type owl:Class ;
+                                rdfs:subClassOf saref:Function .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/DischargingService
+kyrillos-es:DischargingService rdf:type owl:Class ;
+                               rdfs:subClassOf saref:Service ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty saref:isOfferedBy ;
+                                                 owl:someValuesFrom kyrillos-es:EnergyStorage
+                                               ] ,
+                                               [ rdf:type owl:Restriction ;
+                                                 owl:onProperty saref:represents ;
+                                                 owl:someValuesFrom kyrillos-es:DischargingFunction
+                                               ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyEfficiency
+kyrillos-es:EnergyEfficiency rdf:type owl:Class ;
+                             rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty kyrillos-es:basedOnStateOfCharge ;
+                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                               owl:onClass kyrillos-es:StateOfChargeMeasurment
+                                             ] ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
+                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                               owl:onClass kyrillos-es:Percentage
+                                             ] ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty <https://saref.etsi.org/relatesToProperty> ;
+                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                               owl:onClass kyrillos-es:EnergyEfficiencyProperty
+                                             ] ,
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty saref:measurementMadeBy ;
+                                               owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                               owl:onClass kyrillos-es:Battery
+                                             ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyEfficiencyProperty
+kyrillos-es:EnergyEfficiencyProperty rdf:type owl:Class ;
+                                     rdfs:subClassOf saref:Property ,
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty <https://saref.etsi.org/isMeasuredByDevice> ;
+                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                       owl:onClass kyrillos-es:Battery
+                                                     ] ,
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty saref:relatesToMeasurement ;
+                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                       owl:onClass kyrillos-es:EnergyEfficiency
+                                                     ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyStorage
+kyrillos-es:EnergyStorage rdf:type owl:Class ;
+                          rdfs:subClassOf ic-device:Storage ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty <https://saref.etsi.org/measuresProperty> ;
+                                            owl:someValuesFrom kyrillos-es:StateOfCharge
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:hasFunction ;
+                                            owl:someValuesFrom kyrillos-es:ChargingFunction
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:hasFunction ;
+                                            owl:someValuesFrom kyrillos-es:DischargingFunction
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:hasState ;
+                                            owl:someValuesFrom kyrillos-es:Charging
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:hasState ;
+                                            owl:someValuesFrom kyrillos-es:Discharging
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:makesMeasurement ;
+                                            owl:someValuesFrom kyrillos-es:StateOfChargeMeasurment
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:offers ;
+                                            owl:someValuesFrom kyrillos-es:ChargingService
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:offers ;
+                                            owl:someValuesFrom kyrillos-es:DischargingService
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:isProtectedBy ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass ic-pwlm:NominalPowerLimit
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:hasDurabilityInCycles ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                              owl:onDatatype xsd:integer ;
+                                                              owl:withRestrictions ( [ xsd:minInclusive 1
+                                                                                     ]
+                                                                                   )
+                                                            ]
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:hasLosses ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                              owl:onDatatype xsd:decimal ;
+                                                              owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                     ]
+                                                                                   )
+                                                            ]
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:hasMaximumStateOfCharge ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                              owl:onDatatype xsd:decimal ;
+                                                              owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                     ]
+                                                                                     [ xsd:maxInclusive 100
+                                                                                     ]
+                                                                                   )
+                                                            ]
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:hasMinimumStateOfCharge ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                              owl:onDatatype xsd:decimal ;
+                                                              owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                     ]
+                                                                                     [ xsd:maxInclusive 100
+                                                                                     ]
+                                                                                   )
+                                                            ]
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty kyrillos-es:hasStorageCapacity ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                              owl:onDatatype xsd:decimal ;
+                                                              owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                     ]
+                                                                                   )
+                                                            ]
+                                          ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HeterogeneousStorageSystem
+kyrillos-es:HeterogeneousStorageSystem rdf:type owl:Class ;
+                                       rdfs:subClassOf kyrillos-es:BatteryStorageSystem ,
+                                                       kyrillos-es:HydrogenEnergyStorageSystem .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenConsumptionMeasurment
+kyrillos-es:HydrogenConsumptionMeasurment rdf:type owl:Class ;
+                                          rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                                                          [ rdf:type owl:Restriction ;
+                                                            owl:onProperty saref:measurementMadeBy ;
+                                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                            owl:onClass kyrillos-es:HydrogenEnergyStorage
+                                                          ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenEnergyStorage
+kyrillos-es:HydrogenEnergyStorage rdf:type owl:Class ;
+                                  rdfs:subClassOf kyrillos-es:EnergyStorage ,
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty kyrillos-es:hasEnergyGeneratedFromHydrogen ;
+                                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                    owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                                      owl:onDatatype xsd:decimal ;
+                                                                      owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                             ]
+                                                                                           )
+                                                                    ]
+                                                  ] ,
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty kyrillos-es:hasEnergyRequiredForHydrogen ;
+                                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                    owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                                      owl:onDatatype xsd:decimal ;
+                                                                      owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                             ]
+                                                                                           )
+                                                                    ]
+                                                  ] ,
+                                                  [ rdf:type owl:Restriction ;
+                                                    owl:onProperty kyrillos-es:hasHesEfficiency ;
+                                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                    owl:onDataRange [ rdf:type rdfs:Datatype ;
+                                                                      owl:onDatatype xsd:decimal ;
+                                                                      owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                                             ]
+                                                                                             [ xsd:maxInclusive 100
+                                                                                             ]
+                                                                                           )
+                                                                    ]
+                                                  ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenEnergyStorageSystem
+kyrillos-es:HydrogenEnergyStorageSystem rdf:type owl:Class ;
+                                        rdfs:subClassOf kyrillos-es:StorageSystem .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Percentage
+kyrillos-es:Percentage rdf:type owl:Class ;
+                       rdfs:subClassOf saref:UnitOfMeasure .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfCharge
+kyrillos-es:StateOfCharge rdf:type owl:Class ;
+                          rdfs:subClassOf saref4ener:Power ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty <https://saref.etsi.org/isMeasuredByDevice> ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass kyrillos-es:EnergyStorage
+                                          ] ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:relatesToMeasurement ;
+                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                            owl:onClass kyrillos-es:StateOfChargeMeasurment
+                                          ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfChargeMeasurment
+kyrillos-es:StateOfChargeMeasurment rdf:type owl:Class ;
+                                    rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                                                    [ rdf:type owl:Restriction ;
+                                                      owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
+                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                      owl:onClass <http://www.ontology-of-units-of-measure.org/resource/om-2/ActivePower>
+                                                    ] ,
+                                                    [ rdf:type owl:Restriction ;
+                                                      owl:onProperty <https://saref.etsi.org/relatesToProperty> ;
+                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                      owl:onClass kyrillos-es:StateOfCharge
+                                                    ] ,
+                                                    [ rdf:type owl:Restriction ;
+                                                      owl:onProperty saref:measurementMadeBy ;
+                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                      owl:onClass kyrillos-es:EnergyStorage
+                                                    ] .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem
+kyrillos-es:StorageSystem rdf:type owl:Class ;
+                          rdfs:subClassOf ic-device:DeviceCluster ,
+                                          [ rdf:type owl:Restriction ;
+                                            owl:onProperty saref:consistsOf ;
+                                            owl:allValuesFrom kyrillos-es:EnergyStorage
+                                          ] .
+
+
+###  http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
+geo:SpatialThing rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/Command
+saref:Command rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/Device
+saref:Device rdf:type owl:Class ;
+             rdfs:subClassOf [ rdf:type owl:Class ;
+                               owl:unionOf ( [ rdf:type owl:Restriction ;
+                                               owl:onProperty kyrillos-es:isLocatedIn ;
+                                               owl:allValuesFrom ic-tplg:TopologicalLocation
+                                             ]
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty kyrillos-es:isLocatedIn ;
+                                               owl:allValuesFrom geo:SpatialThing
+                                             ]
+                                             [ rdf:type owl:Restriction ;
+                                               owl:onProperty kyrillos-es:isLocatedIn ;
+                                               owl:allValuesFrom saref4bldg:BuildingSpace
+                                             ]
+                                           )
+                             ] .
+
+
+###  https://saref.etsi.org/core/Function
+saref:Function rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/Measurment
+saref:Measurment rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/Power
+saref:Power rdf:type owl:Class ;
+            rdfs:subClassOf saref:Property .
+
+
+###  https://saref.etsi.org/core/PowerUnit
+saref:PowerUnit rdf:type owl:Class ;
+                rdfs:subClassOf saref:UnitOfMeasure .
+
+
+###  https://saref.etsi.org/core/Property
+saref:Property rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/Service
+saref:Service rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/State
+saref:State rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/core/UnitOfMeasure
+saref:UnitOfMeasure rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/saref4bldg/BuildingSpace
+saref4bldg:BuildingSpace rdf:type owl:Class .
+
+
+###  https://saref.etsi.org/saref4ener/Power
+saref4ener:Power rdf:type owl:Class ;
+                 rdfs:subClassOf saref:Power .
+
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/AC
 prosumer:AC rdf:type owl:Class ;
@@ -367,6 +1066,158 @@ prosumer:Prosumer rdf:type owl:Class .
 #    Individuals
 #################################################################
 
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1
+kyrillos-es:Battery-1 rdf:type owl:NamedIndividual ,
+                               kyrillos-es:Battery ;
+                      <https://saref.etsi.org/measuresProperty> kyrillos-es:Battery-1-SOC ;
+                      saref:makesMeasurement kyrillos-es:Battery-1-SOC-M1 ,
+                                             kyrillos-es:Battery-1-SOC-M2 ,
+                                             kyrillos-es:Battery-1-SOC-M3 ;
+                      kyrillos-es:hasMaximumStateOfCharge 0.9 ;
+                      kyrillos-es:hasMinimumStateOfCharge 0.1 ;
+                      kyrillos-es:hasStorageCapacity 100.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC
+kyrillos-es:Battery-1-SOC rdf:type owl:NamedIndividual ,
+                                   kyrillos-es:StateOfCharge ;
+                          saref:relatesToMeasurement kyrillos-es:Battery-1-SOC-M1 ,
+                                                     kyrillos-es:Battery-1-SOC-M2 ,
+                                                     kyrillos-es:Battery-1-SOC-M3 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M1
+kyrillos-es:Battery-1-SOC-M1 rdf:type owl:NamedIndividual ,
+                                      kyrillos-es:StateOfChargeMeasurment ;
+                             saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
+                             saref:hasValue 20.45 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M2
+kyrillos-es:Battery-1-SOC-M2 rdf:type owl:NamedIndividual ,
+                                      kyrillos-es:StateOfChargeMeasurment ;
+                             saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
+                             saref:hasValue 30.3 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M3
+kyrillos-es:Battery-1-SOC-M3 rdf:type owl:NamedIndividual ,
+                                      kyrillos-es:StateOfChargeMeasurment ;
+                             saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
+                             saref:hasValue 100.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2
+kyrillos-es:Battery-2 rdf:type owl:NamedIndividual ,
+                               kyrillos-es:Battery ;
+                      <https://saref.etsi.org/measuresProperty> kyrillos-es:Battery-2-SOC ;
+                      saref:makesMeasurement kyrillos-es:Battery-2-SOC-M1 ,
+                                             kyrillos-es:Battery-2-SOC-M2 ,
+                                             kyrillos-es:Battery-2-SOC-M3 ;
+                      kyrillos-es:hasMaximumStateOfCharge 0.8 ;
+                      kyrillos-es:hasMinimumStateOfCharge 0.2 ;
+                      kyrillos-es:hasStorageCapacity 100.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC
+kyrillos-es:Battery-2-SOC rdf:type owl:NamedIndividual ,
+                                   kyrillos-es:StateOfCharge ;
+                          saref:relatesToMeasurement kyrillos-es:Battery-2-SOC-M1 ,
+                                                     kyrillos-es:Battery-2-SOC-M2 ,
+                                                     kyrillos-es:Battery-2-SOC-M3 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M1
+kyrillos-es:Battery-2-SOC-M1 rdf:type owl:NamedIndividual ,
+                                      kyrillos-es:StateOfChargeMeasurment ;
+                             saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
+                             saref:hasValue 10.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M2
+kyrillos-es:Battery-2-SOC-M2 rdf:type owl:NamedIndividual ,
+                                      kyrillos-es:StateOfChargeMeasurment ;
+                             saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
+                             saref:hasValue 8.3 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M3
+kyrillos-es:Battery-2-SOC-M3 rdf:type owl:NamedIndividual ;
+                             saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
+                             saref:hasValue 7.1 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-3
+kyrillos-es:Battery-3 rdf:type owl:NamedIndividual ,
+                               kyrillos-es:Battery .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1
+kyrillos-es:HBattery-1 rdf:type owl:NamedIndividual ,
+                                kyrillos-es:HydrogenEnergyStorage ;
+                       <https://saref.etsi.org/measuresProperty> kyrillos-es:HBattery-1-SOC ;
+                       saref:makesMeasurement kyrillos-es:HBattery-1-SOC-M1 ,
+                                              kyrillos-es:HBattery-1-SOC-M2 ,
+                                              kyrillos-es:HBattery-1-SOC-M3 ;
+                       kyrillos-es:hasMaximumStateOfCharge 1.0 ;
+                       kyrillos-es:hasMinimumStateOfCharge 0.0 ;
+                       kyrillos-es:hasStorageCapacity 100.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1-SOC
+kyrillos-es:HBattery-1-SOC rdf:type owl:NamedIndividual ,
+                                    kyrillos-es:StateOfCharge .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1-SOC-M1
+kyrillos-es:HBattery-1-SOC-M1 rdf:type owl:NamedIndividual ,
+                                       kyrillos-es:StateOfChargeMeasurment ;
+                              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
+                              saref:hasValue 45.0 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1-SOC-M2
+kyrillos-es:HBattery-1-SOC-M2 rdf:type owl:NamedIndividual ;
+                              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
+                              saref:hasValue 50.5 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1-SOC-M3
+kyrillos-es:HBattery-1-SOC-M3 rdf:type owl:NamedIndividual ;
+                              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
+                              saref:hasValue 60.1 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-2
+kyrillos-es:HBattery-2 rdf:type owl:NamedIndividual ,
+                                kyrillos-es:HydrogenEnergyStorage .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-3
+kyrillos-es:HBattery-3 rdf:type owl:NamedIndividual ,
+                                kyrillos-es:HydrogenEnergyStorage .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-1
+kyrillos-es:StorageSystem-1 rdf:type owl:NamedIndividual ,
+                                     kyrillos-es:StorageSystem ;
+                            saref:consistsOf kyrillos-es:Battery-1 ,
+                                             kyrillos-es:Battery-2 ,
+                                             kyrillos-es:HBattery-1 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-2
+kyrillos-es:StorageSystem-2 rdf:type owl:NamedIndividual ,
+                                     kyrillos-es:StorageSystem ;
+                            saref:consistsOf kyrillos-es:Battery-3 .
+
+
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-3
+kyrillos-es:StorageSystem-3 rdf:type owl:NamedIndividual ,
+                                     kyrillos-es:StorageSystem ;
+                            saref:consistsOf kyrillos-es:HBattery-2 .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork01
 prosumer:DistributionNetwork01 rdf:type owl:NamedIndividual ,
                                         prosumer:DistributionNetwork .
@@ -584,5 +1435,105 @@ prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
               )
 ] .
 
+
+#################################################################
+#    Rules
+#################################################################
+
+kyrillos-es:cluster rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment "" ;
+   rdfs:label "BatteryStorageSystemRule" ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:StorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> saref:consistsOf ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> kyrillos-es:battery
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:Battery ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:battery
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:BatteryStorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment "" ;
+   rdfs:label "HeterogeneousStorageSystemRule" ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:BatteryStorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:HydrogenEnergyStorageSystem ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                                ] ;
+                                                      rdf:rest rdf:nil
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:HeterogeneousStorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
+
+[ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
+   rdfs:comment "" ;
+   rdfs:label "HydrogenStorageSystemRule" ;
+   rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
+   <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:StorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                      rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#IndividualPropertyAtom> ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> saref:consistsOf ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster ;
+                                                                  <http://www.w3.org/2003/11/swrl#argument2> kyrillos-es:battery
+                                                                ] ;
+                                                      rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                                                 rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                                             <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:HydrogenEnergyStorage ;
+                                                                             <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:battery
+                                                                           ] ;
+                                                                 rdf:rest rdf:nil
+                                                               ]
+                                                    ]
+                                         ] ;
+   <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
+                                           rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
+                                                       <http://www.w3.org/2003/11/swrl#classPredicate> kyrillos-es:HydrogenEnergyStorageSystem ;
+                                                       <http://www.w3.org/2003/11/swrl#argument1> kyrillos-es:cluster
+                                                     ] ;
+                                           rdf:rest rdf:nil
+                                         ]
+ ] .
 
 ###  Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi
