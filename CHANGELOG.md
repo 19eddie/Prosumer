@@ -1,3 +1,16 @@
+## [1.0.2](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/1.0.1...1.0.2) (2023-07-06)
+
+
+### Build and continuous integration
+
+* add ttl ontology file in the release ([cd03371](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/cd033715d874ec01df898e7d339060b433b9a7d0))
+* trying to fix the ci ([9a949ad](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/9a949ad09c7906a6883f3d63515745d4ccfe72d3))
+
+
+### Documentation
+
+* test release ([1a154dd](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/1a154ddba7a2409600e24a6215b018e8bb8d7c6a))
+
 ## [1.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/1.0.0...1.0.1) (2023-07-06)
 
 
