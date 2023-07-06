@@ -31,11 +31,13 @@ jobs:
         with:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           ref: main
+          path: ./main-repo
           submodules: recursive
 
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
         run: |
+          echo ls -la
           npm install
           npx semantic-release

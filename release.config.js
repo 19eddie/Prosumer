@@ -10,7 +10,7 @@ config.plugins.push(
             // Change this path if your pdf has another name.
             { "path": "docs/report.pdf" },
             // ttl ontology file
-            { "path": "prosumer01.ttl" },
+            { "path": "main-repo/prosumer01.ttl" },
         ]
     }],
     ["@semantic-release/git", {
