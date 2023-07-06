@@ -48,26 +48,6 @@ ic-data:hasDataPoint rdf:type owl:ObjectProperty ;
                      rdfs:comment "This relationship connects a time series to data point."@en ;
                      rdfs:label "has data point"@en .
 
-###  http://ontology.tno.nl/interconnect/datapoint#producedBy
-ic-data:producedBy rdf:type owl:ObjectProperty ;
-                   rdfs:domain [ rdf:type owl:Class ;
-                                 owl:unionOf ( ic-data:DataPoint
-                                               ic-data:Message
-                                               ic-data:TimeSeries
-                                               flexibility:FlexInstruction
-                                               flexibility:FlexOffer
-                                               flexibility:FlexRequest
-                                               <http://ontology.tno.nl/interconnect/forecast#Forecast>
-                                             )
-                               ] ;
-                   rdfs:range [ rdf:type owl:Class ;
-                                owl:unionOf ( foaf:Agent
-                                              saref:Device
-                                            )
-                              ] ;
-                   rdfs:comment "A relation between an entity (datapoint, message, timeseries, etc) that has been produced by a device or other agent." ,
-                                "TODO: finalize discussion on domain" ;
-                   rdfs:label "produced by" .
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
 prosumer:composedBy rdf:type owl:ObjectProperty ;
