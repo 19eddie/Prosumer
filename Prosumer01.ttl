@@ -6,6 +6,8 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix time: <http://www.w3.org/2006/time#> .
 @prefix saref: <https://saref.etsi.org/core/> .
 @prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
 @prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
@@ -13,11 +15,10 @@
 @prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
 @prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
 @prefix flexibility: <http://ontology.tno.nl/interconnect/flexibility#> .
-@prefix saref4bldg: <https://saref.etsi.org/saref4bldg/> .
-@prefix saref4ener: <https://saref.etsi.org/saref4ener/> .
+@prefix s4bldg: <https://saref.etsi.org/saref4bldg/> .
+@prefix s4ener: <https://saref.etsi.org/saref4ener/> .
 @prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
 @base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
-
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> rdf:type owl:Ontology .
 
 #################################################################
@@ -106,7 +107,7 @@ prosumer:isConnected rdf:type owl:ObjectProperty ,
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/basedOnStateOfCharge
 kyrillos-es:basedOnStateOfCharge rdf:type owl:ObjectProperty ;
                                  rdfs:domain kyrillos-es:EnergyEfficiency ;
-                                 rdfs:range kyrillos-es:StateOfChargeMeasurment .
+                                 rdfs:range kyrillos-es:StateOfChargeMeasurement .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/isLocatedIn
@@ -116,7 +117,7 @@ kyrillos-es:isLocatedIn rdf:type owl:ObjectProperty ;
                         rdfs:range [ rdf:type owl:Class ;
                                      owl:unionOf ( ic-tplg:TopologicalLocation
                                                    geo:SpatialThing
-                                                   saref4bldg:BuildingSpace
+                                                   s4bldg:BuildingSpace
                                                  )
                                    ] .
 
@@ -146,8 +147,8 @@ kyrillos-es:isProtectedBy rdf:type owl:ObjectProperty ;
                                           rdfs:range saref:Property .
 
 
-###  https://saref.etsi.org/relatesToMeasurment
-<https://saref.etsi.org/relatesToMeasurment> rdf:type owl:ObjectProperty ;
+###  https://saref.etsi.org/relatesToMeasurement
+<https://saref.etsi.org/relatesToMeasurement> rdf:type owl:ObjectProperty ;
                                              owl:inverseOf <https://saref.etsi.org/relatesToProperty> ;
                                              rdfs:domain saref:Property .
 
@@ -211,13 +212,13 @@ saref:isOfferedBy rdf:type owl:ObjectProperty ;
 
 ###  https://saref.etsi.org/core/makesMeasurement
 saref:makesMeasurement rdf:type owl:ObjectProperty ;
-                       owl:inverseOf saref:measurmentMadeBy ;
+                       owl:inverseOf saref:measurementMadeBy ;
                        rdfs:domain saref:Device .
 
 
-###  https://saref.etsi.org/core/makesMeasurment
-saref:makesMeasurment rdf:type owl:ObjectProperty ;
-                      owl:inverseOf saref:measurmentMadeBy ;
+###  https://saref.etsi.org/core/makesMeasurement
+saref:makesMeasurement rdf:type owl:ObjectProperty ;
+                      owl:inverseOf saref:measurementMadeBy ;
                       rdfs:domain saref:Device .
 
 
@@ -225,8 +226,8 @@ saref:makesMeasurment rdf:type owl:ObjectProperty ;
 saref:measurementMadeBy rdf:type owl:ObjectProperty .
 
 
-###  https://saref.etsi.org/core/measurmentMadeBy
-saref:measurmentMadeBy rdf:type owl:ObjectProperty ;
+###  https://saref.etsi.org/core/measurementMadeBy
+saref:measurementMadeBy rdf:type owl:ObjectProperty ;
                        rdfs:range saref:Device .
 
 
@@ -359,7 +360,7 @@ saref:hasTimestamp rdf:type owl:DatatypeProperty .
 
 ###  https://saref.etsi.org/core/hasValue
 saref:hasValue rdf:type owl:DatatypeProperty ;
-               rdfs:domain kyrillos-es:StateOfChargeMeasurment ;
+               rdfs:domain kyrillos-es:StateOfChargeMeasurement ;
                rdfs:range [ rdf:type rdfs:Datatype ;
                             owl:onDatatype xsd:decimal ;
                             owl:withRestrictions ( [ xsd:minInclusive 0.0
@@ -371,6 +372,11 @@ saref:hasValue rdf:type owl:DatatypeProperty ;
 #################################################################
 #    Classes
 #################################################################
+
+###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
+ic-data:DataPoint rdf:type owl:Class ;
+                  rdfs:subClassOf saref:Measurement .
+
 
 ###  http://ontology.tno.nl/interconnect/datapoint#TimeSeries
 ic-data:TimeSeries rdf:type owl:Class ;
@@ -407,7 +413,7 @@ ic-data:TimeSeries rdf:type owl:Class ;
 
 ###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
 <http://ontology.tno.nl/interconnect/datapoint#DataPoint> rdf:type owl:Class ;
-                                                          rdfs:subClassOf saref:Measurment .
+                                                          rdfs:subClassOf saref:Measurement .
 
 
 ###  http://ontology.tno.nl/interconnect/device#DeviceCluster
@@ -684,7 +690,7 @@ kyrillos-es:EnergyEfficiency rdf:type owl:Class ;
                                              [ rdf:type owl:Restriction ;
                                                owl:onProperty kyrillos-es:basedOnStateOfCharge ;
                                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                               owl:onClass kyrillos-es:StateOfChargeMeasurment
+                                               owl:onClass kyrillos-es:StateOfChargeMeasurement
                                              ] ,
                                              [ rdf:type owl:Restriction ;
                                                owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
@@ -743,7 +749,7 @@ kyrillos-es:EnergyStorage rdf:type owl:Class ;
                                           ] ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty saref:makesMeasurement ;
-                                            owl:someValuesFrom kyrillos-es:StateOfChargeMeasurment
+                                            owl:someValuesFrom kyrillos-es:StateOfChargeMeasurement
                                           ] ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty saref:offers ;
@@ -820,8 +826,8 @@ kyrillos-es:HeterogeneousStorageSystem rdf:type owl:Class ;
                                                        kyrillos-es:HydrogenEnergyStorageSystem .
 
 
-###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenConsumptionMeasurment
-kyrillos-es:HydrogenConsumptionMeasurment rdf:type owl:Class ;
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenConsumptionMeasurement
+kyrillos-es:HydrogenConsumptionMeasurement rdf:type owl:Class ;
                                           rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
                                                           [ rdf:type owl:Restriction ;
                                                             owl:onProperty saref:measurementMadeBy ;
@@ -879,7 +885,7 @@ kyrillos-es:Percentage rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfCharge
 kyrillos-es:StateOfCharge rdf:type owl:Class ;
-                          rdfs:subClassOf saref4ener:Power ,
+                          rdfs:subClassOf s4ener:Power ,
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty <https://saref.etsi.org/isMeasuredByDevice> ;
                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -888,12 +894,12 @@ kyrillos-es:StateOfCharge rdf:type owl:Class ;
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty saref:relatesToMeasurement ;
                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                            owl:onClass kyrillos-es:StateOfChargeMeasurment
+                                            owl:onClass kyrillos-es:StateOfChargeMeasurement
                                           ] .
 
 
-###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfChargeMeasurment
-kyrillos-es:StateOfChargeMeasurment rdf:type owl:Class ;
+###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfChargeMeasurement
+kyrillos-es:StateOfChargeMeasurement rdf:type owl:Class ;
                                     rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
                                                     [ rdf:type owl:Restriction ;
                                                       owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
@@ -942,7 +948,7 @@ saref:Device rdf:type owl:Class ;
                                              ]
                                              [ rdf:type owl:Restriction ;
                                                owl:onProperty kyrillos-es:isLocatedIn ;
-                                               owl:allValuesFrom saref4bldg:BuildingSpace
+                                               owl:allValuesFrom s4bldg:BuildingSpace
                                              ]
                                            )
                              ] .
@@ -952,8 +958,8 @@ saref:Device rdf:type owl:Class ;
 saref:Function rdf:type owl:Class .
 
 
-###  https://saref.etsi.org/core/Measurment
-saref:Measurment rdf:type owl:Class .
+###  https://saref.etsi.org/core/Measurement
+saref:Measurement rdf:type owl:Class .
 
 
 ###  https://saref.etsi.org/core/Power
@@ -983,11 +989,11 @@ saref:UnitOfMeasure rdf:type owl:Class .
 
 
 ###  https://saref.etsi.org/saref4bldg/BuildingSpace
-saref4bldg:BuildingSpace rdf:type owl:Class .
+s4bldg:BuildingSpace rdf:type owl:Class .
 
 
 ###  https://saref.etsi.org/saref4ener/Power
-saref4ener:Power rdf:type owl:Class ;
+s4ener:Power rdf:type owl:Class ;
                  rdfs:subClassOf saref:Power .
 
 
@@ -1211,21 +1217,21 @@ kyrillos-es:Battery-1-SOC rdf:type owl:NamedIndividual ,
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M1
 kyrillos-es:Battery-1-SOC-M1 rdf:type owl:NamedIndividual ,
-                                      kyrillos-es:StateOfChargeMeasurment ;
+                                      kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
                              saref:hasValue 20.45 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M2
 kyrillos-es:Battery-1-SOC-M2 rdf:type owl:NamedIndividual ,
-                                      kyrillos-es:StateOfChargeMeasurment ;
+                                      kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
                              saref:hasValue 30.3 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M3
 kyrillos-es:Battery-1-SOC-M3 rdf:type owl:NamedIndividual ,
-                                      kyrillos-es:StateOfChargeMeasurment ;
+                                      kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
                              saref:hasValue 100.0 .
 
@@ -1252,14 +1258,14 @@ kyrillos-es:Battery-2-SOC rdf:type owl:NamedIndividual ,
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M1
 kyrillos-es:Battery-2-SOC-M1 rdf:type owl:NamedIndividual ,
-                                      kyrillos-es:StateOfChargeMeasurment ;
+                                      kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
                              saref:hasValue 10.0 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M2
 kyrillos-es:Battery-2-SOC-M2 rdf:type owl:NamedIndividual ,
-                                      kyrillos-es:StateOfChargeMeasurment ;
+                                      kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
                              saref:hasValue 8.3 .
 
@@ -1294,7 +1300,7 @@ kyrillos-es:HBattery-1-SOC rdf:type owl:NamedIndividual ,
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HBattery-1-SOC-M1
 kyrillos-es:HBattery-1-SOC-M1 rdf:type owl:NamedIndividual ,
-                                       kyrillos-es:StateOfChargeMeasurment ;
+                                       kyrillos-es:StateOfChargeMeasurement ;
                               saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
                               saref:hasValue 45.0 .
 
