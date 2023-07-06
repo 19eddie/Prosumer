@@ -353,6 +353,12 @@ saref:hasValue rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
+###  http://ontology.tno.nl/interconnect/datapoint#hasTemporalResolution
+ic-data:hasTemporalResolution rdf:type owl:ObjectProperty ;
+                              rdfs:range time:TemporalDuration ;
+                              rdfs:comment "The resolution is the distance between two measurement time-stapms. This only makes sense if the measurements are equidistant." ;
+                              rdfs:label "has temporal resolution" .
+
 ###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
 ic-data:DataPoint rdf:type owl:Class ;
                   rdfs:subClassOf saref:Measurement .
@@ -360,31 +366,14 @@ ic-data:DataPoint rdf:type owl:Class ;
 
 ###  http://ontology.tno.nl/interconnect/datapoint#TimeSeries
 ic-data:TimeSeries rdf:type owl:Class ;
-                   rdfs:subClassOf [ rdf:type owl:Restriction ;
-                                     owl:onProperty ic-data:hasEffectivePeriod ;
-                                     owl:allValuesFrom time:Interval
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty ic-data:hasUsage ;
-                                     owl:allValuesFrom ic-data:Usage
-                                   ] ,
+                   rdfs:subClassOf 
                                    [ rdf:type owl:Restriction ;
                                      owl:onProperty ic-data:hasDataPoint ;
                                      owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
                                      owl:onClass ic-data:DataPoint
                                    ] ,
                                    [ rdf:type owl:Restriction ;
-                                     owl:onProperty ic-data:hasCreationTime ;
-                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                     owl:onClass time:Instant
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
                                      owl:onProperty ic-data:hasTemporalResolution ;
-                                     owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                     owl:onClass time:TemporalDuration
-                                   ] ,
-                                   [ rdf:type owl:Restriction ;
-                                     owl:onProperty ic-data:hasUpdateRate ;
                                      owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                      owl:onClass time:TemporalDuration
                                    ] ;
@@ -945,11 +934,6 @@ saref:Measurement rdf:type owl:Class .
 ###  https://saref.etsi.org/core/Power
 saref:Power rdf:type owl:Class ;
             rdfs:subClassOf saref:Property .
-
-
-###  https://saref.etsi.org/core/PowerUnit
-saref:PowerUnit rdf:type owl:Class ;
-                rdfs:subClassOf saref:UnitOfMeasure .
 
 
 ###  https://saref.etsi.org/core/Property
