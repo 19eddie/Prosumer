@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/2.0.0...2.0.1) (2023-07-06)
+
+
+### Bug Fixes
+
+* fix the ci ([8a8b05b](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/8a8b05b13f8f979f3e1a72bbaa678e4c24c2d6b3))
+
 ## [2.0.0](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/1.0.1...2.0.0) (2023-07-06)
 
 
