@@ -1,6 +1,6 @@
 const config = require('semantic-release-preconfigured-conventional-commits')
 
-const releaseBranches = ["docs"]
+const releaseBranches = ["docs", "main"]
 config.branches = releaseBranches
 config.plugins.push(
     ["@semantic-release/exec", {
@@ -9,6 +9,8 @@ config.plugins.push(
         "assets": [
             // Change this path if your pdf has another name.
             { "path": "docs/report.pdf" },
+            // ttl ontology file
+            { "path": "prosumer01.ttl" },
         ]
     }],
     ["@semantic-release/git", {

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - docs
+      - main
 jobs:
   compile:
     if: github.event_name == 'push'
@@ -17,14 +18,21 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           ref: docs
           submodules: recursive
-          
+
       - name: Compile latex
         uses: xu-cheng/latex-action@v2
         with:
           root_file: "report.tex"
           working_directory: "docs/"
           args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode -shell-escape
-        
+
+      - name: copy ontology file
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          ref: main
+          submodules: recursive
+
       - name: Release
         env:
           GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
