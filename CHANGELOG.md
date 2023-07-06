@@ -1,3 +1,15 @@
+## [1.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/1.0.0...1.0.1) (2023-07-06)
+
+
+### Build and continuous integration
+
+* added devcontainer configuration ([1950c61](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/1950c61fc7508ec0913b79739c3669fafe474973))
+
+
+### Documentation
+
+* change pdf name ([43ba7d9](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/43ba7d9f724fa88b641c0e78eabcb89770e7de00))
+
 ## 1.0.0 (2023-07-06)
 
 
