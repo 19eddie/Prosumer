@@ -5,20 +5,21 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix time: <http://www.w3.org/2006/time#> .
 @prefix saref: <https://saref.etsi.org/core/> .
+@prefix s4bldg: <https://saref.etsi.org/saref4bldg/> .
+@prefix s4ener: <https://saref.etsi.org/saref4ener/> .
+@prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
 @prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
 @prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
 @prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
 @prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
-@prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
 @prefix flexibility: <http://ontology.tno.nl/interconnect/flexibility#> .
-@prefix s4bldg: <https://saref.etsi.org/saref4bldg/> .
-@prefix s4ener: <https://saref.etsi.org/saref4ener/> .
 @prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
 @base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
+
 <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer> rdf:type owl:Ontology .
 
 #################################################################
@@ -41,12 +42,20 @@ ic-data:belongsToTimeSeries rdf:type owl:ObjectProperty ;
                             rdfs:comment "The relationship that connects a data point to a time series."@en ;
                             rdfs:label "belongs to time series"@en .
 
+
 ###  http://ontology.tno.nl/interconnect/datapoint#hasDataPoint
 ic-data:hasDataPoint rdf:type owl:ObjectProperty ;
                      rdfs:domain ic-data:TimeSeries ;
                      rdfs:range ic-data:DataPoint ;
                      rdfs:comment "This relationship connects a time series to data point."@en ;
                      rdfs:label "has data point"@en .
+
+
+###  http://ontology.tno.nl/interconnect/datapoint#hasTemporalResolution
+ic-data:hasTemporalResolution rdf:type owl:ObjectProperty ;
+                              rdfs:range time:TemporalDuration ;
+                              rdfs:comment "The resolution is the distance between two measurement time-stapms. This only makes sense if the measurements are equidistant." ;
+                              rdfs:label "has temporal resolution" .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/composedBy
@@ -129,8 +138,8 @@ kyrillos-es:isProtectedBy rdf:type owl:ObjectProperty ;
 
 ###  https://saref.etsi.org/relatesToMeasurement
 <https://saref.etsi.org/relatesToMeasurement> rdf:type owl:ObjectProperty ;
-                                             owl:inverseOf <https://saref.etsi.org/relatesToProperty> ;
-                                             rdfs:domain saref:Property .
+                                              owl:inverseOf <https://saref.etsi.org/relatesToProperty> ;
+                                              rdfs:domain saref:Property .
 
 
 ###  https://saref.etsi.org/relatesToProperty
@@ -196,19 +205,9 @@ saref:makesMeasurement rdf:type owl:ObjectProperty ;
                        rdfs:domain saref:Device .
 
 
-###  https://saref.etsi.org/core/makesMeasurement
-saref:makesMeasurement rdf:type owl:ObjectProperty ;
-                      owl:inverseOf saref:measurementMadeBy ;
-                      rdfs:domain saref:Device .
-
-
-###  https://saref.etsi.org/core/measurementMadeBy
-saref:measurementMadeBy rdf:type owl:ObjectProperty .
-
-
 ###  https://saref.etsi.org/core/measurementMadeBy
 saref:measurementMadeBy rdf:type owl:ObjectProperty ;
-                       rdfs:range saref:Device .
+                        rdfs:range saref:Device .
 
 
 ###  https://saref.etsi.org/core/offers
@@ -353,12 +352,6 @@ saref:hasValue rdf:type owl:DatatypeProperty ;
 #    Classes
 #################################################################
 
-###  http://ontology.tno.nl/interconnect/datapoint#hasTemporalResolution
-ic-data:hasTemporalResolution rdf:type owl:ObjectProperty ;
-                              rdfs:range time:TemporalDuration ;
-                              rdfs:comment "The resolution is the distance between two measurement time-stapms. This only makes sense if the measurements are equidistant." ;
-                              rdfs:label "has temporal resolution" .
-
 ###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
 ic-data:DataPoint rdf:type owl:Class ;
                   rdfs:subClassOf saref:Measurement .
@@ -366,8 +359,7 @@ ic-data:DataPoint rdf:type owl:Class ;
 
 ###  http://ontology.tno.nl/interconnect/datapoint#TimeSeries
 ic-data:TimeSeries rdf:type owl:Class ;
-                   rdfs:subClassOf 
-                                   [ rdf:type owl:Restriction ;
+                   rdfs:subClassOf [ rdf:type owl:Restriction ;
                                      owl:onProperty ic-data:hasDataPoint ;
                                      owl:minQualifiedCardinality "0"^^xsd:nonNegativeInteger ;
                                      owl:onClass ic-data:DataPoint
@@ -379,10 +371,6 @@ ic-data:TimeSeries rdf:type owl:Class ;
                                    ] ;
                    rdfs:comment "An ordered sequence of data points of a quantity observed at spaced time intervals is referred to as a time series. Time series can be a result of prediction algorithm."@en ;
                    rdfs:label "Time series" .
-
-###  http://ontology.tno.nl/interconnect/datapoint#DataPoint
-<http://ontology.tno.nl/interconnect/datapoint#DataPoint> rdf:type owl:Class ;
-                                                          rdfs:subClassOf saref:Measurement .
 
 
 ###  http://ontology.tno.nl/interconnect/device#DeviceCluster
@@ -420,7 +408,7 @@ ic-tplg:TopologicalLocation rdf:type owl:Class .
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#EnergyMeterMeasurement
 :EnergyMeterMeasurement rdf:type owl:Class ;
-                        rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                        rdfs:subClassOf ic-data:DataPoint ,
                                         [ rdf:type owl:Restriction ;
                                           owl:onProperty saref:measurementMadeBy ;
                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -441,16 +429,161 @@ prosumer:Bidirectional rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config01
 prosumer:Config01 rdf:type owl:Class ;
-                  rdfs:subClassOf prosumer:Configuration .
+                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Generator
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Load
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M1
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M2
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom [ owl:intersectionOf ( kyrillos-es:StorageSystem
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasDirection ;
+                                                                                                           owl:someValuesFrom prosumer:Monodirectional
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasLocation ;
+                                                                                                           owl:someValuesFrom prosumer:Production
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasPowerType ;
+                                                                                                           owl:someValuesFrom prosumer:DC
+                                                                                                         ]
+                                                                                                       ) ;
+                                                                                    rdf:type owl:Class
+                                                                                  ]
+                                                             ]
+                                                           ) ;
+                                        rdf:type owl:Class
+                                      ] ;
+                  rdfs:subClassOf prosumer:Configuration ,
+                                  [ owl:intersectionOf ( prosumer:Prosumer
+                                                         [ rdf:type owl:Class ;
+                                                           owl:complementOf [ rdf:type owl:Restriction ;
+                                                                              owl:onProperty prosumer:composedBy ;
+                                                                              owl:someValuesFrom prosumer:M3
+                                                                            ]
+                                                         ]
+                                                       ) ;
+                                    rdf:type owl:Class
+                                  ] .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config02
 prosumer:Config02 rdf:type owl:Class ;
-                  rdfs:subClassOf prosumer:Configuration .
+                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Generator
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Load
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M1
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M2
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom [ owl:intersectionOf ( kyrillos-es:StorageSystem
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasDirection ;
+                                                                                                           owl:someValuesFrom prosumer:Bidirectional
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasLocation ;
+                                                                                                           owl:someValuesFrom prosumer:Production
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasPowerType ;
+                                                                                                           owl:someValuesFrom [ rdf:type owl:Class ;
+                                                                                                                                owl:unionOf ( prosumer:AC
+                                                                                                                                              prosumer:DC
+                                                                                                                                            )
+                                                                                                                              ]
+                                                                                                         ]
+                                                                                                       ) ;
+                                                                                    rdf:type owl:Class
+                                                                                  ]
+                                                             ]
+                                                           ) ;
+                                        rdf:type owl:Class
+                                      ] ;
+                  rdfs:subClassOf prosumer:Configuration ,
+                                  [ owl:intersectionOf ( prosumer:Prosumer
+                                                         [ rdf:type owl:Class ;
+                                                           owl:complementOf [ rdf:type owl:Restriction ;
+                                                                              owl:onProperty prosumer:composedBy ;
+                                                                              owl:someValuesFrom prosumer:M3
+                                                                            ]
+                                                         ]
+                                                       ) ;
+                                    rdf:type owl:Class
+                                  ] .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/Config03
 prosumer:Config03 rdf:type owl:Class ;
+                  owl:equivalentClass [ owl:intersectionOf ( prosumer:Prosumer
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Generator
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:Load
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M1
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M2
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom prosumer:M3
+                                                             ]
+                                                             [ rdf:type owl:Restriction ;
+                                                               owl:onProperty prosumer:composedBy ;
+                                                               owl:someValuesFrom [ owl:intersectionOf ( kyrillos-es:StorageSystem
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasDirection ;
+                                                                                                           owl:someValuesFrom prosumer:Bidirectional
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasLocation ;
+                                                                                                           owl:someValuesFrom prosumer:Post-Production
+                                                                                                         ]
+                                                                                                         [ rdf:type owl:Restriction ;
+                                                                                                           owl:onProperty prosumer:hasPowerType ;
+                                                                                                           owl:someValuesFrom prosumer:AC
+                                                                                                         ]
+                                                                                                       ) ;
+                                                                                    rdf:type owl:Class
+                                                                                  ]
+                                                             ]
+                                                           ) ;
+                                        rdf:type owl:Class
+                                      ] ;
                   rdfs:subClassOf prosumer:Configuration .
 
 
@@ -655,7 +788,7 @@ kyrillos-es:DischargingService rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/EnergyEfficiency
 kyrillos-es:EnergyEfficiency rdf:type owl:Class ;
-                             rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
+                             rdfs:subClassOf ic-data:DataPoint ,
                                              [ rdf:type owl:Restriction ;
                                                owl:onProperty kyrillos-es:basedOnStateOfCharge ;
                                                owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
@@ -797,12 +930,12 @@ kyrillos-es:HeterogeneousStorageSystem rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenConsumptionMeasurement
 kyrillos-es:HydrogenConsumptionMeasurement rdf:type owl:Class ;
-                                          rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
-                                                          [ rdf:type owl:Restriction ;
-                                                            owl:onProperty saref:measurementMadeBy ;
-                                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                            owl:onClass kyrillos-es:HydrogenEnergyStorage
-                                                          ] .
+                                           rdfs:subClassOf ic-data:DataPoint ,
+                                                           [ rdf:type owl:Restriction ;
+                                                             owl:onProperty saref:measurementMadeBy ;
+                                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                             owl:onClass kyrillos-es:HydrogenEnergyStorage
+                                                           ] .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/HydrogenEnergyStorage
@@ -869,22 +1002,22 @@ kyrillos-es:StateOfCharge rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StateOfChargeMeasurement
 kyrillos-es:StateOfChargeMeasurement rdf:type owl:Class ;
-                                    rdfs:subClassOf <http://ontology.tno.nl/interconnect/datapoint#DataPoint> ,
-                                                    [ rdf:type owl:Restriction ;
-                                                      owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
-                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                      owl:onClass <http://www.ontology-of-units-of-measure.org/resource/om-2/ActivePower>
-                                                    ] ,
-                                                    [ rdf:type owl:Restriction ;
-                                                      owl:onProperty <https://saref.etsi.org/relatesToProperty> ;
-                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                      owl:onClass kyrillos-es:StateOfCharge
-                                                    ] ,
-                                                    [ rdf:type owl:Restriction ;
-                                                      owl:onProperty saref:measurementMadeBy ;
-                                                      owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                                      owl:onClass kyrillos-es:EnergyStorage
-                                                    ] .
+                                     rdfs:subClassOf ic-data:DataPoint ,
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty <https://saref.etsi.org/isMeasuredIn> ;
+                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                       owl:onClass <http://www.ontology-of-units-of-measure.org/resource/om-2/ActivePower>
+                                                     ] ,
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty <https://saref.etsi.org/relatesToProperty> ;
+                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                       owl:onClass kyrillos-es:StateOfCharge
+                                                     ] ,
+                                                     [ rdf:type owl:Restriction ;
+                                                       owl:onProperty saref:measurementMadeBy ;
+                                                       owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                       owl:onClass kyrillos-es:EnergyStorage
+                                                     ] .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem
@@ -898,6 +1031,10 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
 
 ###  http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
 geo:SpatialThing rdf:type owl:Class .
+
+
+###  http://www.w3.org/2006/time#TemporalDuration
+time:TemporalDuration rdf:type owl:Class .
 
 
 ###  https://saref.etsi.org/core/Command
@@ -958,7 +1095,7 @@ s4bldg:BuildingSpace rdf:type owl:Class .
 
 ###  https://saref.etsi.org/saref4ener/Power
 s4ener:Power rdf:type owl:Class ;
-                 rdfs:subClassOf saref:Power .
+             rdfs:subClassOf saref:Power .
 
 
 #################################################################
@@ -1096,7 +1233,9 @@ prosumer:II-Prosumer rdf:type owl:NamedIndividual ,
                               prosumer:Prosumer ;
                      prosumer:composedBy prosumer:II-EnergyStorage ,
                                          prosumer:II-Generator ,
-                                         prosumer:II-Load .
+                                         prosumer:II-Load ,
+                                         prosumer:II-M1 ,
+                                         prosumer:II-M2 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/III-EnergyDirection
@@ -1152,7 +1291,10 @@ prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
                                prosumer:Prosumer ;
                       prosumer:composedBy prosumer:III-EnergyStorage ,
                                           prosumer:III-Generator ,
-                                          prosumer:III-Load .
+                                          prosumer:III-Load ,
+                                          prosumer:III-M1 ,
+                                          prosumer:III-M2 ,
+                                          prosumer:III-M3 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1
