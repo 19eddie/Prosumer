@@ -250,6 +250,18 @@ saref:represents rdf:type owl:ObjectProperty ;
                         rdfs:comment "Potenza massima (kW) relativa al sistema di accumulo in fase di scarica, anche nota come velocità di trasmissione di potenza."@it .
 
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasMinutesInterval
+:hasMinutesInterval rdf:type owl:DatatypeProperty ;
+                    rdfs:domain time:TemporalDuration .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasValueEnergyMeter
+:hasValueEnergyMeter rdf:type owl:DatatypeProperty ;
+                     rdfs:domain :EnergyMeterMeasurement ;
+                     rdfs:comment """Riferito al contatore (Energy Meter) in un'unità di tempo.
+Se il valore è negativo si riferisce all'energia assorbita, se il valore è positivo si riferisce all'energia immessa."""@it .
+
+
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/hasDurabilityInCycles
 kyrillos-es:hasDurabilityInCycles rdf:type owl:DatatypeProperty ;
                                   rdfs:subPropertyOf owl:topDataProperty .
@@ -1111,22 +1123,38 @@ s4ener:Power rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-Measurement
 :I-M1-Measurement rdf:type owl:NamedIndividual ,
-                           :EnergyMeterMeasurement .
+                           ic-data:TimeSeries ;
+                  ic-data:hasDataPoint :I-M1-value01 ,
+                                       :I-M1-value02 ,
+                                       :I-M1-value03 ;
+                  ic-data:hasTemporalResolution :Misuration-Interval .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value01
 :I-M1-value01 rdf:type owl:NamedIndividual ,
-                       :EnergyMeterMeasurement .
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter 10 ;
+              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value02
 :I-M1-value02 rdf:type owl:NamedIndividual ,
-                       :EnergyMeterMeasurement .
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter 3 ;
+              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-value03
 :I-M1-value03 rdf:type owl:NamedIndividual ,
-                       :EnergyMeterMeasurement .
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter -10 ;
+              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#Misuration-Interval
+:Misuration-Interval rdf:type owl:NamedIndividual ,
+                              time:TemporalDuration ;
+                     :hasMinutesInterval 15 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/DistributionNetwork01
