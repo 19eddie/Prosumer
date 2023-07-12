@@ -255,6 +255,16 @@ saref:represents rdf:type owl:ObjectProperty ;
                     rdfs:domain time:TemporalDuration .
 
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasValueEnergyAbsorbed
+:hasValueEnergyAbsorbed rdf:type owl:DatatypeProperty ;
+                        rdfs:range [ rdf:type rdfs:Datatype ;
+                                     owl:onDatatype xsd:decimal ;
+                                     owl:withRestrictions ( [ xsd:maxExclusive 0.0
+                                                            ]
+                                                          )
+                                   ] .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#hasValueEnergyMeter
 :hasValueEnergyMeter rdf:type owl:DatatypeProperty ;
                      rdfs:domain :EnergyMeterMeasurement ;
@@ -433,6 +443,16 @@ ic-tplg:TopologicalLocation rdf:type owl:Class .
                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                           owl:onClass prosumer:EnergyMeter
                                         ] .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#LoadMeasurement
+:LoadMeasurement rdf:type owl:Class ;
+                 rdfs:subClassOf ic-data:DataPoint ,
+                                 [ rdf:type owl:Restriction ;
+                                   owl:onProperty saref:measurementMadeBy ;
+                                   owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                   owl:onClass prosumer:Load
+                                 ] .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/AC
@@ -1121,6 +1141,36 @@ s4ener:Power rdf:type owl:Class ;
 #    Individuals
 #################################################################
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-Load-value01
+:I-Load-value01 rdf:type owl:NamedIndividual ,
+                         :LoadMeasurement ;
+                :hasValueEnergyAbsorbed -10 ;
+                saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-Load-value02
+:I-Load-value02 rdf:type owl:NamedIndividual ,
+                         :LoadMeasurement ;
+                :hasValueEnergyAbsorbed -5 ;
+                saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-Load-value03
+:I-Load-value03 rdf:type owl:NamedIndividual ,
+                         :LoadMeasurement ;
+                :hasValueEnergyAbsorbed -20 ;
+                saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-LoadMeasurement
+:I-LoadMeasurement rdf:type owl:NamedIndividual ,
+                            ic-data:TimeSeries ;
+                   ic-data:hasDataPoint :I-Load-value01 ,
+                                        :I-Load-value02 ,
+                                        :I-Load-value03 ;
+                   ic-data:hasTemporalResolution :Misuration-Interval .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M1-Measurement
 :I-M1-Measurement rdf:type owl:NamedIndividual ,
                            ic-data:TimeSeries ;
@@ -1183,7 +1233,11 @@ prosumer:I-Generator rdf:type owl:NamedIndividual ,
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Load
 prosumer:I-Load rdf:type owl:NamedIndividual ,
-                         prosumer:Load .
+                         prosumer:Load ;
+                <https://saref.etsi.org/measuresProperty> :I-LoadMeasurement ;
+                saref:makesMeasurement :I-Load-value01 ,
+                                       :I-Load-value02 ,
+                                       :I-Load-value03 .
 
 
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/I-Location
