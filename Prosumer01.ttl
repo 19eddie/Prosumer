@@ -1254,6 +1254,36 @@ s4ener:Power rdf:type owl:Class ;
               saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime .
 
 
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M2-Measurement
+:I-M2-Measurement rdf:type owl:NamedIndividual ,
+                           ic-data:TimeSeries ;
+                  ic-data:hasDataPoint :I-M2-value01 ,
+                                       :I-M2-value02 ,
+                                       :I-M2-value03 ;
+                  ic-data:hasTemporalResolution :Misuration-Interval .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M2-value01
+:I-M2-value01 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter 10 ;
+              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M2-value02
+:I-M2-value02 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter 3 ;
+              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime .
+
+
+###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#I-M2-value03
+:I-M2-value03 rdf:type owl:NamedIndividual ,
+                       :EnergyMeterMeasurement ;
+              :hasValueEnergyMeter -10 ;
+              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime .
+
+
 ###  http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#Misuration-Interval
 :Misuration-Interval rdf:type owl:NamedIndividual ,
                               time:TemporalDuration ;
