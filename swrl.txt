@@ -1,0 +1,115 @@
+calcolo hasEnergyRequestOrProvided in Config01
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
+
+Generator(?generator) ^ ic-data:TimeSeries(?Generator-Measurement) ^  measuresProperty(?generator, ?Generator-Measurement) ^ ic-data:hasDataPoint(?Generator-Measurement, ?Generator-Value) ^ GeneratorMeasurement(?Generator-Value) ^ hasValueEnergyProduced(?Generator-Value, ?Generator-ValueEnergyProduced) ^ hasTimestamp(?Generator-Value, ?load-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^ hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
+
+Config01(?prosumer) ^
+composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^ composedBy(?prosumer, ?generator) ^
+
+swrlb:add(?result, ?Generator-ValueEnergyProduced, ?Load-ValueEnergyAbsorbed)
+
+->
+hasEnergyRequestOrProvided(?M2-Value, ?result)
+
+--------------------------------------------------------------------------------------------------------------
+
+calcolo M2 in Config01 con 
+ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
+&&
+ALPHA < battMaxDischarging (posso assorbire tutta l'energia in eccesso con la batteria)
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ hasEnergyRequestOrProvided(?M2-Value, ?alphaValue) ^ hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
+
+StorageSystem(?ss) ^ consistsOf(?ss, ?bat) ^ hasMaxDischargingPower(?bat, ?batMaxDischargValue) ^
+
+Config01(?prosumer) ^ 
+composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^ composedBy(?prosumer, ?ss) ^
+
+swrlb:lessThan(?alphaValue, 0) ^
+swrlb:abs(?absAlphaValue, ?alphaValue) ^
+swrlb:lessThan(?absAlphaValue, ?batMaxDischargValue) ^
+swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^
+
+->
+hasValueEnergyMeter(?M2-Value, ?absLoad-ValueEnergyAbsorbed) ^ canAbsorbOrEmit(?M2-Value, true)
+
+--------------------------------------------------------------------------------------------------------------
+
+calcolo M2 in Config01 con 
+ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
+&&
+ALPHA > battMaxDischarging (la batteria non può fornire tutta l'energia mancante)
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ hasEnergyRequestOrProvided(?M2-Value, ?alphaValue) ^ hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
+
+StorageSystem(?ss) ^ consistsOf(?ss, ?bat) ^ hasMaxDischargingPower(?bat, ?batMaxDischargValue) ^
+
+Config01(?prosumer) ^ 
+composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^ composedBy(?prosumer, ?ss) ^
+
+swrlb:lessThan(?alphaValue, 0) ^
+swrlb:abs(?absAlphaValue, ?alphaValue) ^
+swrlb:greaterThan(?absAlphaValue, ?batMaxDischargValue) ^
+
+swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^
+swrlb:add(?generatoreValue, ?absAlphaValue, ?absLoad-ValueEnergyAbsorbed) ^
+swrlb:add(?result, ?generatoreValue, ?batMaxDischargValue)
+
+->
+hasValueEnergyMeter(?M2-Value, ?result) ^ canAbsorbOrEmit(?M2-Value, false)
+
+--------------------------------------------------------------------------------------------------------------
+
+calcolo M2 in Config01 con 
+ALPHA >= 0 (generatore produce più energia di quella assorbita dal load)
+&&
+ALPHA <= battMaxCharging (posso assorbire tutta l'energia in eccesso con la batteria)
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ hasEnergyRequestOrProvided(?M2-Value, ?alphaValue) ^ hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
+
+StorageSystem(?ss) ^ consistsOf(?ss, ?bat) ^ hasMaxChargingPower(?bat, ?batMaxChargValue) ^
+
+Config01(?prosumer) ^ 
+composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^ composedBy(?prosumer, ?ss) ^
+
+swrlb:greaterThanOrEqual(?alphaValue, 0) ^
+swrlb:lessThanOrEqual(?alphaValue, ?batMaxChargValue) ^
+swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^
+
+->
+hasValueEnergyMeter(?M2-Value, ?absLoad-ValueEnergyAbsorbed) ^ canAbsorbOrEmit(?M2-Value, true)
+
+--------------------------------------------------------------------------------------------------------------
+
+calcolo M2 in Config01 con 
+ALPHA > 0 (generatore produce più energia di quella assorbita dal load)
+&&
+ALPHA > battMaxCharging (non posso assorbire tutta l'energia in eccesso con la batteria, quella in più va su M2)
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ hasEnergyRequestOrProvided(?M2-Value, ?alphaValue) ^ hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
+
+StorageSystem(?ss) ^ consistsOf(?ss, ?bat) ^ hasMaxChargingPower(?bat, ?batMaxChargValue) ^
+
+Config01(?prosumer) ^ 
+composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^ composedBy(?prosumer, ?ss) ^
+
+swrlb:greaterThan(?alphaValue, 0) ^
+swrlb:greaterThan(?alphaValue, ?batMaxChargValue) ^
+
+swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^
+swrlb:add(?generatoreValue, ?alphaValue, ?absLoad-ValueEnergyAbsorbed) ^
+swrlb:subtract(?result, ?generatoreValue, ?batMaxChargValue)
+
+->
+hasValueEnergyMeter(?M2-Value, ?result) ^ canAbsorbOrEmit(?M2-Value, false)
