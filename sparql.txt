@@ -1,0 +1,33 @@
+QUERY per capire se si può caricare o meno una batteria (della config 01)
+
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
+PREFIX pros: <http://www.semanticweb.org/prosumer#>
+PREFIX : <http://www.semanticweb.org/prosumer/>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX sf2: <https://saref.etsi.org/>
+PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?system ?unit ?maxSOC ?BSOC ?SOC ?capacity ?maxCP ?maxCapacity ?shouldBe ?res
+WHERE {
+    ?prosumer rdf:type :Config01 .
+    ?prosumer :composedBy ?system .
+    ?system rdf:type bat:StorageSystem .
+    ?system saref:consistsOf ?unit .
+    ?unit sf2:measuresProperty ?BSOC .
+    ?BSOC pros:hasSOC ?SOC .
+    ?unit bat:hasMaximumStateOfCharge ?maxSOC .
+    ?unit bat:hasStorageCapacity ?capacity .
+    ?unit pros:hasMaxChargingPower ?maxCP .
+    
+    BIND((10) as ?x)
+    BIND((?maxSOC * ?capacity) as ?maxCapacity) .
+    BIND((?SOC + ?x) as ?shouldBe) .
+    # Restituzione di un valore booleano in base alla condizione specificata
+    BIND(if( (?maxCP > ?x) && (?shouldBe < ?maxCapacity), true, false) as ?res) .
+ }
+ GROUP BY ?system ?unit ?maxSOC ?BSOC ?SOC ?capacity ?maxCP ?maxCapacity ?shouldBe ?res
