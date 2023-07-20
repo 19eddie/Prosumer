@@ -351,6 +351,11 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                     rdfs:domain time:TemporalDuration .
 
 
+###  http://www.semanticweb.org/prosumer#hasSOC
+:hasSOC rdf:type owl:DatatypeProperty ;
+        rdfs:domain kyrillos-es:StateOfCharge .
+
+
 ###  http://www.semanticweb.org/prosumer#hasValueEnergyAbsorbed
 :hasValueEnergyAbsorbed rdf:type owl:DatatypeProperty ;
                         rdfs:domain :LoadMeasurement ;
@@ -1195,7 +1200,8 @@ kyrillos-es:Battery-1-SOC rdf:type owl:NamedIndividual ,
                                    kyrillos-es:StateOfCharge ;
                           saref:relatesToMeasurement kyrillos-es:Battery-1-SOC-M1 ,
                                                      kyrillos-es:Battery-1-SOC-M2 ,
-                                                     kyrillos-es:Battery-1-SOC-M3 .
+                                                     kyrillos-es:Battery-1-SOC-M3 ;
+                          :hasSOC 50 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M1
@@ -1240,7 +1246,8 @@ kyrillos-es:Battery-2-SOC rdf:type owl:NamedIndividual ,
                                    kyrillos-es:StateOfCharge ;
                           saref:relatesToMeasurement kyrillos-es:Battery-2-SOC-M1 ,
                                                      kyrillos-es:Battery-2-SOC-M2 ,
-                                                     kyrillos-es:Battery-2-SOC-M3 .
+                                                     kyrillos-es:Battery-2-SOC-M3 ;
+                          :hasSOC 70 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M1
