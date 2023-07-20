@@ -1,4 +1,4 @@
-@prefix : <http://www.semanticweb.org/prosumer#> .
+@prefix : <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
 @prefix gn: <https://www.geonames.org/ontology#> .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -14,11 +14,11 @@
 @prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
 @prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
 @prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
-@prefix prosumer: <http://www.semanticweb.org/prosumer/> .
+@prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
 @prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
 @prefix flexibility: <http://ontology.tno.nl/interconnect/flexibility#> .
 @prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
-@base <http://www.semanticweb.org/prosumer#> .
+@base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
 
 <http://www.semanticweb.org/prosumer> rdf:type owl:Ontology .
 
@@ -322,8 +322,8 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                rdfs:comment "Capacità (kWh) relativa al sistema di accumulo, ovvero la massima energia disponibile nel sistema dopo una ricarica completa."@it .
 
 
-###  http://www.semanticweb.org/prosumer#alphaEnergy
-:alphaEnergy rdf:type owl:DatatypeProperty ;
+###  http://www.semanticweb.org/prosumer#hasEnergyRequestOrProvided
+:hasEnergyRequestOrProvided rdf:type owl:DatatypeProperty ;
              rdfs:comment """Generatore - load
 è l'energia in più (positiva) o in meno (negativa) che rimane dopo che il generatore ha messo a disposizione tutta la sua energia prodotta per soddisfare il load""" .
 
@@ -386,8 +386,8 @@ Se il valore è negativo si riferisce all'energia assorbita, se il valore è pos
                                    ] .
 
 
-###  http://www.semanticweb.org/prosumer#inGradoDiAssorbireOFornire
-:inGradoDiAssorbireOFornire rdf:type owl:DatatypeProperty .
+###  http://www.semanticweb.org/prosumer#canAbsorbOrEmit
+:canAbsorbOrEmit rdf:type owl:DatatypeProperty .
 
 
 ###  https://saref.etsi.org/core/hasTimestamp
@@ -1222,7 +1222,7 @@ kyrillos-es:Battery-1-SOC-M2 rdf:type owl:NamedIndividual ,
 kyrillos-es:Battery-1-SOC-M3 rdf:type owl:NamedIndividual ,
                                       kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
-                             saref:hasValue 100.0 .
+                             saref:hasValue 90.0 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2
@@ -1321,26 +1321,6 @@ kyrillos-es:HBattery-3 rdf:type owl:NamedIndividual ,
                                 kyrillos-es:HydrogenEnergyStorage .
 
 
-###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-1
-kyrillos-es:StorageSystem-1 rdf:type owl:NamedIndividual ,
-                                     kyrillos-es:StorageSystem ;
-                            saref:consistsOf kyrillos-es:Battery-1 ,
-                                             kyrillos-es:Battery-2 ,
-                                             kyrillos-es:HBattery-1 .
-
-
-###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-2
-kyrillos-es:StorageSystem-2 rdf:type owl:NamedIndividual ,
-                                     kyrillos-es:StorageSystem ;
-                            saref:consistsOf kyrillos-es:Battery-3 .
-
-
-###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem-3
-kyrillos-es:StorageSystem-3 rdf:type owl:NamedIndividual ,
-                                     kyrillos-es:StorageSystem ;
-                            saref:consistsOf kyrillos-es:HBattery-2 .
-
-
 ###  http://www.semanticweb.org/prosumer#I-Generator-Measurement
 :I-Generator-Measurement rdf:type owl:NamedIndividual ,
                                   ic-data:TimeSeries ;
@@ -1392,8 +1372,8 @@ kyrillos-es:StorageSystem-3 rdf:type owl:NamedIndividual ,
                 saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime .
 
 
-###  http://www.semanticweb.org/prosumer#I-LoadMeasurement
-:I-LoadMeasurement rdf:type owl:NamedIndividual ,
+###  http://www.semanticweb.org/prosumer#I-Load-Measurement
+:I-Load-Measurement rdf:type owl:NamedIndividual ,
                             ic-data:TimeSeries ;
                    ic-data:hasDataPoint :I-Load-value01 ,
                                         :I-Load-value02 ,
@@ -1492,7 +1472,7 @@ kyrillos-es:StorageSystem-3 rdf:type owl:NamedIndividual ,
 ###  http://www.semanticweb.org/prosumer/I-Load
 <http://www.semanticweb.org/prosumer/I-Load> rdf:type owl:NamedIndividual ,
                                                       <http://www.semanticweb.org/prosumer/Load> ;
-                                             <https://saref.etsi.org/measuresProperty> :I-LoadMeasurement ;
+                                             <https://saref.etsi.org/measuresProperty> :I-Load-Measurement ;
                                              saref:makesMeasurement :I-Load-value01 ,
                                                                     :I-Load-value02 ,
                                                                     :I-Load-value03 .
@@ -1784,7 +1764,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
 
 [ <http://swrl.stanford.edu/ontologies/3.3/swrla.owl#isRuleEnabled> "true"^^xsd:boolean ;
    rdfs:comment "energia in più o in meno dopo che il load ha assorbito dal generatore" ;
-   rdfs:label "alphaEnergy" ;
+   rdfs:label "hasEnergyRequestOrProvided" ;
    rdf:type <http://www.w3.org/2003/11/swrl#Imp> ;
    <http://www.w3.org/2003/11/swrl#body> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#ClassAtom> ;
@@ -1956,7 +1936,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ] ;
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :alphaEnergy ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEnergyRequestOrProvided ;
                                                        <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                        <http://www.w3.org/2003/11/swrl#argument2> :result
                                                      ] ;
@@ -2585,7 +2565,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                                      ] ;
                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :alphaEnergy ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEnergyRequestOrProvided ;
                                                                   <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                                   <http://www.w3.org/2003/11/swrl#argument2> :aplhaValue
                                                                 ] ;
@@ -2758,7 +2738,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ] ;
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :inGradoDiAssorbireOFornire ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :canAbsorbOrEmit ;
                                                        <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                        <http://www.w3.org/2003/11/swrl#argument2> "false"^^xsd:boolean
                                                      ] ;
@@ -2792,7 +2772,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                                                 ] ;
                                                       rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                                  rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :alphaEnergy ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEnergyRequestOrProvided ;
                                                                              <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                                              <http://www.w3.org/2003/11/swrl#argument2> :aplhaValue
                                                                            ] ;
@@ -2941,7 +2921,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ] ;
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :inGradoDiAssorbireOFornire ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :canAbsorbOrEmit ;
                                                        <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                        <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
                                                      ] ;
@@ -2969,7 +2949,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                                      ] ;
                                            rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                       rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :alphaEnergy ;
+                                                                  <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEnergyRequestOrProvided ;
                                                                   <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                                   <http://www.w3.org/2003/11/swrl#argument2> :aplhaValue
                                                                 ] ;
@@ -3150,7 +3130,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ] ;
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :inGradoDiAssorbireOFornire ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :canAbsorbOrEmit ;
                                                        <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                        <http://www.w3.org/2003/11/swrl#argument2> "false"^^xsd:boolean
                                                      ] ;
@@ -3184,7 +3164,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                                                 ] ;
                                                       rdf:rest [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                                                  rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :alphaEnergy ;
+                                                                             <http://www.w3.org/2003/11/swrl#propertyPredicate> :hasEnergyRequestOrProvided ;
                                                                              <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                                              <http://www.w3.org/2003/11/swrl#argument2> :aplhaValue
                                                                            ] ;
@@ -3341,7 +3321,7 @@ kyrillos-es:battery rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
                                          ] ;
    <http://www.w3.org/2003/11/swrl#head> [ rdf:type <http://www.w3.org/2003/11/swrl#AtomList> ;
                                            rdf:first [ rdf:type <http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom> ;
-                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :inGradoDiAssorbireOFornire ;
+                                                       <http://www.w3.org/2003/11/swrl#propertyPredicate> :canAbsorbOrEmit ;
                                                        <http://www.w3.org/2003/11/swrl#argument1> :M2-Value ;
                                                        <http://www.w3.org/2003/11/swrl#argument2> "true"^^xsd:boolean
                                                      ] ;
