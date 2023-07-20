@@ -65,3 +65,53 @@ WHERE {
  }
  GROUP BY ?system ?unit ?SOC ?minCapacity ?output ?shouldBe ?canEmit
 
+
+
+LALAALA qualcosa col generatore
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
+PREFIX pros: <http://www.semanticweb.org/prosumer#>
+PREFIX : <http://www.semanticweb.org/prosumer/>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX sf2: <https://saref.etsi.org/>
+PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
+WHERE {
+
+    ?prosumer rdf:type :Prosumer .
+    ?prosumer :composedBy ?system .
+    ?system rdf:type bat:StorageSystem .
+    ?system saref:consistsOf ?unit .
+    ?unit sf2:measuresProperty ?BatterySOC .
+    ?BatterySOC saref:relatesToMeasurement ?measurement .
+    ?measurement saref:hasTimestamp ?timestamp .
+    
+    FILTER(xsd:string(?timestamp) = "2020-12-12T09:30:00"^^xsd:string)# || xsd:string(?timestamp) = "2020-12-12T09:15:00"^^xsd:string)
+    
+    ?prosumer :composedBy ?generator .
+    ?generator rdf:type :Generator .
+    ?generator saref:makesMeasurement ?genM .
+    ?genM saref:hasTimestamp ?genT .
+
+    FILTER(xsd:string(?timestamp) = xsd:string(?genT))
+
+    ?genM 
+    ?BatterySOC pros:hasSOC ?SOC .
+    ?unit bat:hasMaximumStateOfCharge ?maxSOC .
+    ?unit bat:hasStorageCapacity ?capacity .
+    ?unit pros:hasMaxChargingPower ?maxCharging .
+    
+    BIND((10) as ?input) #questa x sarebbe quanta energia avanza dal sistema, energia che la batteria deve assorbire dal sistema
+    BIND((?maxSOC * ?capacity) as ?maxCapacity) .
+    BIND((?SOC + ?input) as ?shouldBe) .
+    BIND(if( (?maxCharging >= ?input) && (?shouldBe <= ?maxCapacity), true, false) as ?canAbsorb) .
+ }
+ GROUP BY ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
+
+
+QUERY per capire se si può scaricare o meno una batteria (della config 01)
