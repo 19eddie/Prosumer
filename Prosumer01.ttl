@@ -1,4 +1,4 @@
-@prefix : <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
+@prefix : <http://www.semanticweb.org/prosumer#> .
 @prefix gn: <https://www.geonames.org/ontology#> .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -14,11 +14,11 @@
 @prefix ic-data: <http://ontology.tno.nl/interconnect/datapoint#> .
 @prefix ic-pwlm: <http://ontology.tno.nl/interconnect/powerlimit#> .
 @prefix ic-tplg: <http://ontology.tno.nl/interconnect/topology#> .
-@prefix prosumer: <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer/> .
+@prefix prosumer: <http://www.semanticweb.org/prosumer/> .
 @prefix ic-device: <http://ontology.tno.nl/interconnect/device#> .
 @prefix flexibility: <http://ontology.tno.nl/interconnect/flexibility#> .
 @prefix kyrillos-es: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/> .
-@base <http://www.semanticweb.org/angela/ontologies/2023/5/prosumer#> .
+@base <http://www.semanticweb.org/prosumer#> .
 
 <http://www.semanticweb.org/prosumer> rdf:type owl:Ontology .
 
