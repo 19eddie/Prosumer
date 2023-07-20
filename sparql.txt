@@ -12,25 +12,24 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?system ?unit ?maxSOC ?BSOC ?SOC ?capacity ?maxCP ?maxCapacity ?shouldBe ?res
+SELECT ?system ?unit ?maxSOC ?BatterySOC ?SOC ?capacity ?maxCharging ?maxCapacity ?shouldBe ?res
 WHERE {
-    ?prosumer rdf:type :Config01 .
+    ?prosumer rdf:type :Prosumer .
     ?prosumer :composedBy ?system .
     ?system rdf:type bat:StorageSystem .
     ?system saref:consistsOf ?unit .
-    ?unit sf2:measuresProperty ?BSOC .
-    ?BSOC pros:hasSOC ?SOC .
+    ?unit sf2:measuresProperty ?BatterySOC .
+    ?BatterySOC pros:hasSOC ?SOC .
     ?unit bat:hasMaximumStateOfCharge ?maxSOC .
     ?unit bat:hasStorageCapacity ?capacity .
-    ?unit pros:hasMaxChargingPower ?maxCP .
+    ?unit pros:hasMaxChargingPower ?maxCharging .
     
-    BIND((10) as ?x)
+    BIND((10) as ?x) #questa x sarebbe quanta energia avanza dal sistema, energia che la batteria deve assorbire dal sistema
     BIND((?maxSOC * ?capacity) as ?maxCapacity) .
     BIND((?SOC + ?x) as ?shouldBe) .
-    # Restituzione di un valore booleano in base alla condizione specificata
-    BIND(if( (?maxCP > ?x) && (?shouldBe < ?maxCapacity), true, false) as ?res) .
+    BIND(if( (?maxCharging > ?x) && (?shouldBe < ?maxCapacity), true, false) as ?res) .
  }
- GROUP BY ?system ?unit ?maxSOC ?BSOC ?SOC ?capacity ?maxCP ?maxCapacity ?shouldBe ?res
+ GROUP BY ?system ?unit ?maxSOC ?BatterySOC ?SOC ?capacity ?maxCharging ?maxCapacity ?shouldBe ?res
 
 
 QUERY per capire se si può scaricare o meno una batteria (della config 01)
@@ -47,23 +46,22 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?system ?unit ?minSOC ?BSOC ?SOC ?capacity ?maxDP ?minCapacity ?shouldBe ?res
+SELECT ?system ?unit ?minSOC ?BatterySOC ?SOC ?capacity ?maxDischarging ?minCapacity ?shouldBe ?res
 WHERE {
-    ?prosumer rdf:type :Config01 .
+    ?prosumer rdf:type :Prosumer .
     ?prosumer :composedBy ?system .
     ?system rdf:type bat:StorageSystem .
     ?system saref:consistsOf ?unit .
-    ?unit sf2:measuresProperty ?BSOC .
-    ?BSOC pros:hasSOC ?SOC .
+    ?unit sf2:measuresProperty ?BatterySOC .
+    ?BatterySOC pros:hasSOC ?SOC .
     ?unit bat:hasMinimumStateOfCharge ?minSOC .
     ?unit bat:hasStorageCapacity ?capacity .
-    ?unit pros:hasMaxChargingPower ?maxDP .
+    ?unit pros:hasMaxChargingPower ?maxDischarging .
     
-    BIND((10) as ?x)
+    BIND((10) as ?x) #questa x sarebbe quanta energia servirebbe al sistema, energia che la batteria deve immettere nel sistema
     BIND((?minSOC * ?capacity) as ?minCapacity) .
     BIND((?SOC - ?x) as ?shouldBe) .
-    # Restituzione di un valore booleano in base alla condizione specificata
-    BIND(if( (?maxDP > ?x) && (?shouldBe > ?minSOC), true, false) as ?res) .
+    BIND(if( (?maxDischarging > ?x) && (?shouldBe > ?minSOC), true, false) as ?res) .
  }
- GROUP BY ?system ?unit ?minSOC ?BSOC ?SOC ?capacity ?maxDP ?minCapacity ?shouldBe ?res
+ GROUP BY ?system ?unit ?minSOC ?BatterySOC ?SOC ?capacity ?maxDischarging ?minCapacity ?shouldBe ?res
 
