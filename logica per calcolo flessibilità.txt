@@ -13,8 +13,8 @@ variabili che ho (finale) e variabili che devo calcolare (calcolo):
 (calcolo) battMinSOCValue = battCapacity * battMinStateOfCharge = 10
 (calcolo) battChargingCapacity = battMaxSOCValue - battSOC = 0
 (calcolo) battDischargingCapacity = battMinSOCValue - battSOC = 80
---> (calcolo) battChargableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0
---> (calcolo) battDischargableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50
+--> (calcolo) battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0
+--> (calcolo) battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50
 		
 
 
@@ -26,11 +26,11 @@ variabili che ho (finale) e variabili che devo calcolare (calcolo):
 
 alpha = generatore - load 
 if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
-	if(abs(alpha) < battDischargableEnergy) { //quello che assorbe il load è soddisfabile dalla batteria
+	if(abs(alpha) < battDischargeableEnergy) { //quello che assorbe il load è soddisfabile dalla batteria
 		m1 = 0
 		//potrei dire quanto assorbo dalla batteria
 	} else { //non mi basta assorbire dalla batteria, devo prendere dalla rete
-		m1 = battDischargableEnergy + alpha //sarà un valore negativo
+		m1 = battDischargeableEnergy + alpha //sarà un valore negativo
 	}
 } else { //soddisfo tutto il load con solo il generatore
 	m1 = alpha
@@ -41,7 +41,7 @@ if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
 // (va meno energia nella rete) ---> carico batteria al max 
 
 if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
-	m1 = generatore - load - battChargableEnergy
+	m1 = generatore - load - battChargeableEnergy
 } else { //conf01 la batteria assorbe solo dal generatore
 	m1 = generatore - load
 }
