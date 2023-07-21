@@ -1,0 +1,55 @@
+variabili che ho (finale) e variabili che devo calcolare (calcolo):
+
+(finale) load = 10 //per ogni timestamp
+(finale) generatorEnergyProduction = 100 //per ogni timestamp
+(finale) battMaxStateOfCharge = 0.9 //per batteria
+(finale) battMinStateOfCharge = 0.1 //per batteria
+(finale) battCapacity = 100 //per batteria
+(finale) battMaxChargingPower = 60 //per batteria
+(finale) battMaxDishargingPower = 50 //per batteria
+(finale) battSOC = 90 //per batteria, sarebbe da prendere per ogni timestamp
+
+(calcolo) battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90
+(calcolo) battMinSOCValue = battCapacity * battMinStateOfCharge = 10
+(calcolo) battChargingCapacity = battMaxSOCValue - battSOC = 0
+(calcolo) battDischargingCapacity = battMinSOCValue - battSOC = 80
+--> (calcolo) battChargableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0
+--> (calcolo) battDischargableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50
+		
+
+
+-----****FLESSIBILITA'****----- 	
+//se si riesce a prendere il SOC per ogni timestamp è il top, adesso non si può perche sono tutti inferiti dentro ogni misurazione.
+
+-----M1 MASSIMO-----
+// (va più energia nella rete) ---> non carico batteria, però se mi serve prendo da batteria. valido per tutte le conf.
+
+alpha = generatore - load 
+if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
+	if(abs(alpha) < battDischargableEnergy) { //quello che assorbe il load è soddisfabile dalla batteria
+		m1 = 0
+		//potrei dire quanto assorbo dalla batteria
+	} else { //non mi basta assorbire dalla batteria, devo prendere dalla rete
+		m1 = battDischargableEnergy + alpha //sarà un valore negativo
+	}
+} else { //soddisfo tutto il load con solo il generatore
+	m1 = alpha
+}
+-------------------
+
+-----M1 MINIMO-----
+// (va meno energia nella rete) ---> carico batteria al max 
+
+if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
+	m1 = generatore - load - battChargableEnergy
+} else { //conf01 la batteria assorbe solo dal generatore
+	m1 = generatore - load
+}
+-------------------
+
+
+
+
+
+
+
