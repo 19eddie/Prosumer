@@ -1,45 +1,45 @@
-variabili che ho (finale) e variabili che devo calcolare (calcolo):
+// Variabili disponibili
+load = 10 //ho un valore per ogni timestamp (kw)
+generatorEnergyProduction = 100 //ho un valore per ogni timestamp (kw)
+battMaxStateOfCharge = 0.9 //ho un valore per batteria
+battMinStateOfCharge = 0.1 //ho un valore per batteria
+battCapacity = 100 //ho un valore per batteria. Capacità totale (kw)
+battMaxChargingPower = 60 //ho un valore per batteria (kw)
+battMaxDishargingPower = 50 //ho un valore per batteria (kw)
+battSOC = 90 //ho un valore per batteria, sarebbe da avere per ogni timestamp. Livello di carica attuale (kw)
 
-(finale) load = 10 //per ogni timestamp
-(finale) generatorEnergyProduction = 100 //per ogni timestamp
-(finale) battMaxStateOfCharge = 0.9 //per batteria
-(finale) battMinStateOfCharge = 0.1 //per batteria
-(finale) battCapacity = 100 //per batteria
-(finale) battMaxChargingPower = 60 //per batteria
-(finale) battMaxDishargingPower = 50 //per batteria
-(finale) battSOC = 90 //per batteria, sarebbe da prendere per ogni timestamp
-
-(calcolo) battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90
-(calcolo) battMinSOCValue = battCapacity * battMinStateOfCharge = 10
-(calcolo) battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
-(calcolo) battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
---> (calcolo) battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
---> (calcolo) battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
+// Variabili da calcolare
+battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90 // livello Massimo di carica possibile per la batteria (kw)
+battMinSOCValue = battCapacity * battMinStateOfCharge = 10 // livello Minimo di carica possibile per la batteria (kw)
+battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
+battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
+--> battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
+--> battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
 		
 
 
 -----****FLESSIBILITA'****----- 	
-//se M1 è negativo vuol dire che sto assorbendo energia dalla rete, se è positivo vuol dire che sto immettendo energia nella rete.
-//se si riesce a prendere il SOC per ogni timestamp è il top, adesso non si può perche sono tutti inferiti dentro ogni misurazione.
+// Se il valore di M1 è negativo, indica che l'energia è assorbita dalla rete; se è positivo, indica che l'energia è immessa nella rete.
+// Nota: al momento, il valore di SOC (livello di carica della batteria) è unico a livello di batteria, in quanto non è possibile prenderlo per ogni timestamp perchè sono tutti inferiti dentro ogni misurazione.
 
 -----M1 MASSIMO-----
 // (va più energia nella rete) ---> non carico batteria, però se mi serve prendo da batteria. valido per tutte le conf.
 
-alpha = generatore - load 
+alpha = generatorEnergyProduction - load 
 if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
-	if(abs(alpha) < battDischargeableEnergy) { //quello che assorbe il load è soddisfabile dalla batteria
-		m1 = 0
-		//potrei dire quanto assorbo dalla batteria
+	if(abs(alpha) < battDischargeableEnergy) { //l'energia richiesta dal load può essere soddisfatta dalla batteria
+		m1 = 0 //ho già preso tutti i kw dal generatore quindi non esce niente verso la rete
+		energiaAssorbitaDallaBatteria = abs(alpha)
 	} else { //non mi basta assorbire dalla batteria, devo prendere dalla rete
 		m1 = battDischargeableEnergy + alpha //sarà un valore negativo
 	}
 } else { //soddisfo tutto il load con solo il generatore
-	m1 = alpha
+	m1 = alpha //sarà positivo
 }
 -------------------
 
 -----M1 MINIMO-----
-// (va meno energia nella rete) ---> carico batteria al max 
+// (va meno energia nella rete) ---> carico batteria prelevando anche dalla rete 
 
 if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
 	m1 = generatore - load - battChargeableEnergy
