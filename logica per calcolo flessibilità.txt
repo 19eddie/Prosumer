@@ -11,14 +11,15 @@ variabili che ho (finale) e variabili che devo calcolare (calcolo):
 
 (calcolo) battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90
 (calcolo) battMinSOCValue = battCapacity * battMinStateOfCharge = 10
-(calcolo) battChargingCapacity = battMaxSOCValue - battSOC = 0
-(calcolo) battDischargingCapacity = battMinSOCValue - battSOC = 80
---> (calcolo) battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0
---> (calcolo) battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50
+(calcolo) battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
+(calcolo) battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
+--> (calcolo) battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
+--> (calcolo) battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
 		
 
 
 -----****FLESSIBILITA'****----- 	
+//se M1 è negativo vuol dire che sto assorbendo energia dalla rete, se è positivo vuol dire che sto immettendo energia nella rete.
 //se si riesce a prendere il SOC per ogni timestamp è il top, adesso non si può perche sono tutti inferiti dentro ogni misurazione.
 
 -----M1 MASSIMO-----
@@ -46,10 +47,3 @@ if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
 	m1 = generatore - load
 }
 -------------------
-
-
-
-
-
-
-
