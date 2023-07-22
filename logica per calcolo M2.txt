@@ -1,0 +1,80 @@
+descrizione del problema in linguaggio naturale:
+
+devo scrivere un algoritmo per calcolare queste variabili:
+"M2": (intero) valore espresso in kw;
+"canAbsorbAllExceedingEnergy": (true/false) è presente solo nel caso in cui la batteria si trovi nelle condizioni di dover assorbire dell'energia. indica se una batteria è in grado assorbire l'energia richiesta;
+"canProvideAllRequestedEnergy": (true/false) è presente solo nel caso in cui la batteria si trovi nelle condizioni di dover fornire dell'energia. indica se una batteria è in grado fornire l'energia richiesta;
+
+questi sono i dati a disposizione:
+"load": (intero) indica il consumo energetico, in kw. va soddisfatto con il generatore e se il generatore non basta va presa energia anche dalla batteria;
+"generatorEnergyProduction": (intero) indica l'energia prodotta dal generatore, in kw;
+"battMaxDischargingValue": (intero) è presente solo nel caso in cui la batteria si trovi nelle condizioni di dover fornire dell'energia. rappresenta il numero massimo di energia che può fornire.
+"battMaxChargingValue": (intero) è presente solo nel caso in cui la batteria si trovi nelle condizioni di dover assorbire dell'energia. rappresenta il numero massimo di energia che può assorbire.
+
+per comodità creiamo questa variabile "alphaEnergy" = "generatorEnergyProduction" - "load". rappresenta l'energia prodotta in eccesso (valore positivo) dal generatore oppure l'energia che manca (valore negativo) per soddisfare il load. il valore di alphaEnergy sarà ad esempio 30 se load=10 e generatorEnergyProduction=40; sarà ad esempio -20 se load=50 e generatorEnergyProduction=30.
+
+ora ecco tutte le condizioni, devo tenere conto di questi 4 casi:
+caso1: alphaEnergy < 0 (devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta) && alphaEnergy < battMaxDischargingValue (l'energia me la può fornire la batteria)
+in questo caso la variabile M2 deve valere "load" (oppure generatore+alphaEnergy, è lo stesso valore devi valutare tu quale è più conveniente usare anche da un punto di vista di raggruppare i controlli e risultati, l'importante è che il risultato sia lo stesso); la variabile canProvideAllRequestedEnergy deve essere settata a true, in quanto l'energia richiesta me la può fornire la batteria.
+
+caso2: alphaEnergy < 0 (devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta) && alphaEnergy > battMaxDischargingValue (l'energia non me la può fornire la batteria)
+in questo caso la variabile M2 deve valere "generatore+battMaxDischargingValue" (oppure valuta tu se è conveniente usare altro da un punto di vista di raggruppare i controlli e risultati, l'importante è che il risultato sia lo stesso); la variabile canProvideAllRequestedEnergy deve essere settata a false, in quanto l'energia richiesta non me la può fornire la batteria.
+
+caso3: alphaEnergy >= 0 (produco più energia di quella richiesta dal load) && alphaEnergy <= battMaxChargingValue (la batteria può assorbire l'energia)
+in questo caso M2 deve valere load (oppure valuta tu se è conveniente usare altro da un punto di vista di raggruppare i controlli e risultati, l'importante è che il risultato sia lo stesso); la variabile canAbsorbAllExceedingEnergy deve essere settata a true.
+
+caso4: alphaEnergy >= 0 (produco più energia di quella richiesta dal load) && alphaEnergy > battMaxChargingValue (la batteria non può assorbire tutta l'energià in eccesso)
+in questo caso M2 deve valere "generatorEnergyProduction" - "battMaxChargingValue" (oppure valuta tu se è conveniente usare altro da un punto di vista di raggruppare i controlli e risultati, l'importante è che il risultato sia lo stesso); la variabile canAbsorbAllExceedingEnergy deve essere settata a false.
+
+
+------------------------------------------------------------------------------------------
+
+// Variabili disponibili
+load = 10 //ho un valore per ogni timestamp (kw)
+generatorEnergyProduction = 100 //ho un valore per ogni timestamp (kw)
+battMaxStateOfCharge = 0.9 //ho un valore per batteria
+battMinStateOfCharge = 0.1 //ho un valore per batteria
+battCapacity = 100 //ho un valore per batteria. Capacità totale (kw)
+battMaxChargingPower = 60 //ho un valore per batteria (kw)
+battMaxDishargingPower = 50 //ho un valore per batteria (kw)
+battSOC = 90 //ho un valore per batteria, sarebbe da avere per ogni timestamp. Livello di carica attuale (kw)
+
+// Variabili da calcolare
+battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90 // livello Massimo di carica possibile per la batteria (kw)
+battMinSOCValue = battCapacity * battMinStateOfCharge = 10 // livello Minimo di carica possibile per la batteria (kw)
+battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
+battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
+--> battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
+--> battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
+		
+
+
+----***PSEUDOCODICE CALCOLO M2***----
+
+//per config 03
+m2 = generatorEnergyProduction
+//TODO: calcolare M3
+
+//per config 01
+alpha = generatorEnergyProduction - load 
+if(alpha < 0) { //devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta. 
+    if(alpha < battDischargeableEnergy) { //l'energia me la può fornire la batteria.
+        # CASO 1: Devo assorbire energia dalla batteria e la batteria può fornirla
+        M2 = load //tutta l'energia del generatore e quella che serve dalla batteria 
+        canProvideAllRequestedEnergy = true
+    } else { //l'energia NON me la può fornire tutta la batteria.
+        # CASO 2: Devo assorbire energia dalla batteria ma la batteria non può fornirla tutta
+        M2 = generatorEnergyProduction + battDischargeableEnergy //prendo comunque tutta quella che può fornirmi la batteria
+        canProvideAllRequestedEnergy = false
+    }
+} else { //produco più energia di quella richiesta
+    if(alpha <= battChargeableEnergy) { //la batteria è in grado di assorbire tutta la produzione in eccesso
+        # CASO 3: Produco più energia di quella richiesta e la batteria può assorbirla
+        M2 = load
+        canAbsorbAllExceedingEnergy = true
+    } else { //la batteria non assorbe tutta la produzione in eccesso
+        # CASO 4: Produco più energia di quella richiesta ma la batteria non può assorbire tutto l'eccesso
+        M2 = generatorEnergyProduction - battChargeableEnergy //ricarico comunque la batteria il più possibile
+        canAbsorbAllExceedingEnergy = false
+    }
+}
