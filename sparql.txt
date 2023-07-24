@@ -28,6 +28,7 @@ if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
 }
 -------------------
 
+
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -39,7 +40,7 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?prosumer ?M1max ?M1min ?timestamp ?m1value
+SELECT ?prosumer ?battery ?M1max ?batTimestamp  #?M1min ?timestamp ?m1value
 WHERE {
   ?prosumer rdf:type :Prosumer .
   ?prosumer :composedBy ?system .
@@ -53,11 +54,11 @@ WHERE {
   ?genMeasurement ic:hasDataPoint ?genData .
   ?genData saref:hasTimestamp ?genTimestamp .
   ?genData pros:hasValueEnergyProduced ?genValue .
-    
+
   ?load sf2:measuresProperty ?loadMeasurement .
   ?loadMeasurement ic:hasDataPoint ?loadData .
   ?loadData saref:hasTimestamp ?loadTimestamp .
-  ?loadData pros:hasValueEnergyProduced ?loadValue .
+  ?loadData pros:hasValueEnergyAbsorbed ?loadValue .
     
   ?system saref:consistsOf ?battery .
   ?battery sf2:measuresProperty ?batterySOC .
@@ -67,14 +68,20 @@ WHERE {
   ?batMeasurement pros:hasBatteryChargeableEnergy ?battChargeableEnergy .
   ?batMeasurement pros:hasBatteryDischargeableEnergy ?battDischargeableEnergy .
 
+  FILTER((xsd:string(?batTimestamp) = xsd:string(?loadTimestamp)) && (xsd:string(?batTimestamp) = xsd:string(?genTimestamp)))
+
+  BIND((?battDischargeableEnergy + ?alpha) as ?m1)
   BIND((?genValue - ?loadValue) as ?alpha)
   BIND( 
     if(?alpha < 0,
       if( ABS(?alpha) < ?battDischargeableEnergy,
        0,
-       BIND((?battDischargeableEnergy + ?alpha) as ?m1)
+       ?m1
       ),
       ?alpha 
     )
   as ?M1max)
+
 }
+
+GROUP BY ?prosumer ?battery ?M1max ?batTimestamp 
