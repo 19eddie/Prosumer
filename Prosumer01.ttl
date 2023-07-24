@@ -1606,7 +1606,9 @@ prosumer:III-EnergyStorage rdf:type owl:NamedIndividual ,
                                     prosumer:EnergyStorage ;
                            prosumer:hasDirection prosumer:III-EnergyDirection ;
                            prosumer:hasLocation prosumer:III-Location ;
-                           prosumer:hasPowerType prosumer:III-PowerType .
+                           prosumer:hasPowerType prosumer:III-PowerType ;
+                           saref:consistsOf kyrillos-es:Battery-1 ,
+                                            kyrillos-es:Battery-2 .
 
 
 ###  http://www.semanticweb.org/prosumer/III-Generator
@@ -1647,9 +1649,9 @@ prosumer:III-PowerType rdf:type owl:NamedIndividual ,
 ###  http://www.semanticweb.org/prosumer/III-Prosumer
 prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
                                prosumer:Prosumer ;
-                      prosumer:composedBy prosumer:III-EnergyStorage ,
-                                          prosumer:III-Generator ,
-                                          prosumer:III-Load ,
+                      prosumer:composedBy prosumer:I-Generator ,
+                                          prosumer:I-Load ,
+                                          prosumer:III-EnergyStorage ,
                                           prosumer:III-M1 ,
                                           prosumer:III-M2 ,
                                           prosumer:III-M3 .
