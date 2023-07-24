@@ -59,13 +59,13 @@ WHERE {
   ?loadData saref:hasTimestamp ?loadTimestamp .
   ?loadData pros:hasValueEnergyProduced ?loadValue .
     
-  ?system bat:consistsOf ?battery .
-  ?battery measuresProperty ?batterySOC .
-  ?batterySOC relatesToMeasurement ?batMeasurement .
+  ?system saref:consistsOf ?battery .
+  ?battery sf2:measuresProperty ?batterySOC .
+  ?batterySOC sf2:relatesToMeasurement ?batMeasurement .
   #?batMeasurement saref:hasValue ?batValue .
-  ?batMeasurement saef:hasTimestamp ?batTimestamp .
-  ?batMeasurement hasBatteryChargeableEnergy ?battChargeableEnergy .
-  ?batMeasurement hasBatteryDischargeableEnergy ?battDischargeableEnergy .
+  ?batMeasurement saref:hasTimestamp ?batTimestamp .
+  ?batMeasurement pros:hasBatteryChargeableEnergy ?battChargeableEnergy .
+  ?batMeasurement pros:hasBatteryDischargeableEnergy ?battDischargeableEnergy .
 
   BIND((?genValue - ?loadValue) as ?alpha)
   BIND( 
