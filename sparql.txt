@@ -28,7 +28,6 @@ if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
 }
 -------------------
 
-
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -40,7 +39,7 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?prosumer ?battery ?M1max ?batTimestamp  #?M1min ?timestamp ?m1value
+SELECT ?prosumer ?battery ?batTimestamp ?battChargeableEnergy ?battDischargeableEnergy ?M1max ?M1min
 WHERE {
   ?prosumer rdf:type :Prosumer .
   ?prosumer :composedBy ?system .
@@ -69,19 +68,31 @@ WHERE {
   ?batMeasurement pros:hasBatteryDischargeableEnergy ?battDischargeableEnergy .
 
   FILTER((xsd:string(?batTimestamp) = xsd:string(?loadTimestamp)) && (xsd:string(?batTimestamp) = xsd:string(?genTimestamp)))
-
-  BIND((?battDischargeableEnergy + ?alpha) as ?m1)
+  
   BIND((?genValue - ?loadValue) as ?alpha)
   BIND( 
     if(?alpha < 0,
       if( ABS(?alpha) < ?battDischargeableEnergy,
        0,
-       ?m1
+       ?battDischargeableEnergy + ?alpha
       ),
       ?alpha 
     )
   as ?M1max)
 
+    ?prosumer rdf:type ?type .
+
+   FILTER(?type = :Config01 || ?type = :Config02 || ?type = :Config03) 
+    BIND(
+     IF((?type = :Config02 || ?type = :Config03),
+      ?alpha - ?battChargeableEnergy,
+      ?alpha
+    )
+  as ?M1min)
+
 }
 
-GROUP BY ?prosumer ?battery ?M1max ?batTimestamp 
+GROUP BY ?prosumer ?battery ?batTimestamp ?M1max ?M1min ?battDischargeableEnergy ?battChargeableEnergy
+
+ORDER BY ?prosumer ?battery ?batTimestamp
+
