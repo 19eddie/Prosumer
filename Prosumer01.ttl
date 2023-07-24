@@ -336,12 +336,24 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
 
 ###  http://www.semanticweb.org/prosumer#hasBatteryChargeableEnergy
 :hasBatteryChargeableEnergy rdf:type owl:DatatypeProperty ;
-                            rdfs:domain kyrillos-es:StateOfChargeMeasurement .
+                            rdfs:domain kyrillos-es:StateOfChargeMeasurement ;
+                            rdfs:range [ rdf:type rdfs:Datatype ;
+                                         owl:onDatatype xsd:decimal ;
+                                         owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                ]
+                                                              )
+                                       ] .
 
 
 ###  http://www.semanticweb.org/prosumer#hasBatteryDischargeableEnergy
 :hasBatteryDischargeableEnergy rdf:type owl:DatatypeProperty ;
-                               rdfs:domain kyrillos-es:StateOfChargeMeasurement .
+                               rdfs:domain kyrillos-es:StateOfChargeMeasurement ;
+                               rdfs:range [ rdf:type rdfs:Datatype ;
+                                            owl:onDatatype xsd:decimal ;
+                                            owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                                   ]
+                                                                 )
+                                          ] .
 
 
 ###  http://www.semanticweb.org/prosumer#hasEfficiency
@@ -359,12 +371,24 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
 ###  http://www.semanticweb.org/prosumer#hasMaxChargingPower
 :hasMaxChargingPower rdf:type owl:DatatypeProperty ;
                      rdfs:domain kyrillos-es:EnergyStorage ;
+                     rdfs:range [ rdf:type rdfs:Datatype ;
+                                  owl:onDatatype xsd:decimal ;
+                                  owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                         ]
+                                                       )
+                                ] ;
                      rdfs:comment "Potenza massima (kW) relativa al sistema di accumulo in fase di carica, ovvero la massima quantità di potenza che la batteria può assorbire."@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasMaxDischargingPower
 :hasMaxDischargingPower rdf:type owl:DatatypeProperty ;
                         rdfs:domain kyrillos-es:EnergyStorage ;
+                        rdfs:range [ rdf:type rdfs:Datatype ;
+                                     owl:onDatatype xsd:decimal ;
+                                     owl:withRestrictions ( [ xsd:minInclusive 0.0
+                                                            ]
+                                                          )
+                                   ] ;
                         rdfs:comment "Potenza massima (kW) relativa al sistema di accumulo in fase di scarica, anche nota come velocità di trasmissione di potenza."@it .
 
 
@@ -375,11 +399,6 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
 
 ###  http://www.semanticweb.org/prosumer#hasProduced
 :hasProduced rdf:type owl:DatatypeProperty .
-
-
-###  http://www.semanticweb.org/prosumer#hasSOC
-:hasSOC rdf:type owl:DatatypeProperty ;
-        rdfs:domain kyrillos-es:StateOfCharge .
 
 
 ###  http://www.semanticweb.org/prosumer#hasValueEnergyAbsorbed
@@ -1266,20 +1285,20 @@ kyrillos-es:Battery-2-SOC rdf:type owl:NamedIndividual ,
 kyrillos-es:Battery-2-SOC-M1 rdf:type owl:NamedIndividual ,
                                       kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:00:00"^^xsd:dateTime ;
-                             saref:hasValue 10.0 .
+                             saref:hasValue 70.0 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M2
 kyrillos-es:Battery-2-SOC-M2 rdf:type owl:NamedIndividual ,
                                       kyrillos-es:StateOfChargeMeasurement ;
                              saref:hasTimestamp "2020-12-12T09:15:00"^^xsd:dateTime ;
-                             saref:hasValue 8.3 .
+                             saref:hasValue 28.3 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M3
 kyrillos-es:Battery-2-SOC-M3 rdf:type owl:NamedIndividual ;
                              saref:hasTimestamp "2020-12-12T09:30:00"^^xsd:dateTime ;
-                             saref:hasValue 7.1 .
+                             saref:hasValue 50.1 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-3
