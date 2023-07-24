@@ -271,8 +271,8 @@ battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90 // livello Massimo di
 battMinSOCValue = battCapacity * battMinStateOfCharge = 10 // livello Minimo di carica possibile per la batteria (kw)
 battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
 battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
---> battChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
---> battDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
+--> hasBatteryChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
+--> hasBatteryDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
 		
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 //ic-data:TimeSeries(?Load-Measurement) ^
@@ -303,7 +303,7 @@ swrlb:subtract(?battChargingCapacity, ?battMaxSOCValue, ?Battery-Value) ^ swrlb:
 swrlb:lessThanOrEqual(?battMaxChargingPower, ?battChargingCapacity) ^
 swrlb:lessThanOrEqual(?battMaxDishargingPower, ?battDischargingCapacity) 
 
--> battChargeableEnergy(?Battery-Measurement, ?battMaxChargingPower) ^ battDischargeableEnergy(?Battery-Measurement, ?battMaxDishargingPower)
+-> hasBatteryChargeableEnergy(?Battery-Measurement, ?battMaxChargingPower) ^ hasBatteryDischargeableEnergy(?Battery-Measurement, ?battMaxDishargingPower)
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -333,7 +333,7 @@ swrlb:subtract(?battChargingCapacity, ?battMaxSOCValue, ?Battery-Value) ^ swrlb:
 swrlb:greaterThan(?battMaxChargingPower, ?battChargingCapacity) ^
 swrlb:greaterThan(?battMaxDishargingPower, ?battDischargingCapacity) 
 
--> battChargeableEnergy(?Battery-Measurement, ?battChargingCapacity) ^ battDischargeableEnergy(?Battery-Measurement, ?battDischargingCapacity)
+-> hasBatteryChargeableEnergy(?Battery-Measurement, ?battChargingCapacity) ^ hasBatteryDischargeableEnergy(?Battery-Measurement, ?battDischargingCapacity)
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -364,7 +364,7 @@ swrlb:subtract(?battChargingCapacity, ?battMaxSOCValue, ?Battery-Value) ^ swrlb:
 swrlb:lessThanOrEqual(?battMaxChargingPower, ?battChargingCapacity) ^
 swrlb:greaterThan(?battMaxDishargingPower, ?battDischargingCapacity) 
 
--> battChargeableEnergy(?Battery-Measurement, ?battMaxChargingPower) ^ battDischargeableEnergy(?Battery-Measurement, ?battDischargingCapacity)
+-> hasBatteryChargeableEnergy(?Battery-Measurement, ?battMaxChargingPower) ^ hasBatteryDischargeableEnergy(?Battery-Measurement, ?battDischargingCapacity)
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -395,4 +395,4 @@ swrlb:subtract(?battChargingCapacity, ?battMaxSOCValue, ?Battery-Value) ^ swrlb:
 swrlb:greaterThan(?battMaxChargingPower, ?battChargingCapacity) ^
 swrlb:lessThanOrEqual(?battMaxDishargingPower, ?battDischargingCapacity) 
 
--> battChargeableEnergy(?Battery-Measurement, ?battChargingCapacity) ^ battDischargeableEnergy(?Battery-Measurement, ?battMaxDishargingPower)
+-> hasBatteryChargeableEnergy(?Battery-Measurement, ?battChargingCapacity) ^ hasBatteryDischargeableEnergy(?Battery-Measurement, ?battMaxDishargingPower)
