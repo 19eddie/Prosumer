@@ -1,39 +1,32 @@
-QUERY per capire se si può caricare o meno una batteria (della config 01)
 
+-----****FLESSIBILITA'****----- 	
+// Se il valore di M1 è negativo, indica che l'energia è assorbita dalla rete; se è positivo, indica che l'energia è immessa nella rete.
 
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
-PREFIX pros: <http://www.semanticweb.org/prosumer#>
-PREFIX : <http://www.semanticweb.org/prosumer/>
-PREFIX saref: <https://saref.etsi.org/core/>
-PREFIX sf2: <https://saref.etsi.org/>
-PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+-----M1 MASSIMO-----
+// (va più energia nella rete) ---> non carico batteria, però se mi serve prendo da batteria. valido per tutte le conf.
 
-SELECT ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
-WHERE {
-    ?prosumer rdf:type :Prosumer .
-    ?prosumer :composedBy ?system .
-    ?system rdf:type bat:StorageSystem .
-    ?system saref:consistsOf ?unit .
-    ?unit sf2:measuresProperty ?BatterySOC .
-    ?BatterySOC pros:hasSOC ?SOC .
-    ?unit bat:hasMaximumStateOfCharge ?maxSOC .
-    ?unit bat:hasStorageCapacity ?capacity .
-    ?unit pros:hasMaxChargingPower ?maxCharging .
-    
-    BIND((10) as ?input) #questa x sarebbe quanta energia avanza dal sistema, energia che la batteria deve assorbire dal sistema
-    BIND((?maxSOC * ?capacity) as ?maxCapacity) .
-    BIND((?SOC + ?input) as ?shouldBe) .
-    BIND(if( (?maxCharging >= ?input) && (?shouldBe <= ?maxCapacity), true, false) as ?canAbsorb) .
- }
- GROUP BY ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
+alpha = generatorEnergyProduction - load 
+if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
+	if(abs(alpha) < battDischargeableEnergy) { //l'energia richiesta dal load può essere soddisfatta dalla batteria
+		m1 = 0 //ho già preso tutti i kw dal generatore quindi non esce niente verso la rete
+		energiaAssorbitaDallaBatteria = abs(alpha)
+	} else { //non mi basta assorbire dalla batteria, devo prendere dalla rete
+		m1 = battDischargeableEnergy + alpha //sarà un valore negativo
+	}
+} else { //soddisfo tutto il load con solo il generatore
+	m1 = alpha //sarà positivo
+}
+-------------------
 
+-----M1 MINIMO-----
+// (va meno energia nella rete) ---> carico batteria prelevando anche dalla rete 
 
-QUERY per capire se si può scaricare o meno una batteria (della config 01)
-
+if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
+	m1 = generatore - load - battChargeableEnergy
+} else { //conf01 la batteria assorbe solo dal generatore
+	m1 = generatore - load
+}
+-------------------
 
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -46,260 +39,42 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?system ?unit ?SOC ?minCapacity ?output ?shouldBe ?canEmit
+SELECT ?prosumer ?M1max ?M1min ?timestamp ?m1value
 WHERE {
-    ?prosumer rdf:type :Prosumer .
-    ?prosumer :composedBy ?system .
-    ?system rdf:type bat:StorageSystem .
-    ?system saref:consistsOf ?unit .
-    ?unit sf2:measuresProperty ?BatterySOC .
-    ?BatterySOC pros:hasSOC ?SOC .
-    ?unit bat:hasMinimumStateOfCharge ?minSOC .
-    ?unit bat:hasStorageCapacity ?capacity .
-    ?unit pros:hasMaxDischargingPower ?maxDischarging .
+  ?prosumer rdf:type :Prosumer .
+  ?prosumer :composedBy ?system .
+  ?system rdf:type bat:StorageSystem .
+  ?prosumer :composedBy ?generator .
+  ?generator rdf:type :Generator .
+  ?prosumer :composedBy ?load .
+  ?load rdf:type :Load .
+  
+  ?generator sf2:measuresProperty ?genMeasurement .
+  ?genMeasurement ic:hasDataPoint ?genData .
+  ?genData saref:hasTimestamp ?genTimestamp .
+  ?genData pros:hasValueEnergyProduced ?genValue .
     
-    BIND((10) as ?output) #questa x sarebbe quanta energia servirebbe al sistema, energia che la batteria deve immettere nel sistema
-    BIND((?minSOC * ?capacity) as ?minCapacity) .
-    BIND((?SOC - ?output) as ?shouldBe) .
-    BIND(if( (?maxDischarging >= ?output) && (?shouldBe >= ?minSOC), true, false) as ?canEmit) .
- }
- GROUP BY ?system ?unit ?SOC ?minCapacity ?output ?shouldBe ?canEmit
-
-
-
-LALAALA qualcosa col generatore
-
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
-PREFIX pros: <http://www.semanticweb.org/prosumer#>
-PREFIX : <http://www.semanticweb.org/prosumer/>
-PREFIX saref: <https://saref.etsi.org/core/>
-PREFIX sf2: <https://saref.etsi.org/>
-PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-SELECT ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
-WHERE {
-
-    ?prosumer rdf:type :Prosumer .
-    ?prosumer :composedBy ?system .
-    ?system rdf:type bat:StorageSystem .
-    ?system saref:consistsOf ?unit .
-    ?unit sf2:measuresProperty ?BatterySOC .
-    ?BatterySOC saref:relatesToMeasurement ?measurement .
-    ?measurement saref:hasTimestamp ?timestamp .
+  ?load sf2:measuresProperty ?loadMeasurement .
+  ?loadMeasurement ic:hasDataPoint ?loadData .
+  ?loadData saref:hasTimestamp ?loadTimestamp .
+  ?loadData pros:hasValueEnergyProduced ?loadValue .
     
-    FILTER(xsd:string(?timestamp) = "2020-12-12T09:30:00"^^xsd:string)# || xsd:string(?timestamp) = "2020-12-12T09:15:00"^^xsd:string)
-    
-    ?prosumer :composedBy ?generator .
-    ?generator rdf:type :Generator .
-    ?generator saref:makesMeasurement ?genM .
-    ?genM saref:hasTimestamp ?genT .
-
-    FILTER(xsd:string(?timestamp) = xsd:string(?genT))
-
-    ?genM 
-    ?BatterySOC pros:hasSOC ?SOC .
-    ?unit bat:hasMaximumStateOfCharge ?maxSOC .
-    ?unit bat:hasStorageCapacity ?capacity .
-    ?unit pros:hasMaxChargingPower ?maxCharging .
-    
-    BIND((10) as ?input) #questa x sarebbe quanta energia avanza dal sistema, energia che la batteria deve assorbire dal sistema
-    BIND((?maxSOC * ?capacity) as ?maxCapacity) .
-    BIND((?SOC + ?input) as ?shouldBe) .
-    BIND(if( (?maxCharging >= ?input) && (?shouldBe <= ?maxCapacity), true, false) as ?canAbsorb) .
- }
- GROUP BY ?system ?unit ?SOC ?maxCapacity ?input ?shouldBe ?canAbsorb
-
-
-QUERY per capire se si può scaricare o meno una batteria (della config 01)
-
-
-
-
-//qua ho scritto cose ma non sono realmente cose
-
-EnergyMeterMeasurement(?M2-Value) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ 
-prosumer:Load(?load) ^ autogen0:measuresProperty(?generator, ?Generator-Measurement) ^ 
-swrlb:add(?result, ?Generator-ValueEnergyProduced, ?Load-ValueEnergyAbsorbed) ^ 
-autogen0:measuresProperty(?load, ?Load-Measurement) ^ prosumer:composedBy(?prosumer, ?meterM2) ^ 
-prosumer:Generator(?generator) ^ hasValueEnergyProduced(?Generator-Value, ?Generator-ValueEnergyProduced) ^ 
-hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ prosumer:composedBy(?prosumer, ?generator) ^
- prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?Load-Measurement) ^ ic-data:TimeSeries(?Generator-Measurement) ^ 
- saref:hasTimestamp(?Generator-Value, ?load-dataTimestamp) ^ autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ 
- prosumer:composedBy(?prosumer, ?load) ^ LoadMeasurement(?Load-Value) ^ 
- ic-data:hasDataPoint(?Generator-Measurement, ?Generator-Value) ^ GeneratorMeasurement(?Generator-Value) ^ 
- prosumer:Config01(?prosumer) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ 
- ic-data:TimeSeries(?M2-Measurement) ^ saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ 
- saref:hasTimestamp(?M2-Value, ?load-dataTimestamp)
-  -> hasEnergyRequestOrProvided(?M2-Value, ?result)
-
-
-/**CAN ABSORB***/
-prosumer:composedBy(?prosumer, ?system) ^ kyrillos-es:StorageSystem(?system) ^ 
-saref:consistsOf(?system, ?unit) ^ autogen0:measuresProperty(?unit, ?batterySOC) ^ 
-hasSOC(?batterySOC, ?SOC) ^ kyrillos-es:hasMaximumStateOfCharge(?unit, ?maxSOC) ^ 
-kyrillos-es:hasStorageCapacity(?unit, ?capacity) ^ hasMaxChargingPower(?unit, ?maxCharging) ^ 
-
-prosumer:composedBy(?prosumer, ?meterM2) ^  autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^
-ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^ 
-hasEnergyRequestOrProvided(?M2-Value, ?value)
-
-swrlb:multiply(?maxCapacity, ?maxSOC, ?capacity) ^ swrlb:add(?shouldBe, ?SOC, ?value) ^ 
-swrlb:greaterThanOrEqual(?maxCharging, ?value) ^ swrlb:lessThanOrEqual(?shouldBe, ?maxCapacity) 
--> canAbsorb(?batterySOC, true)
-
-/**CAN EMIT nope**/
-prosumer:composedBy(?prosumer, ?system) ^ kyrillos-es:StorageSystem(?system) ^ 
-saref:consistsOf(?system, ?unit) ^ autogen0:measuresProperty(?unit, ?batterySOC) ^ 
-hasSOC(?batterySOC, ?SOC) ^ kyrillos-es:hasMaximumStateOfCharge(?unit, ?maxSOC) ^ 
-kyrillos-es:hasStorageCapacity(?unit, ?capacity) ^ hasMaxChargingPower(?unit, ?maxCharging) ^ 
-
-prosumer:composedBy(?prosumer, ?meterM2) ^  autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^
-ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^ 
-hasEnergyRequestOrProvided(?M2-Value, ?value)
-
-swrlb:multiply(?maxCapacity, ?maxSOC, ?capacity) ^ swrlb:add(?shouldBe, ?SOC, ?value) ^ 
-swrlb:greaterThanOrEqual(?maxCharging, ?value) ^ swrlb:lessThanOrEqual(?shouldBe, ?maxCapacity) 
--> canAbsorb(?batterySOC, true)
-
-
-//can emit M2 per alpha<0 && alpha<battMaxDischarging
-prosumer:composedBy(?prosumer, ?ss) ^
-prosumer:composedBy(?prosumer, ?meterM2) ^
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:Load(?load) ^ 
-prosumer:M2(?meterM2) ^
-autogen0:measuresProperty(?bat, ?batterySOC) ^ 
-hasSOC(?batterySOC, ?SOC) ^ 
-kyrillos-es:StorageSystem(?ss) ^
-
-saref:consistsOf(?ss, ?bat) ^ 
-hasMaxDischargingPower(?bat, ?batMaxDischargValue) ^
-
-hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^
-ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^  
-autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^  LoadMeasurement(?Load-Value) ^
-prosumer:Config01(?prosumer) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ ic-data:TimeSeries(?M2-Measurement) ^
-saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) 
-ic-data:TimeSeries(?Load-Measurement) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ 
-
-
-swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ 
- swrlb:add(?generatorValue, ?aplhaValue, ?absLoad-ValueEnergyAbsorbed) ^ 
-swrlb:add(?result, ?generatorValue, ?batMaxDischargValue) ^ 
-  swrlb:abs(?absAplhaValue, ?aplhaValue) ^ autogen0:measuresProperty(?load, ?Load-Measurement) ^
-   swrlb:lessThan(?aplhaValue, 0) ^ swrlb:greaterThan(?absAplhaValue, ?batMaxDischargValue) ^  
-
-kyrillos-es:hasMinimumStateOfCharge(?bat, ?minSOC) ^ kyrillos-es:hasStorageCapacity(?bat, ?capacity)
-
-swrlb:multiply(?minCapacity, ?minSOC, ?capacity) ^ swrlb:add(?shouldBe, ?SOC, ?aplhaValue) ^ 
-swrlb:greaterThanOrEqual(?batMaxDischargValue, ?aplhaValue) ^ swrlb:lessThanOrEqual(?shouldBe, ?minCapacity) 
-
-
-     -> canEmit(?batterySOC, false) ^ hasValueEnergyMeter(?M2-Value, ?result)
-
-
-
-//can emit 
-
-
-
-
-// can absorb M2 per alpha>0 && alpha<battMaxCharging
-prosumer:composedBy(?prosumer, ?ss) ^ 
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:composedBy(?prosumer, ?meterM2) ^ 
-
-prosumer:M2(?meterM2) ^
-prosumer:Load(?load) ^ 
-kyrillos-es:StorageSystem(?ss) ^ saref:consistsOf(?ss, ?bat) ^ 
-autogen0:measuresProperty(?bat, ?batterySOC) ^ 
-hasSOC(?batterySOC, ?SOC) ^ 
-
-autogen0:measuresProperty(?load, ?Load-Measurement) ^ 
-LoadMeasurement(?Load-Value) ^ prosumer:Config01(?prosumer) ^ 
-
-ic-data:TimeSeries(?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^
-
-autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ 
-ic-data:TimeSeries(?M2-Measurement) ^
-hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
-
-swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ 
-swrlb:add(?generatoreValue, ?aplhaValue, ?absLoad-ValueEnergyAbsorbed) ^ 
-swrlb:greaterThan(?aplhaValue, 0) ^
-swrlb:greaterThan(?aplhaValue, ?batMaxChargValue) ^ 
-hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^  
-
-hasMaxChargingPower(?bat, ?batMaxChargValue) ^ 
-
-kyrillos-es:hasMaximumStateOfCharge(?bat, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?bat, ?capacity)
-
-
-swrlb:multiply(?maxCapacity, ?maxSOC, ?capacity) ^ swrlb:add(?shouldBe, ?SOC, ?aplhaValue) ^ 
-swrlb:greaterThanOrEqual(?batMaxChargValue, ?aplhaValue) ^ swrlb:lessThanOrEqual(?shouldBe, ?maxCapacity) 
-
-saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ 
-
-swrlb:subtract(?result, ?generatoreValue, ?batMaxChargValue) 
-  -> canAbsorb(?batterySOC, true) ^ hasValueEnergyMeter(?M2-Value, ?result)
-
-
-//saref:consistsOf(?ss, ?bat) ^ 
-
-// can absorb M2 per alpha>0 && alpha>battMaxCharging
-prosumer:composedBy(?prosumer, ?ss) ^ 
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:composedBy(?prosumer, ?meterM2) ^ 
-
-prosumer:M2(?meterM2) ^
-prosumer:Load(?load) ^ 
-kyrillos-es:StorageSystem(?ss) ^ saref:consistsOf(?ss, ?bat) ^ 
-autogen0:measuresProperty(?bat, ?batterySOC) ^ 
-hasSOC(?batterySOC, ?SOC) ^ 
-
-autogen0:measuresProperty(?load, ?Load-Measurement) ^ 
-LoadMeasurement(?Load-Value) ^ prosumer:Config01(?prosumer) ^ 
-
-ic-data:TimeSeries(?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^
-
-autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ 
-ic-data:TimeSeries(?M2-Measurement) ^
-hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) ^
-
-swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ 
-swrlb:add(?generatoreValue, ?aplhaValue, ?absLoad-ValueEnergyAbsorbed) ^ 
-swrlb:greaterThan(?aplhaValue, 0) ^
-swrlb:greaterThan(?aplhaValue, ?batMaxChargValue) ^ 
-hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^  
-
-hasMaxChargingPower(?bat, ?batMaxChargValue) ^ 
-
-kyrillos-es:hasMaximumStateOfCharge(?bat, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?bat, ?capacity)
-
-
-swrlb:multiply(?maxCapacity, ?maxSOC, ?capacity) ^ swrlb:add(?shouldBe, ?SOC, ?aplhaValue) ^ 
-swrlb:lessThan(?batMaxChargValue, ?aplhaValue) ^ swrlb:greaterThan(?shouldBe, ?maxCapacity) 
-
-saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ 
-
-swrlb:subtract(?result, ?generatoreValue, ?batMaxChargValue) 
-  -> canAbsorb(?batterySOC, false) ^ hasValueEnergyMeter(?M2-Value, ?result)
-
-
-
-
-//EDDIES VERSIONSS 
-
-//M2 per alpha>0 && alpha<battMaxCharging
-prosumer:composedBy(?prosumer, ?system) ^ kyrillos-es:StorageSystem(?system) ^ saref:consistsOf(?system, ?unit) ^ autogen0:measuresProperty(?unit, ?batterySOC) ^ hasSOC(?batterySOC, ?SOC) ^ swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ autogen0:measuresProperty(?load, ?Load-Measurement) ^ hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^ swrlb:lessThanOrEqual(?aplhaValue, ?batMaxChargValue) ^ prosumer:composedBy(?prosumer, ?meterM2) ^ swrlb:greaterThanOrEqual(?aplhaValue, 0) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ prosumer:M2(?meterM2) ^ saref:consistsOf(?ss, ?bat) ^ ic-data:TimeSeries(?Load-Measurement) ^ autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ prosumer:composedBy(?prosumer, ?load) ^ LoadMeasurement(?Load-Value) ^ prosumer:composedBy(?prosumer, ?ss) ^ prosumer:Load(?load) ^ prosumer:Config01(?prosumer) ^ hasMaxChargingPower(?bat, ?batMaxChargValue) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ ic-data:TimeSeries(?M2-Measurement) ^ saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) ^ kyrillos-es:StorageSystem(?ss) -> canAbsorb(?batterySOC, true) ^ hasValueEnergyMeter(?M2-Value, ?absLoad-ValueEnergyAbsorbed)
-
-  //M2 per alpha>0 && alpha>battMaxCharging
-  prosumer:composedBy(?prosumer, ?system) ^ kyrillos-es:StorageSystem(?system) ^ saref:consistsOf(?system, ?unit) ^ autogen0:measuresProperty(?unit, ?batterySOC) ^ hasSOC(?batterySOC, ?SOC) ^ swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^ swrlb:subtract(?result, ?generatoreValue, ?batMaxChargValue) ^ swrlb:add(?generatoreValue, ?aplhaValue, ?absLoad-ValueEnergyAbsorbed) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ prosumer:composedBy(?prosumer, ?ss) ^ prosumer:Load(?load) ^ kyrillos-es:StorageSystem(?ss) ^ autogen0:measuresProperty(?load, ?Load-Measurement) ^ swrlb:greaterThan(?aplhaValue, 0) ^ swrlb:greaterThan(?aplhaValue, ?batMaxChargValue) ^ prosumer:composedBy(?prosumer, ?meterM2) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ prosumer:M2(?meterM2) ^ saref:consistsOf(?ss, ?bat) ^ ic-data:TimeSeries(?Load-Measurement) ^ autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ prosumer:composedBy(?prosumer, ?load) ^ LoadMeasurement(?Load-Value) ^ prosumer:Config01(?prosumer) ^ hasMaxChargingPower(?bat, ?batMaxChargValue) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ ic-data:TimeSeries(?M2-Measurement) ^ saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) -> canAbsorb(?batterySOC, false) ^ hasValueEnergyMeter(?M2-Value, ?result)
-
-
-// M2 per alpha<0 && alpha<battMaxDischarging
-  swrlb:abs(?absLoad-ValueEnergyAbsorbed, ?Load-ValueEnergyAbsorbed) ^ hasEnergyRequestOrProvided(?M2-Value, ?aplhaValue) ^ swrlb:add(?generatoreValue, ?aplhaValue, ?absLoad-ValueEnergyAbsorbed) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ prosumer:composedBy(?prosumer, ?ss) ^ prosumer:Load(?load) ^ swrlb:add(?result, ?generatoreValue, ?batMaxDischargValue) ^ hasMaxDischargingPower(?bat, ?batMaxDischargValue) ^ kyrillos-es:StorageSystem(?ss) ^ swrlb:abs(?absAplhaValue, ?aplhaValue) ^ autogen0:measuresProperty(?load, ?Load-Measurement) ^ prosumer:composedBy(?prosumer, ?meterM2) ^ swrlb:lessThan(?aplhaValue, 0) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ swrlb:greaterThan(?absAplhaValue, ?batMaxDischargValue) ^ prosumer:M2(?meterM2) ^ saref:consistsOf(?ss, ?bat) ^ ic-data:TimeSeries(?Load-Measurement) ^ autogen0:measuresProperty(?meterM2, ?M2-Measurement) ^ prosumer:composedBy(?prosumer, ?load) ^ LoadMeasurement(?Load-Value) ^ prosumer:Config01(?prosumer) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ ic-data:TimeSeries(?M2-Measurement) ^ saref:hasTimestamp(?Load-Value, ?load-dataTimestamp) ^ saref:hasTimestamp(?M2-Value, ?load-dataTimestamp) -> canAbsorbOrEmit(?M2-Value, false) ^ hasValueEnergyMeter(?M2-Value, ?result)
+  ?system bat:consistsOf ?battery .
+  ?battery measuresProperty ?batterySOC .
+  ?batterySOC relatesToMeasurement ?batMeasurement .
+  #?batMeasurement saref:hasValue ?batValue .
+  ?batMeasurement saef:hasTimestamp ?batTimestamp .
+  ?batMeasurement hasBatteryChargeableEnergy ?battChargeableEnergy .
+  ?batMeasurement hasBatteryDischargeableEnergy ?battDischargeableEnergy .
+
+  BIND((?genValue - ?loadValue) as ?alpha)
+  BIND( 
+    if(?alpha < 0,
+      if( ABS(?alpha) < ?battDischargeableEnergy,
+       0,
+       BIND((?battDischargeableEnergy + ?alpha) as ?m1)
+      ),
+      ?alpha 
+    )
+  as ?M1max)
+}
