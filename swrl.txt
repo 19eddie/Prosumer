@@ -264,37 +264,44 @@ battMinStateOfCharge = 0.1 //ho un valore per batteria
 battCapacity = 100 //ho un valore per batteria. Capacità totale (kw)
 battMaxChargingPower = 60 //ho un valore per batteria (kw)
 battMaxDishargingPower = 50 //ho un valore per batteria (kw)
-battSOC = 90 //ho un valore per batteria, sarebbe da avere per ogni timestamp. Livello di carica attuale (kw)
+Battery-Value = 90 //ho un valore per batteria, sarebbe da avere per ogni timestamp. Livello di carica attuale (kw)
 
 // Variabili da calcolare
 battMaxSOCValue = battCapacity * battMaxStateOfCharge = 90 // livello Massimo di carica possibile per la batteria (kw)
 battMinSOCValue = battCapacity * battMinStateOfCharge = 10 // livello Minimo di carica possibile per la batteria (kw)
-battChargingCapacity = battMaxSOCValue - battSOC = 0 //kw che può assorbire per riempirsi
-battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire per svuotarsi
+battChargingCapacity = battMaxSOCValue - Battery-Value = 0 //kw che può assorbire per riempirsi
+battDischargingCapacity = Battery-Value - battMinSOCValue = 80 //kw che può fornire per svuotarsi
 --> hasBatteryChargeableEnergy = min(battMaxChargingPower, battChargingCapacity) = 0 //kw che può REALMENTE assorbire al momento
 --> hasBatteryDischargeableEnergy = min(battMaxDishargingPower, battDischargingCapacity) = 50 //kw che può REALMENTE fornire al momento
 		
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-//ic-data:TimeSeries(?Load-Measurement) ^
+/**
 
-//battMaxChargingPower <= battChargingCapacity
-//battMaxDishargingPower <= battDischargingCapacity
-
-prosumer:composedBy(?prosumer, ?ss) ^ 
 prosumer:composedBy(?prosumer, ?load) ^
 prosumer:composedBy(?prosumer, ?generator) ^ 
 
-prosumer:Load(?load) ^ makesMeasurement(?load, ?Load-Measurement) ^ LoadMeasurement(?Load-Measurement) ^ 
+prosumer:Load(?load) ^ measuresProperty(?load, ?loadMes) ^ ic-data:hasDataPoint(?loadMes, ?Load-Measurement) ^ LoadMeasurement(?Load-Measurement) ^ 
  hasValueEnergyAbsorbed(?Load-Measurement, ?Load-Value) ^ saref:hasTimestamp(?Load-Measurement, ?dataTimestamp) ^ 
 
-prosumer:Generator(?generator) ^ makesMeasurement(?generator, ?Generator-Measurement) ^ GeneratorMeasurement(?Generator-Measurement)
+prosumer:Generator(?generator) ^ measuresProperty(?generator, ?genMes) ^ ic-data:hasDataPoint(?genMes, ?Generator-Measurement) ^ GeneratorMeasurement(?Generator-Measurement)
  hasValueEnergyProduced(?Generator-Measurement, ?Generator-Value) ^ saref:hasTimestamp(?Generator-Measurement, ?dataTimestamp) ^ 
 
+**/
+
+
+//ic-data:TimeSeries(?Load-Measurement) ^
+
+//battMaxChargingPower <= battChargingCapacity //vuol dire che può caricare x
+//battMaxDishargingPower <= battDischargingCapacity 
+
+prosumer:composedBy(?prosumer, ?ss) ^ 
+
 kyrillos-es:StorageSystem(?ss) ^ 
- saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ makesMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
+ saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ relatesToMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
  hasValue(?Battery-Measurement, ?Battery-Value) ^ saref:hasTimestamp(?Battery-Measurement, ?dataTimestamp) ^ 
 
 kyrillos-es:hasMaximumStateOfCharge(?battery, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?battery, ?capacity) ^ kyrillos-es:hasMinimumStateOfCharge(?battery, ?minSOC) ^
+hasMaxChargingPower(?battery, ?battMaxChargingPower) ^ hasMaxDischargingPower(?battery, ?battMaxDishargingPower) ^
 
 swrlb:multiply(?battMaxSOCValue, ?maxSOC, ?capacity) ^ swrlb:multiply(?battMinSOCValue, ?minSOC, ?capacity) ^ 
 
@@ -311,20 +318,12 @@ swrlb:lessThanOrEqual(?battMaxDishargingPower, ?battDischargingCapacity)
 //battMaxDishargingPower > battDischargingCapacity
 
 prosumer:composedBy(?prosumer, ?ss) ^ 
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:composedBy(?prosumer, ?generator) ^ 
-
-prosumer:Load(?load) ^ makesMeasurement(?load, ?Load-Measurement) ^ LoadMeasurement(?Load-Measurement) ^ 
- hasValueEnergyAbsorbed(?Load-Measurement, ?Load-Value) ^ saref:hasTimestamp(?Load-Measurement, ?dataTimestamp) ^ 
-
-prosumer:Generator(?generator) ^ makesMeasurement(?generator, ?Generator-Measurement) ^ GeneratorMeasurement(?Generator-Measurement)
- hasValueEnergyProduced(?Generator-Measurement, ?Generator-Value) ^ saref:hasTimestamp(?Generator-Measurement, ?dataTimestamp) ^ 
-
 kyrillos-es:StorageSystem(?ss) ^ 
- saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ makesMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
+ saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ relatesToMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
  hasValue(?Battery-Measurement, ?Battery-Value) ^ saref:hasTimestamp(?Battery-Measurement, ?dataTimestamp) ^ 
 
 kyrillos-es:hasMaximumStateOfCharge(?battery, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?battery, ?capacity) ^ kyrillos-es:hasMinimumStateOfCharge(?battery, ?minSOC) ^
+hasMaxChargingPower(?battery, ?battMaxChargingPower) ^ hasMaxDischargingPower(?battery, ?battMaxDishargingPower) ^
 
 swrlb:multiply(?battMaxSOCValue, ?maxSOC, ?capacity) ^ swrlb:multiply(?battMinSOCValue, ?minSOC, ?capacity) ^ 
 
@@ -342,20 +341,12 @@ swrlb:greaterThan(?battMaxDishargingPower, ?battDischargingCapacity)
 //battMaxDishargingPower > battDischargingCapacity
 
 prosumer:composedBy(?prosumer, ?ss) ^ 
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:composedBy(?prosumer, ?generator) ^ 
-
-prosumer:Load(?load) ^ makesMeasurement(?load, ?Load-Measurement) ^ LoadMeasurement(?Load-Measurement) ^ 
- hasValueEnergyAbsorbed(?Load-Measurement, ?Load-Value) ^ saref:hasTimestamp(?Load-Measurement, ?dataTimestamp) ^ 
-
-prosumer:Generator(?generator) ^ makesMeasurement(?generator, ?Generator-Measurement) ^ GeneratorMeasurement(?Generator-Measurement)
- hasValueEnergyProduced(?Generator-Measurement, ?Generator-Value) ^ saref:hasTimestamp(?Generator-Measurement, ?dataTimestamp) ^ 
-
 kyrillos-es:StorageSystem(?ss) ^ 
- saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ makesMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
+ saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ relatesToMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
  hasValue(?Battery-Measurement, ?Battery-Value) ^ saref:hasTimestamp(?Battery-Measurement, ?dataTimestamp) ^ 
 
 kyrillos-es:hasMaximumStateOfCharge(?battery, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?battery, ?capacity) ^ kyrillos-es:hasMinimumStateOfCharge(?battery, ?minSOC) ^
+hasMaxChargingPower(?battery, ?battMaxChargingPower) ^ hasMaxDischargingPower(?battery, ?battMaxDishargingPower) ^
 
 swrlb:multiply(?battMaxSOCValue, ?maxSOC, ?capacity) ^ swrlb:multiply(?battMinSOCValue, ?minSOC, ?capacity) ^ 
 
@@ -373,18 +364,10 @@ swrlb:greaterThan(?battMaxDishargingPower, ?battDischargingCapacity)
 //battMaxDishargingPower <= battDischargingCapacity
 
 prosumer:composedBy(?prosumer, ?ss) ^ 
-prosumer:composedBy(?prosumer, ?load) ^
-prosumer:composedBy(?prosumer, ?generator) ^ 
-
-prosumer:Load(?load) ^ makesMeasurement(?load, ?Load-Measurement) ^ LoadMeasurement(?Load-Measurement) ^ 
- hasValueEnergyAbsorbed(?Load-Measurement, ?Load-Value) ^ saref:hasTimestamp(?Load-Measurement, ?dataTimestamp) ^ 
-
-prosumer:Generator(?generator) ^ makesMeasurement(?generator, ?Generator-Measurement) ^ GeneratorMeasurement(?Generator-Measurement)
- hasValueEnergyProduced(?Generator-Measurement, ?Generator-Value) ^ saref:hasTimestamp(?Generator-Measurement, ?dataTimestamp) ^ 
-
-kyrillos-es:StorageSystem(?ss) ^ 
- saref:consistsOf(?ss, ?battery) ^ measuresProperty(?battery, ?batterySOC) ^ makesMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
+kyrillos-es:StorageSystem(?ss) ^ saref:consistsOf(?ss, ?battery) ^ 
+ measuresProperty(?battery, ?batterySOC) ^ relatesToMeasurement(?batterySOC, ?Battery-Measurement) ^ StateOfChargeMeasurement(?Battery-Measurement) ^
  hasValue(?Battery-Measurement, ?Battery-Value) ^ saref:hasTimestamp(?Battery-Measurement, ?dataTimestamp) ^ 
+hasMaxChargingPower(?battery, ?battMaxChargingPower) ^ hasMaxDischargingPower(?battery, ?battMaxDishargingPower) ^
 
 kyrillos-es:hasMaximumStateOfCharge(?battery, ?maxSOC) ^ kyrillos-es:hasStorageCapacity(?battery, ?capacity) ^ kyrillos-es:hasMinimumStateOfCharge(?battery, ?minSOC) ^
 
