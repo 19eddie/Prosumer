@@ -51,11 +51,7 @@ battDischargingCapacity = battSOC - battMinSOCValue = 80 //kw che può fornire p
 
 ----***PSEUDOCODICE CALCOLO M2***----
 
-//per config 03
-m2 = generatorEnergyProduction
-//TODO: calcolare M3
-
-//per config 01
+//M2 per config 01 e config 02
 alpha = generatorEnergyProduction - load 
 if(alpha < 0) { //devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta. 
     if(alpha < battDischargeableEnergy) { //l'energia me la può fornire la batteria.
@@ -75,6 +71,35 @@ if(alpha < 0) { //devo assorbire dell'energia dalla batteria perchè quella prod
     } else { //la batteria non assorbe tutta la produzione in eccesso
         # CASO 4: Produco più energia di quella richiesta ma la batteria non può assorbire tutto l'eccesso
         M2 = generatorEnergyProduction - battChargeableEnergy //ricarico comunque la batteria il più possibile
+        canAbsorbAllExceedingEnergy = false
+    }
+}
+
+
+
+//M2 per config 03
+M2 = generatorEnergyProduction
+
+//M3 per config 03
+alpha = generatorEnergyProduction - load 
+if(alpha < 0) { //devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta. 
+    if(alpha < battDischargeableEnergy) { //l'energia me la può fornire la batteria.
+        # CASO 1: Devo assorbire energia dalla batteria e la batteria può fornirla
+        canProvideAllRequestedEnergy = true
+        M3 = load - generatorEnergyProduction
+    } else { //l'energia NON me la può fornire tutta la batteria.
+        # CASO 2: Devo assorbire energia dalla batteria ma la batteria non può fornirla tutta
+        M3 = battDischargeableEnergy //prendo comunque tutta quella che può fornirmi la batteria
+        canProvideAllRequestedEnergy = false
+    }
+} else { //produco più energia di quella richiesta
+    if(alpha <= battChargeableEnergy) { //la batteria è in grado di assorbire tutta la produzione in eccesso
+        # CASO 3: Produco più energia di quella richiesta e la batteria può assorbirla
+        M3 = load - generatorEnergyProduction
+        canAbsorbAllExceedingEnergy = true
+    } else { //la batteria non assorbe tutta la produzione in eccesso
+        # CASO 4: Produco più energia di quella richiesta ma la batteria non può assorbire tutto l'eccesso
+        M3 = -(battChargeableEnergy)
         canAbsorbAllExceedingEnergy = false
     }
 }
