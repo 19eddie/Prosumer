@@ -322,6 +322,14 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                rdfs:comment "Capacità (kWh) relativa al sistema di accumulo, ovvero la massima energia disponibile nel sistema dopo una ricarica completa."@it .
 
 
+###  http://www.semanticweb.org/prosumer#battChargeableEnergy
+:battChargeableEnergy rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/prosumer#battDischargeableEnergy
+:battDischargeableEnergy rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.semanticweb.org/prosumer#canAbsorb
 :canAbsorb rdf:type owl:DatatypeProperty .
 
@@ -361,6 +369,10 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
 ###  http://www.semanticweb.org/prosumer#hasMinutesInterval
 :hasMinutesInterval rdf:type owl:DatatypeProperty ;
                     rdfs:domain time:TemporalDuration .
+
+
+###  http://www.semanticweb.org/prosumer#hasProduced
+:hasProduced rdf:type owl:DatatypeProperty .
 
 
 ###  http://www.semanticweb.org/prosumer#hasSOC
@@ -772,11 +784,6 @@ kyrillos-es:StateOfCharge rdf:type owl:Class ;
                                             owl:onProperty <https://saref.etsi.org/isMeasuredByDevice> ;
                                             owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                             owl:onClass kyrillos-es:EnergyStorage
-                                          ] ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty saref:relatesToMeasurement ;
-                                            owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-                                            owl:onClass kyrillos-es:StateOfChargeMeasurement
                                           ] .
 
 
@@ -1208,8 +1215,7 @@ kyrillos-es:Battery-1-SOC rdf:type owl:NamedIndividual ,
                                    kyrillos-es:StateOfCharge ;
                           saref:relatesToMeasurement kyrillos-es:Battery-1-SOC-M1 ,
                                                      kyrillos-es:Battery-1-SOC-M2 ,
-                                                     kyrillos-es:Battery-1-SOC-M3 ;
-                          :hasSOC 90.0 .
+                                                     kyrillos-es:Battery-1-SOC-M3 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-1-SOC-M1
@@ -1254,8 +1260,7 @@ kyrillos-es:Battery-2-SOC rdf:type owl:NamedIndividual ,
                                    kyrillos-es:StateOfCharge ;
                           saref:relatesToMeasurement kyrillos-es:Battery-2-SOC-M1 ,
                                                      kyrillos-es:Battery-2-SOC-M2 ,
-                                                     kyrillos-es:Battery-2-SOC-M3 ;
-                          :hasSOC 7.1 .
+                                                     kyrillos-es:Battery-2-SOC-M3 .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/Battery-2-SOC-M1
@@ -1335,7 +1340,8 @@ kyrillos-es:HBattery-3 rdf:type owl:NamedIndividual ,
                          ic-data:hasDataPoint :I-Generator-value01 ,
                                               :I-Generator-value02 ,
                                               :I-Generator-value03 ;
-                         ic-data:hasTemporalResolution :Misuration-Interval .
+                         ic-data:hasTemporalResolution :Misuration-Interval ;
+                         :hasProduced 16 .
 
 
 ###  http://www.semanticweb.org/prosumer#I-Generator-value01
@@ -1779,10 +1785,6 @@ prosumer:III-Prosumer rdf:type owl:NamedIndividual ,
 :minSOC rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
 
 :minCapacity rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
-
-:alphaValue rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
-
-:absalphaValue rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
 
 :cluster rdf:type <http://www.w3.org/2003/11/swrl#Variable> .
 
