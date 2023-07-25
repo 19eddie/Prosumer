@@ -1,4 +1,4 @@
-calcolo hasEnergyRequestOrProvided in Config01
+//calcolo hasEnergyRequestOrProvided in Config01. usato per le regole successive
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
 
@@ -16,10 +16,10 @@ hasEnergyRequestOrProvided(?M2-Value, ?result)
 
 --------------------------------------------------------------------------------------------------------------
 
-calcolo M2 in Config01 con 
-ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
-&&
-ALPHA < battMaxDischarging (posso assorbire tutta l'energia in eccesso con la batteria)
+//calcolo M2 in Config01 con 
+//ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
+//&&
+//ALPHA < battMaxDischarging (posso assorbire tutta l'energia in eccesso con la batteria)
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
 
@@ -40,10 +40,10 @@ hasValueEnergyMeter(?M2-Value, ?absLoad-ValueEnergyAbsorbed) ^ canAbsorbOrEmit(?
 
 --------------------------------------------------------------------------------------------------------------
 
-calcolo M2 in Config01 con 
-ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
-&&
-ALPHA > battMaxDischarging (la batteria non può fornire tutta l'energia mancante)
+//calcolo M2 in Config01 con 
+//ALPHA < 0 (mi serve più energia di quella fornita dal generatore)
+//&&
+//ALPHA > battMaxDischarging (la batteria non può fornire tutta l'energia mancante)
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
 
@@ -67,10 +67,10 @@ hasValueEnergyMeter(?M2-Value, ?result) ^ canAbsorbOrEmit(?M2-Value, false)
 
 --------------------------------------------------------------------------------------------------------------
 
-calcolo M2 in Config01 con 
-ALPHA >= 0 (generatore produce più energia di quella assorbita dal load)
-&&
-ALPHA <= battMaxCharging (posso assorbire tutta l'energia in eccesso con la batteria)
+//calcolo M2 in Config01 con 
+//ALPHA >= 0 (generatore produce più energia di quella assorbita dal load)
+//&&
+//ALPHA <= battMaxCharging (posso assorbire tutta l'energia in eccesso con la batteria)
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
 
@@ -90,10 +90,10 @@ hasValueEnergyMeter(?M2-Value, ?absLoad-ValueEnergyAbsorbed) ^ canAbsorbOrEmit(?
 
 --------------------------------------------------------------------------------------------------------------
 
-calcolo M2 in Config01 con 
-ALPHA > 0 (generatore produce più energia di quella assorbita dal load)
-&&
-ALPHA > battMaxCharging (non posso assorbire tutta l'energia in eccesso con la batteria, quella in più va su M2)
+//calcolo M2 in Config01 con 
+//ALPHA > 0 (generatore produce più energia di quella assorbita dal load)
+//&&
+//ALPHA > battMaxCharging (non posso assorbire tutta l'energia in eccesso con la batteria, quella in più va su M2)
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^
 
