@@ -69,7 +69,7 @@ WHERE {
 
   FILTER((xsd:string(?batTimestamp) = xsd:string(?loadTimestamp)) && (xsd:string(?batTimestamp) = xsd:string(?genTimestamp)))
   
-  BIND((?genValue - ?loadValue) as ?alpha)
+  BIND((?genValue + ?loadValue) as ?alpha)
   BIND( 
     if(?alpha < 0,
       if( ABS(?alpha) < ?battDischargeableEnergy,
@@ -93,7 +93,6 @@ WHERE {
 }
 
 GROUP BY ?prosumer ?battery ?batTimestamp ?M1max ?M1min ?battDischargeableEnergy ?battChargeableEnergy
-
 ORDER BY ?prosumer ?battery ?batTimestamp
 
 
