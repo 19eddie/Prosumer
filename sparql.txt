@@ -110,7 +110,8 @@ ORDER BY ?prosumer ?battery ?batTimestamp
 
 
 ----------------
-query per kw totali caricabili/scaricabili da uno StorageSystem (composto da più batterie):
+//query per kw totali caricabili/scaricabili da uno StorageSystem (composto da più batterie)
+//sarebbe da mettere come subquery della precedente e utilizzare nei calcoli i valori storageSystemChargeableEnergy e storageSystemDischargeableEnergy al posto di battChargeableEnergy e battDischargeableEnergy. Non è stato fatto perche Protègè non supporta le subquery (https://github.com/protegeproject/snap-sparql-query/issues/10)
 
 
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
