@@ -1,3 +1,6 @@
+//queste regole tengono conto della singola batteria
+
+
 //M1 in config01
 //M1 = M2 + load
 

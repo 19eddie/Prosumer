@@ -1,3 +1,7 @@
+//le regole tengono conto di una sola batteria
+
+--------------------------------------------------------------------------------------------------------------
+
 //calcolo hasEnergyRequestOrProvided in Config01. usato per le regole successive
 
 Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?load-dataTimestamp) ^

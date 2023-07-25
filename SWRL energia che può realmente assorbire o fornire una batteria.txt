@@ -1,4 +1,4 @@
-// Variabili disponibili. Sono stati utilizzati valori di esempio
+// Variabili disponibili. In questi appunti sono stati utilizzati valori di esempio
 load = 10 //ho un valore per ogni timestamp (kw)
 generatorEnergyProduction = 100 //ho un valore per ogni timestamp (kw)
 battMaxStateOfCharge = 0.9 //ho un valore per batteria
