@@ -1,0 +1,127 @@
+----***PSEUDOCODICE CALCOLO M2 in config03***----
+M2 = generatorEnergyProduction
+
+----***PSEUDOCODICE CALCOLO M3 in config03***----
+alpha = generatorEnergyProduction - load //NOTA: nell'ontologia il valore load è negativo, va quindi fatta l'operazione di add e non di subtract.
+if(alpha < 0) { //devo assorbire dell'energia dalla batteria perchè quella prodotta dal generatore non basta. 
+    if(abs(alpha) < battDischargeableEnergy) { //l'energia me la può fornire la batteria.
+        # CASO 1: Devo assorbire energia dalla batteria e la batteria può fornirla
+        canProvideAllRequestedEnergy = true
+        M3 = abs(alpha)
+    } else { //l'energia NON me la può fornire tutta la batteria.
+        # CASO 2: Devo assorbire energia dalla batteria ma la batteria non può fornirla tutta
+        M3 = battDischargeableEnergy //prendo comunque tutta quella che può fornirmi la batteria
+        canProvideAllRequestedEnergy = false
+    }
+} else { //produco più energia di quella richiesta
+    if(alpha <= battChargeableEnergy) { //la batteria è in grado di assorbire tutta la produzione in eccesso
+        # CASO 3: Produco più energia di quella richiesta e la batteria può assorbirla
+        M3 = abs(load) - generatorEnergyProduction
+        canAbsorbAllExceedingEnergy = true
+    } else { //la batteria non assorbe tutta la produzione in eccesso
+        # CASO 4: Produco più energia di quella richiesta ma la batteria non può assorbire tutto l'eccesso
+        M3 = -(battChargeableEnergy)
+        canAbsorbAllExceedingEnergy = false
+    }
+}
+
+----***PSEUDOCODICE CALCOLO M1 in config03***----
+M1 = M2 + M3 + load
+
+------------QUERY per calcolo M1, M2 e M3 in config03------------
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
+PREFIX pros: <http://www.semanticweb.org/prosumer#>
+PREFIX : <http://www.semanticweb.org/prosumer/>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX sf2: <https://saref.etsi.org/>
+PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?prosumer ?M1 ?M2 ?M3 ?battery ?batTimestamp ?canStorageProvideAllRequestedEnergy ?canStorageAbsorbAllExceedingEnergy
+WHERE {
+  #Prendo i prosumer di tipo config03
+  ?prosumer rdf:type :Prosumer .
+  ?prosumer :composedBy ?system .
+  ?system rdf:type bat:StorageSystem .
+  ?prosumer :composedBy ?generator .
+  ?generator rdf:type :Generator .
+  ?prosumer :composedBy ?load .
+  ?load rdf:type :Load .
+  ?prosumer rdf:type ?type .
+  FILTER(?type = :Config01 || ?type = :Config02) 
+
+  #Prendo il valore del generatore
+  ?generator sf2:measuresProperty ?genMeasurement .
+  ?genMeasurement ic:hasDataPoint ?genData .
+  ?genData saref:hasTimestamp ?genTimestamp .
+  ?genData pros:hasValueEnergyProduced ?genValue .
+
+  #Prendo il valore del load
+  ?load sf2:measuresProperty ?loadMeasurement .
+  ?loadMeasurement ic:hasDataPoint ?loadData .
+  ?loadData saref:hasTimestamp ?loadTimestamp .
+  ?loadData pros:hasValueEnergyAbsorbed ?loadValue .
+  
+  #Prendo il valore della batteria
+  ?system saref:consistsOf ?battery .
+  ?battery sf2:measuresProperty ?batterySOC .
+  ?batterySOC sf2:relatesToMeasurement ?batMeasurement .
+  ?batMeasurement saref:hasTimestamp ?batTimestamp .
+  ?batMeasurement pros:hasBatteryChargeableEnergy ?battChargeableEnergy .
+  ?batMeasurement pros:hasBatteryDischargeableEnergy ?battDischargeableEnergy .
+
+  #Faccio i calcoli sullo stesso timestamp
+  FILTER((xsd:string(?batTimestamp) = xsd:string(?loadTimestamp)) && (xsd:string(?batTimestamp) = xsd:string(?genTimestamp)))
+  
+  #Calcolo alpha
+  BIND((?genValue + ?loadValue) as ?alpha)
+  
+  #M3
+  BIND( 
+    if(?alpha < 0,
+      if( ABS(?alpha) < ?battDischargeableEnergy,
+       ABS(?alpha), #CASO1
+       ?battDischargeableEnergy #CASO2
+      ),
+      if(ABS(?alpha) <= ?battChargeableEnergy,
+        ABS(?loadValue) - ?genValue, #CASO3
+        -?battChargeableEnergy #CASO4
+      )
+    )
+  as ?M3)
+
+  #canStorageProvideAllRequestedEnergy
+  BIND( 
+    if(?alpha < 0,
+      if( ABS(?alpha) < ?battDischargeableEnergy,
+       true, #CASO1
+       false #CASO2
+      ),
+      "No energy Required"
+    )
+  as ?canStorageProvideAllRequestedEnergy)
+
+  #canStorageAbsorbAllExceedingEnergy
+  BIND( 
+    if(?alpha >= 0,
+      if( ABS(?alpha) <= ?battChargeableEnergy,
+       true, #CASO3
+       false #CASO4
+      ),
+      "No energy to Absorb"
+    )
+  as ?canStorageAbsorbAllExceedingEnergy)
+
+  #M2
+  BIND((?genValue) as ?M2)
+
+  #M1
+  BIND(((?M2 + ?M3) + ?loadValue) as ?M1)
+}
+
+GROUP BY ?prosumer ?M1 ?M2 ?M3 ?canStorageProvideAllRequestedEnergy ?canStorageAbsorbAllExceedingEnergy ?battery ?batTimestamp
+ORDER BY ?prosumer ?battery ?batTimestamp
