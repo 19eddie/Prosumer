@@ -1,3 +1,14 @@
+## [3.0.0](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/2.0.1...3.0.0) (2023-07-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* add all files of main branch in the release
+
+### Build and continuous integration
+
+* add all files of main branch in the release ([6e6502d](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/6e6502d8e0d3bd62ff973398ef986767885c0b5c))
+
 ## [2.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/2.0.0...2.0.1) (2023-07-06)
 
 
