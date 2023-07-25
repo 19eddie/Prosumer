@@ -1,0 +1,58 @@
+//M1 in config01
+//M1 = M2 + load
+
+prosumer:M1(?meterM1) ^  ic-data:TimeSeries(?M1-Measurement) ^ measuresProperty(?meterM1, ?M1-Measurement) ^ ic-data:hasDataPoint(?M1-Measurement, ?M1-Value) ^ EnergyMeterMeasurement(?M1-Value) ^ hasTimestamp(?M1-Value, ?M1-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^
+hasValueEnergyMeter(?M2-Value, ?M2-dataValueEnergyMeter) ^ hasTimestamp(?M2-Value, ?M1-dataTimestamp) ^
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?M1-dataTimestamp) ^
+
+Config01(?prosumer) ^
+composedBy(?prosumer, ?meterM1) ^ composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^
+
+swrlb:add(?result, ?M2-dataValueEnergyMeter, ?Load-ValueEnergyAbsorbed)
+->
+hasValueEnergyMeter(?M1-Value, ?result)
+
+----------------------------------------------------
+
+//M1 in config02
+//M1 = M2 + load
+
+prosumer:M1(?meterM1) ^  ic-data:TimeSeries(?M1-Measurement) ^ measuresProperty(?meterM1, ?M1-Measurement) ^ ic-data:hasDataPoint(?M1-Measurement, ?M1-Value) ^ EnergyMeterMeasurement(?M1-Value) ^ hasTimestamp(?M1-Value, ?M1-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^
+hasValueEnergyMeter(?M2-Value, ?M2-dataValueEnergyMeter) ^ hasTimestamp(?M2-Value, ?M1-dataTimestamp) ^
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?M1-dataTimestamp) ^
+
+Config02(?prosumer) ^
+composedBy(?prosumer, ?meterM1) ^ composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?load) ^
+
+swrlb:add(?result, ?M2-dataValueEnergyMeter, ?Load-ValueEnergyAbsorbed)
+->
+hasValueEnergyMeter(?M1-Value, ?result)
+
+----------------------------------------------------
+
+//M1 in config03
+//M1 = M2 + M3 + load
+
+prosumer:M1(?meterM1) ^  ic-data:TimeSeries(?M1-Measurement) ^ measuresProperty(?meterM1, ?M1-Measurement) ^ ic-data:hasDataPoint(?M1-Measurement, ?M1-Value) ^ EnergyMeterMeasurement(?M1-Value) ^ hasTimestamp(?M1-Value, ?M1-dataTimestamp) ^
+
+prosumer:M2(?meterM2) ^ ic-data:TimeSeries(?M2-Measurement) ^ measuresProperty(?meterM2, ?M2-Measurement) ^ ic-data:hasDataPoint(?M2-Measurement, ?M2-Value) ^ EnergyMeterMeasurement(?M2-Value) ^
+hasValueEnergyMeter(?M2-Value, ?M2-dataValueEnergyMeter) ^ hasTimestamp(?M2-Value, ?M1-dataTimestamp) ^
+
+prosumer:M3(?meterM3) ^ ic-data:TimeSeries(?M3-Measurement) ^ measuresProperty(?meterM3, ?M3-Measurement) ^ ic-data:hasDataPoint(?M3-Measurement, ?M3-Value) ^ EnergyMeterMeasurement(?M3-Value) ^
+hasValueEnergyMeter(?M3-Value, ?M3-dataValueEnergyMeter) ^ hasTimestamp(?M3-Value, ?M1-dataTimestamp) ^
+
+Load(?load) ^  ic-data:TimeSeries(?Load-Measurement) ^ measuresProperty(?load, ?Load-Measurement) ^ ic-data:hasDataPoint(?Load-Measurement, ?Load-Value) ^ LoadMeasurement(?Load-Value) ^ hasValueEnergyAbsorbed(?Load-Value, ?Load-ValueEnergyAbsorbed) ^ hasTimestamp(?Load-Value, ?M1-dataTimestamp) ^
+
+Config03(?prosumer) ^
+composedBy(?prosumer, ?meterM1) ^ composedBy(?prosumer, ?meterM2) ^ composedBy(?prosumer, ?meterM3) ^ composedBy(?prosumer, ?load) ^
+
+swrlb:add(?partialResult, ?M2-dataValueEnergyMeter, ?M3-dataValueEnergyMeter)
+swrlb:add(?result, ?partialResult, ?Load-ValueEnergyAbsorbed)
+->
+hasValueEnergyMeter(?M1-Value, ?result)
