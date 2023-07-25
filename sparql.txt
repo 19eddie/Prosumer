@@ -2,29 +2,35 @@
 -----****FLESSIBILITA'****----- 	
 // Se il valore di M1 è negativo, indica che l'energia è assorbita dalla rete; se è positivo, indica che l'energia è immessa nella rete.
 
+alpha = generatorEnergyProduction - load //NOTA: nell'ontologia il valore load è negativo, va quindi fatta l'operazione di add e non di subtract.
+
 -----M1 MASSIMO-----
 // (va più energia nella rete) ---> non carico batteria, però se mi serve prendo da batteria. valido per tutte le conf.
 
-alpha = generatorEnergyProduction - load 
 if(alpha < 0){ //devo assorbire dalla rete o dalla batteria
 	if(abs(alpha) < battDischargeableEnergy) { //l'energia richiesta dal load può essere soddisfatta dalla batteria
-		m1 = 0 //ho già preso tutti i kw dal generatore quindi non esce niente verso la rete
+		M1max = 0 //ho già preso tutti i kw dal generatore quindi non esce niente verso la rete
 		energiaAssorbitaDallaBatteria = abs(alpha)
 	} else { //non mi basta assorbire dalla batteria, devo prendere dalla rete
-		m1 = battDischargeableEnergy + alpha //sarà un valore negativo
+		M1max = battDischargeableEnergy + alpha //sarà un valore negativo
 	}
 } else { //soddisfo tutto il load con solo il generatore
-	m1 = alpha //sarà positivo
+	M1max = alpha //sarà positivo
 }
 -------------------
 
 -----M1 MINIMO-----
 // (va meno energia nella rete) ---> carico batteria prelevando anche dalla rete 
 
-if(conf02 or conf03) { //la batteria assorbe anche dalla rete se serve
-	m1 = generatore - load - battChargeableEnergy
+if(conf02 or conf03) { //la batteria assorbe anche dalla rete
+	M1min = alpha - battChargeableEnergy
 } else { //conf01 la batteria assorbe solo dal generatore
-	m1 = generatore - load
+  if(alpha > 0) { //se alpha > 0 è energia che avanza dal generatore
+    M1min = alpha - min(battChargeableEnergy, alpha) //faccio assorbire tutta l'energia possibile alla batteria
+  } else { //se non avanza energia dal generatore non metto nulla nella batteria, in conf01 posso solo ricaricarla dal generatore
+    M1min = alpha
+  }
+	
 }
 -------------------
 
@@ -86,7 +92,13 @@ WHERE {
     BIND(
      IF((?type = :Config02 || ?type = :Config03),
       ?alpha - ?battChargeableEnergy,
-      ?alpha
+      IF(?alpha > 0,
+        IF(?alpha < ?battChargeableEnergy,
+          0,
+          ?alpha - ?battChargeableEnergy
+        ),
+        ?alpha
+      )
     )
   as ?M1min)
 
