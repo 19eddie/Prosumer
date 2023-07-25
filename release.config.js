@@ -9,8 +9,10 @@ config.plugins.push(
         "assets": [
             // Change this path if your pdf has another name.
             { "path": "docs/report.pdf" },
-            // ttl ontology file
-            { "path": "main-repo/Prosumer01.ttl" },
+            // main branch txt files
+            { "path": "main-repo/*.txt" },
+            // ontology ttl file
+            { "path": "main-repo/*.ttl" },
         ]
     }],
     ["@semantic-release/git", {
