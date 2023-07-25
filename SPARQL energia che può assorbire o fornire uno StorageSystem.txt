@@ -1,0 +1,29 @@
+//query per kw totali caricabili/scaricabili da uno StorageSystem (composto da più batterie)
+//sarebbe da mettere come subquery delle altre e utilizzare nei calcoli i valori storageSystemChargeableEnergy e storageSystemDischargeableEnergy al posto di battChargeableEnergy e battDischargeableEnergy. Non è stato fatto perche Protègè non supporta le subquery (https://github.com/protegeproject/snap-sparql-query/issues/10)
+
+
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX bat: <http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/>
+PREFIX pros: <http://www.semanticweb.org/prosumer#>
+PREFIX : <http://www.semanticweb.org/prosumer/>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX sf2: <https://saref.etsi.org/>
+PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?system ?batTimestamp (SUM(?battChargeableEnergy) as ?storageSystemChargeableEnergy) (SUM(?battDischargeableEnergy) as ?storageSystemDischargeableEnergy)
+WHERE {
+  ?system rdf:type bat:StorageSystem .    
+  ?system saref:consistsOf ?battery .
+
+  ?battery sf2:measuresProperty ?batterySOC .
+  ?batterySOC sf2:relatesToMeasurement ?batMeasurement .
+  
+  ?batMeasurement saref:hasTimestamp ?batTimestamp .
+  ?batMeasurement pros:hasBatteryChargeableEnergy ?battChargeableEnergy .
+  ?batMeasurement pros:hasBatteryDischargeableEnergy ?battDischargeableEnergy .
+}
+GROUP BY ?system ?batTimestamp 
+ORDER BY ?system ?batTimestamp 
