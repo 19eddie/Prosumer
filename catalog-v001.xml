@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-    <uri id="Imports Wizard Entry" name="http://www.semanticweb.org/cyrill/ontologies/2023/3/battery" uri="file:/Users/angela/Library/Mobile%20Documents/com~apple~CloudDocs/MAGISTRALE/WEB%20SEMANTICO/Consegna%20Progetto%20WS/battery-with-data.ttl"/>
-    <uri id="Imports Wizard Entry" name="http://ontology.tno.nl/interconnect/device" uri="http://ontology.tno.nl/interconnect/device#"/>
-    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base=""/>
-</catalog>
