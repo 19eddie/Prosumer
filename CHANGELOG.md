@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.0...3.0.1) (2023-07-26)
+
+
+### Documentation
+
+* add class paragraph on chapter 2 ([c547df5](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/c547df52a43858a46de53d494857c5f47441f75a))
+* add object properties section to chapter 2 ([16f13c0](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/16f13c0b9b71d93707792dc96917e76e19d07b2c))
+* create introduction ([84a1ba9](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/84a1ba9d77cb5c401663d6ba7f678d034ada344f))
+
 ## [3.0.0](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/2.0.1...3.0.0) (2023-07-25)
 
 
