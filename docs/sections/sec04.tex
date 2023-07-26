@@ -85,12 +85,20 @@ Si può quindi notare l'utilizzo in particolare dell'ontologia \textit{battery},
 
 \subsection{Query che calcola l'energia che può fornire o assorbire uno Storage System}
 
+Dato uno Storage System composto da una o più batterie, si vuole calcolare l'energia che il sistema nel suo complesso può assorbire o fornire.
+
+Per ogni batteria, c'è un valore che rappresenta l'energia presente in un dato timestamp, percìo si sommano i valori delle varie batterie presenti nello storage dello stesso timestamp.
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=15cm]{images/subquery.png}
     \caption{Query per il calcolo dell'energia che uno Storage System può assorbire o fornire.}
     \label{fig:subquery}
 \end{figure}
+
+La query è disponibile nella repository di \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github} nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20energia%20che%20pu%C3%B2%20assorbire%20o%20fornire%20uno%20StorageSystem.txt}{SPARQL energia che può assorbire o fornire uno StorageSystem.txt}
+
+Dall'esecuzione della query otteniamo dunque la quantità di energia che ogni Storage System può assorbire e immettere nel relativo timestamp. \ref{fig:subquery_res}
 
 \begin{figure}[H]
     \centering
@@ -100,6 +108,8 @@ Si può quindi notare l'utilizzo in particolare dell'ontologia \textit{battery},
 \end{figure}
 
 \subsection{Query sul calcolo della flessibilità del contatore M1}
+
+
 
 \subsection{Query per il calcolo di M1 e M2 in prosumer di configurazione 1 e 2}
 
