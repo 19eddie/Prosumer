@@ -1,3 +1,10 @@
+## [3.0.4](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.3...3.0.4) (2023-07-26)
+
+
+### Documentation
+
+* add configurations images ([c76d46a](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/c76d46a3bb53c7c95e27588579814c8305ff8d40))
+
 ## [3.0.3](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.2...3.0.3) (2023-07-26)
 
 
