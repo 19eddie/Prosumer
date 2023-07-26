@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.2...3.0.3) (2023-07-26)
+
+
+### Documentation
+
+* add prosumer section to chapter 3 ([ee9a40d](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/ee9a40d532664f14495f30314eaa49affcfa7ca8))
+
 ## [3.0.2](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.1...3.0.2) (2023-07-26)
 
 
