@@ -809,7 +809,8 @@ kyrillos-es:StateOfChargeMeasurement rdf:type owl:Class ;
                                                        owl:onProperty saref:measurementMadeBy ;
                                                        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                                        owl:onClass kyrillos-es:EnergyStorage
-                                                     ] .
+                                                     ] ;
+                                     rdfs:comment "Rappresenta un'informazione atomica relativa al valore del livello di carica della batteria in un determinato tempo"@it .
 
 
 ###  http://www.semanticweb.org/cyrill/ontologies/2023/3/battery/StorageSystem
@@ -818,7 +819,8 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
                                           [ rdf:type owl:Restriction ;
                                             owl:onProperty saref:consistsOf ;
                                             owl:allValuesFrom kyrillos-es:EnergyStorage
-                                          ] .
+                                          ] ;
+                          rdfs:comment "sistema di accumulo composto da una o più Battery/EnergyStorage"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#EnergyMeterMeasurement
@@ -828,7 +830,8 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
                                           owl:onProperty saref:measurementMadeBy ;
                                           owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                           owl:onClass prosumer:EnergyMeter
-                                        ] .
+                                        ] ;
+                        rdfs:comment "Rappresenta un'informazione atomica relativa al valore del contatore in un determinato tempo"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#GeneratorMeasurement
@@ -838,7 +841,8 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
                                         owl:onProperty saref:measurementMadeBy ;
                                         owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                         owl:onClass prosumer:Generator
-                                      ] .
+                                      ] ;
+                      rdfs:comment "Rappresenta un'informazione atomica relativa al valore del generatore in un determinato tempo"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#LoadMeasurement
@@ -848,19 +852,22 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
                                    owl:onProperty saref:measurementMadeBy ;
                                    owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
                                    owl:onClass prosumer:Load
-                                 ] .
+                                 ] ;
+                 rdfs:comment "Rappresenta un'informazione atomica relativa al valore del consumo in un determinato tempo"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/AC
 prosumer:AC rdf:type owl:Class ;
             rdfs:subClassOf prosumer:PowerType ;
-            owl:disjointWith prosumer:DC .
+            owl:disjointWith prosumer:DC ;
+            rdfs:comment "Corrente di tipo Alternata"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Bidirectional
 prosumer:Bidirectional rdf:type owl:Class ;
                        rdfs:subClassOf prosumer:EnergyDirection ;
-                       owl:disjointWith prosumer:Monodirectional .
+                       owl:disjointWith prosumer:Monodirectional ;
+                       rdfs:comment "Bidirezionale: il sistema di accumulo può assorbire energia sia dal generatore sia dalla rete"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Config01
@@ -1046,11 +1053,13 @@ prosumer:Configuration rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/prosumer/DC
 prosumer:DC rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:PowerType .
+            rdfs:subClassOf prosumer:PowerType ;
+            rdfs:comment "Corrente di tipo Continua"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/DistributionNetwork
-prosumer:DistributionNetwork rdf:type owl:Class .
+prosumer:DistributionNetwork rdf:type owl:Class ;
+                             rdfs:comment "Rappresenta la rete"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/EnergyDirection
@@ -1059,7 +1068,8 @@ prosumer:EnergyDirection rdf:type owl:Class ;
                                                owl:unionOf ( prosumer:Bidirectional
                                                              prosumer:Monodirectional
                                                            )
-                                             ] .
+                                             ] ;
+                         rdfs:comment "Modella la direzione del sistema di accumulo"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/EnergyMeter
@@ -1069,11 +1079,13 @@ prosumer:EnergyMeter rdf:type owl:Class ;
                                                          prosumer:M2
                                                          prosumer:M3
                                                        )
-                                         ] .
+                                         ] ;
+                     rdfs:comment "Contatore per la misura dell'energia"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/EnergyStorage
-prosumer:EnergyStorage rdf:type owl:Class .
+prosumer:EnergyStorage rdf:type owl:Class ;
+                       rdfs:comment "rappresenta la singola batteria"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/EnergyStorageLocation
@@ -1082,41 +1094,49 @@ prosumer:EnergyStorageLocation rdf:type owl:Class ;
                                                      owl:unionOf ( prosumer:Post-Production
                                                                    prosumer:Production
                                                                  )
-                                                   ] .
+                                                   ] ;
+                               rdfs:comment "Posizione del sistema di accumulo"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Generator
-prosumer:Generator rdf:type owl:Class .
+prosumer:Generator rdf:type owl:Class ;
+                   rdfs:comment "Entità che produce energia nel prosumer."@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Load
-prosumer:Load rdf:type owl:Class .
+prosumer:Load rdf:type owl:Class ;
+              rdfs:comment "Profilo di carico equivalente, detto anche consumo. è l'energia che viene richiesta al prosumer"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/M1
 prosumer:M1 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
+            rdfs:subClassOf prosumer:EnergyMeter ;
+            rdfs:comment "è il contatore di scambio con la rete di distribuzione, misura l'energia scambiata (assorbita o immessa) con la rete."@it .
 
 
 ###  http://www.semanticweb.org/prosumer/M2
 prosumer:M2 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
+            rdfs:subClassOf prosumer:EnergyMeter ;
+            rdfs:comment "è il contatore che misura l'energia scambiata nel punto di produzione (ovvero la combinazione dell'energia prodotta dal generatore con l'energia fornita o assorbita dal sistema di accumulo)"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/M3
 prosumer:M3 rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:EnergyMeter .
+            rdfs:subClassOf prosumer:EnergyMeter ;
+            rdfs:comment "quando è presente (solo in Prosumer di configurazione 3), serve a misurare l'energia di carico e scarico del sistema di accumulo."@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Monodirectional
 prosumer:Monodirectional rdf:type owl:Class ;
-                         rdfs:subClassOf prosumer:EnergyDirection .
+                         rdfs:subClassOf prosumer:EnergyDirection ;
+                         rdfs:comment "Monodirezionale: il sistema di accumulo può assorbire energia solo dal generatore"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Post-Production
 prosumer:Post-Production rdf:type owl:Class ;
                          rdfs:subClassOf prosumer:EnergyStorageLocation ;
-                         owl:disjointWith prosumer:Production .
+                         owl:disjointWith prosumer:Production ;
+                         rdfs:comment "Posizione Post-Produzione"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/PowerType
@@ -1125,12 +1145,14 @@ prosumer:PowerType rdf:type owl:Class ;
                                          owl:unionOf ( prosumer:AC
                                                        prosumer:DC
                                                      )
-                                       ] .
+                                       ] ;
+                   rdfs:comment "TIpo di corrente"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Production
 prosumer:Production rdf:type owl:Class ;
-                    rdfs:subClassOf prosumer:EnergyStorageLocation .
+                    rdfs:subClassOf prosumer:EnergyStorageLocation ;
+                    rdfs:comment "Posizione Produzione"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Prosumer
