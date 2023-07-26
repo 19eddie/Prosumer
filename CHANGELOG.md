@@ -1,3 +1,12 @@
+## [3.0.8](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.7...3.0.8) (2023-07-26)
+
+
+### Documentation
+
+* add description to rules ([d90adce](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/d90adceada2929f2e430aa97995677946e6e5eb2))
+* add second query description ([496d829](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/496d8294979c04c309b33f55746ba5bcaf800d4d))
+* complete query in chapter 4 ([0ad83ab](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/0ad83abd4f6f6a2e29e0006981fb26ce23a7a72b))
+
 ## [3.0.7](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.6...3.0.7) (2023-07-26)
 
 
