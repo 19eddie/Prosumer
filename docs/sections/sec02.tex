@@ -46,12 +46,33 @@ In base alla configurazione (descritta in seguito), l'impianto può avere due o 
 L'ontologia è stata sviluppata focalizzandosi sul ruolo del prosumer e delle sue caratteristiche.
 Di conseguenza è stato pensato di modellare come classi principali:
 \begin{itemize}
-    \item \textbf{Prosumer};
-    \item Profilo di consumo, chiamato \textbf{Load};
-    \item Sistema di generazione, chiamato \textbf{Generator};
-    \item Sistema di accumulo, chiamato \textbf{Storage System}, composto da uno o più \textbf{Energy Storage} o \textbf{Battery};
-    \item Contatore, chiamato \textbf{Energy Meter}.
+    \item \textbf{Prosumer} per modellare l'individuo principale;
+    \item Profilo di consumo, chiamato \textbf{Load}, per modellare la quantià di energia consumata;
+    \item Sistema di generazione, chiamato \textbf{Generator}, per mdellare la quantià di energia prodotta;
+    \item Sistema di accumulo, chiamato \textbf{Storage System}, composto da uno o più \textbf{Energy Storage} o \textbf{Battery}, per modellare l'energia immagazzinata;
+    \item Contatore, chiamato \textbf{Energy Meter}, con sottoclassi \textbf{M1}, \textbf{M2} e \textbf{M3}, per modellare il controllo sulla quantità di energia scambiata all'interno di un prosumer;
+    \item \textbf{Power Type}, con sottoclassi \textbf{AC} e \textbf{DC}, per modellare la tipologia di corrente;
+    \item \textbf{Energy Storage Location}, con sottoclassi \textbf{Production} e \textbf{Post Production}, per modellare la posizione del sistema di accumulo;
+    \item \textbf{Energy Direction}, con sottoclassi \textbf{Monodirectional} e \textbf{Bidirectional}, per modellare la direzione del sistema di accumulo.
 \end{itemize}
+
+Per quanto riguarda la modellazione di \textbf{Storage System} e di \textbf{Battery}, è stata utilizzata l'ontologia \textit{Battery} sviluppata da Kyrillos.
+
+Le varie configurazioni sono state modellate come sottoclassi di \textbf{Prosumer}, ovvero \textbf{Config01}, \textbf{Config02} e \textbf{Config03}.
+A seconda delle equivalenze dichiarate all'interno di ogni sottoclasse di \textbf{Configuration}, sarà il reasoner a dichiarare a che configurazione appartengono le istanze di tipo Prosumer.
+
+Le varie sottoclassi sono tutte disgiunte tra loro, in quanto ritenuto concettualmente non possibile l'appartenenza di un'istanza a più classi diverse.
+Anche le classi principali come \textit{Load}, \textit{Generator} e altre sono disgiunte tra loro per la stessa motivazione.
+
+In seguito si può vedere la struttura dell'ontologia, con le classi principali e le loro sottoclassi, compresa di estensioni quali \textit{SAREF}, \textit{InterConnect} e \textit{Battery}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=7cm]{images/classi_prosumer.png}
+    \caption{Struttura dell'ontologia Prosumer.}
+    \label{fig:classi_prosumer}
+\end{figure}
+
 
 \section{Proprietà}
 
