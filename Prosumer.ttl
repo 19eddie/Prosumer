@@ -317,7 +317,7 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                                                    ]
                                                                  )
                                           ] ;
-                               rdfs:comment "Capacità (kWh) relativa al sistema di accumulo, ovvero la massima energia disponibile nel sistema dopo una ricarica completa."@it .
+                               rdfs:comment "Capacità (kW) relativa al sistema di accumulo, ovvero la massima energia disponibile nel sistema dopo una ricarica completa."@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasBatteryChargeableEnergy
@@ -328,7 +328,8 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                          owl:withRestrictions ( [ xsd:minInclusive 0.0
                                                                 ]
                                                               )
-                                       ] .
+                                       ] ;
+                            rdfs:comment "energia in kW che può realmente assorbire la batteria in uno specifico tempo, tenendo conto del SOC e delle altre caratteristiche della batteria. Calcolato dalle regole SWRL"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasBatteryDischargeableEnergy
@@ -339,7 +340,8 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                             owl:withRestrictions ( [ xsd:minInclusive 0.0
                                                                    ]
                                                                  )
-                                          ] .
+                                          ] ;
+                               rdfs:comment "energia in kW che può realmente fornire la batteria in uno specifico tempo, tenendo conto del SOC e delle altre caratteristiche della batteria. Calcolato dalle regole SWRL"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasEfficiency
@@ -380,7 +382,8 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
 
 ###  http://www.semanticweb.org/prosumer#hasMinutesInterval
 :hasMinutesInterval rdf:type owl:DatatypeProperty ;
-                    rdfs:domain time:TemporalDuration .
+                    rdfs:domain time:TemporalDuration ;
+                    rdfs:comment "indica un intervallo temporale in minuti"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasValueEnergyAbsorbed
@@ -392,14 +395,13 @@ kyrillos-es:hasStorageCapacity rdf:type owl:DatatypeProperty ;
                                                             ]
                                                           )
                                    ] ;
-                        rdfs:comment "Il carico equivalente (Load) può essere modellato mediante una singola proprietà che esprime l’energia assorbita (quindi negativa) nell’unità di tempo." .
+                        rdfs:comment "Energia in kW assorbita dal carico equivalente (Load)"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasValueEnergyMeter
 :hasValueEnergyMeter rdf:type owl:DatatypeProperty ;
                      rdfs:domain :EnergyMeterMeasurement ;
-                     rdfs:comment """Riferito al contatore (Energy Meter) in un'unità di tempo.
-Se il valore è negativo si riferisce all'energia assorbita, se il valore è positivo si riferisce all'energia immessa."""@it .
+                     rdfs:comment "Energia in kW assorbita (valore negativo) o immessa (valore positivo) nel contatore"@it .
 
 
 ###  http://www.semanticweb.org/prosumer#hasValueEnergyProduced
@@ -410,7 +412,8 @@ Se il valore è negativo si riferisce all'energia assorbita, se il valore è pos
                                      owl:withRestrictions ( [ xsd:minInclusive 0.0
                                                             ]
                                                           )
-                                   ] .
+                                   ] ;
+                        rdfs:comment "indica i kW prodotti dal generatore"@it .
 
 
 ###  https://saref.etsi.org/core/hasTimestamp
