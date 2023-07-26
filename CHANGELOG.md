@@ -1,3 +1,15 @@
+## [3.0.6](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.5...3.0.6) (2023-07-26)
+
+
+### Documentation
+
+* add section for swrl and sparql ([f08713c](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/f08713c9219251c5c298fc3cd48872e9f1b2a737))
+
+
+### General maintenance
+
+* update and add images ([02bf970](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/02bf970cc624b3c46881942783f5fcf4353e8706))
+
 ## [3.0.5](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.4...3.0.5) (2023-07-26)
 
 
