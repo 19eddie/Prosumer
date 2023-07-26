@@ -13,7 +13,8 @@ PREFIX sf2: <https://saref.etsi.org/>
 PREFIX ic: <http://ontology.tno.nl/interconnect/datapoint#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?system ?batTimestamp (SUM(?battChargeableEnergy) as ?storageSystemChargeableEnergy) (SUM(?battDischargeableEnergy) as ?storageSystemDischargeableEnergy)
+SELECT ?system ?batTimestamp (SUM(?battChargeableEnergy) as ?storageSystemChargeableEnergy)
+ (SUM(?battDischargeableEnergy) as ?storageSystemDischargeableEnergy)
 WHERE {
   ?system rdf:type bat:StorageSystem .    
   ?system saref:consistsOf ?battery .
