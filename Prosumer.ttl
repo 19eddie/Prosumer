@@ -869,7 +869,8 @@ kyrillos-es:StorageSystem rdf:type owl:Class ;
 
 ###  http://www.semanticweb.org/prosumer/AC
 prosumer:AC rdf:type owl:Class ;
-            rdfs:subClassOf prosumer:PowerType .
+            rdfs:subClassOf prosumer:PowerType ;
+            owl:disjointWith prosumer:DC .
 
 
 ###  http://www.semanticweb.org/prosumer/Bidirectional
@@ -1485,11 +1486,6 @@ kyrillos-es:HBattery-3 rdf:type owl:NamedIndividual ,
 :Misuration-Interval rdf:type owl:NamedIndividual ,
                               time:TemporalDuration ;
                      :hasMinutesInterval 15 .
-
-
-###  http://www.semanticweb.org/prosumer/DistributionNetwork01
-prosumer:DistributionNetwork01 rdf:type owl:NamedIndividual ,
-                                        prosumer:DistributionNetwork .
 
 
 ###  http://www.semanticweb.org/prosumer/I-EnergyDirection
