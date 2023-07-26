@@ -929,7 +929,10 @@ prosumer:Config01 rdf:type owl:Class ;
                                                          ]
                                                        ) ;
                                     rdf:type owl:Class
-                                  ] .
+                                  ] ;
+                  rdfs:comment """Un Prosumer di Configurazione 1 ha le seguenti caratteristiche:
+Composto da Generatore, Load, M1, M2, StorageSystem.
+Lo StorageSystem deve essere di tipo Monodirezionale, lato Produzione, in corrente Continua."""@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Config02
@@ -987,7 +990,10 @@ prosumer:Config02 rdf:type owl:Class ;
                                                          ]
                                                        ) ;
                                     rdf:type owl:Class
-                                  ] .
+                                  ] ;
+                  rdfs:comment """Un Prosumer di Configurazione 2 ha le seguenti caratteristiche:
+Composto da Generatore, Load, M1, M2, StorageSystem.
+Lo StorageSystem deve essere di tipo Bidirezionale, lato Produzione, in corrente Continua o Alternata."""@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Config03
@@ -1035,7 +1041,10 @@ prosumer:Config03 rdf:type owl:Class ;
                                                            ) ;
                                         rdf:type owl:Class
                                       ] ;
-                  rdfs:subClassOf prosumer:Configuration .
+                  rdfs:subClassOf prosumer:Configuration ;
+                  rdfs:comment """Un Prosumer di Configurazione 3 ha le seguenti caratteristiche:
+Composto da Generatore, Load, M1, M2, M3, StorageSystem.
+Lo StorageSystem deve essere di tipo Bidirezionale, lato Post-produzione, in corrente Alternata."""@it .
 
 
 ###  http://www.semanticweb.org/prosumer/Configuration
@@ -1046,7 +1055,8 @@ prosumer:Configuration rdf:type owl:Class ;
                                                            prosumer:Config03
                                                          )
                                            ] ;
-                       rdfs:subClassOf prosumer:Prosumer .
+                       rdfs:subClassOf prosumer:Prosumer ;
+                       rdfs:comment "La configurazione di un Prosumer è differenziata in base alle sue caratteristiche"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/DC
@@ -1139,7 +1149,12 @@ prosumer:Production rdf:type owl:Class ;
 
 
 ###  http://www.semanticweb.org/prosumer/Prosumer
-prosumer:Prosumer rdf:type owl:Class .
+prosumer:Prosumer rdf:type owl:Class ;
+                  rdfs:comment """Un Prosumer è un'entità connessa a rete elettrica, caratterizzata da:
+-Profilo di carico equivalente (consumo/load);
+-Sistema di generazione;
+-Sistema di accumulo dell'energia (storage);
+-Due o più contatori (punti di misura)."""@it .
 
 
 ###  http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing
