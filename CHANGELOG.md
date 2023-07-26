@@ -1,3 +1,15 @@
+## [3.0.7](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.6...3.0.7) (2023-07-26)
+
+
+### General maintenance
+
+* add more images ([2fa7938](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/2fa79386e440e0f246e2c99011fe6de6f15abbba))
+
+
+### Documentation
+
+* update chapter 4 ([f200749](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/f200749b3d14c63a79b81d9ecf480160b67dd036))
+
 ## [3.0.6](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.5...3.0.6) (2023-07-26)
 
 
