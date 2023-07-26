@@ -1,6 +1,57 @@
 \chapter{Analisi del dominio e del contesto}
+In questa sezione viene riportata la modellazione di classi e proprietà che compongono l'ontologia.
+
+
+\section{Analisi del dominio}
+Il dominio è inerente all'energia, in maniera specifica al Prosumer, ovvero un'entità che può sia produrre che consumare energia.
+Un Prosumer è caratterizzato da:
+
+\begin{itemize}
+    \item Un profilo di carico equivalente o consumo;
+    \item Un sistema di generazione;
+    \item Un sistema di accumulo dell'energia o storage;
+    \item Due o più contatori, detti anche punti di misura.
+\end{itemize}
+
+Un sistema di accumulo può essere monodirezionale, ovvero può assorbire energia elettrica solo dall’impianto di produzione, oppure bidirezionale, cioè può assorbire energia elettrica sia dall’impianto di produzione che dalla rete con obbligo di connessione di terzi.
+Il principale elemento differenziante è quindi se lo storage assorbe energia esclusivamente dall’impianto di produzione.
+
+In base alla configurazione (descritta in seguito), l'impianto può avere due o tre contatori:
+\begin{itemize}
+    \item Contatore M1: è il contatore di scambio con la rete di distribuzione, e misura l’energia scambiata (assorbita o immessa) con la rete.
+    \item Contatore M2: è il contatore che misura l’energia scambiata nel punto di produzione (ovvero la combinazione dell’energia prodotta dal generatore con l’energia fornita o assorbita dal sistema di accumulo).
+    \item Contatore M3: quando presente (configurazione 3 descritta più avanti), serve a misurare l’energia di carico e scarico del sistema di accumulo (tipicamente, una batteria elettrica).
+\end{itemize}
+
+È noto che il prosumer possa avere tre tipi di configurazioni, ovvero:
+\begin{itemize}
+    \item Configurazione 1:
+          \begin{itemize}
+              \item Sistema di accumulo monodirezionale, situato lato produzione e caratterizzato da corrente continua;
+              \item Presenza dei contatori M1 e M2, assenza del contatore M3.
+          \end{itemize}
+    \item Configurazione 2:
+          \begin{itemize}
+              \item Sistema di accumulo bidirezionale, situazio lato produzione e caratterizzato da corrente che può essere sia alternata che continua;
+              \item Presenza dei contatori M1, M2, assenza del contatore M3.
+          \end{itemize}
+    \item Configurazione 3:
+          \begin{itemize}
+              \item Sistema di accumulo bidirezionale, situato lato post-produzione e caratterizzato da corrente alternata;
+              \item Presenza dei contatori M1, M2 e M3.
+          \end{itemize}
+\end{itemize}
 
 \section{Classi}
+L'ontologia è stata sviluppata focalizzandosi sul ruolo del prosumer e delle sue caratteristiche.
+Di conseguenza è stato pensato di modellare come classi principali:
+\begin{itemize}
+    \item \textbf{Prosumer};
+    \item Profilo di consumo, chiamato \textbf{Load};
+    \item Sistema di generazione, chiamato \textbf{Generator};
+    \item Sistema di accumulo, chiamato \textbf{Storage System}, composto da uno o più \textbf{Energy Storage} o \textbf{Battery};
+    \item Contatore, chiamato \textbf{Energy Meter}.
+\end{itemize}
 
 \section{Proprietà}
 
