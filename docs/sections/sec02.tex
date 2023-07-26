@@ -64,7 +64,7 @@ A seconda delle equivalenze dichiarate all'interno di ogni sottoclasse di \textb
 Le varie sottoclassi sono tutte disgiunte tra loro, in quanto ritenuto concettualmente non possibile l'appartenenza di un'istanza a più classi diverse.
 Anche le classi principali come \textit{Load}, \textit{Generator} e altre sono disgiunte tra loro per la stessa motivazione.
 
-In seguito si può vedere la struttura dell'ontologia, con le classi principali e le loro sottoclassi, compresa di estensioni quali \textit{SAREF}, \textit{InterConnect} e \textit{Battery}.
+In seguito (Figura \ref*{fig:classi_prosumer}) si può vedere la struttura dell'ontologia, con le classi principali e le loro sottoclassi, compresa di estensioni quali \textit{SAREF}, \textit{InterConnect} e \textit{Battery}.
 
 \begin{figure}[!ht]
     \centering
@@ -74,6 +74,28 @@ In seguito si può vedere la struttura dell'ontologia, con le classi principali 
 \end{figure}
 
 
-\section{Proprietà}
+\section{Object Properties}
+Le proprietà individuate nel dominio hanno permesso la modellazione di vincoli tra classi negli individui.
+
+Nella figura seguente (\ref*{fig:proprieta_prosumer}) si notano molte proprietà, tante delle quali sono state importate dalle ontologie estese sopra nominate.
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=6cm]{images/proprieta_prosumer.png}
+    \caption{Proprietà dell'ontologia Prosumer.}
+    \label{fig:proprieta_prosumer}
+\end{figure}
+
+Per quanto riguarda l'ontologia Prosumer, sono state modellate le seguenti proprietà:
+\begin{itemize}
+    \item \textbf{composedBy}: modella gli individui principali di cui può essere composto un Prosumer (Storage System, Load, Generator, Energy Meter);
+    \item \textbf{hasDirection}: modella la direzione del sistema di accumulo;
+    \item \textbf{hasLocation}: modella la posizione del sistema di accumulo;
+    \item \textbf{hasPowerType}: modella la tipologia di corrente.
+\end{itemize}
+
+Le ultime tre proprietà elencate hanno come dominio lo \textit{Storage System}, ciò permette di descriverne le caratteristiche e di conseguenza permette al reasoner di inferire automaticamente il tipo di configurazione.
+
+Si nota che, date le caratteristiche specifiche di \textit{Storage System}, verrà notato il caso di assegnamenti di individui inconsistenti, come ad esempio l'aggiunta di un Energy Meter di tipo M3 ad un prosumer il cui Storage System ha le caratteristiche della configurazione 1.
 
 \section{Data Properties}
+
