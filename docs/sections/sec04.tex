@@ -5,11 +5,15 @@ Per permettere al reasoner di inferire maggiori informazioni riguardanti l'ontol
 
 Le seguenti regole sono state realizzate per permettere al reasoner di inferire il valore di energia che una batteria può effettivamente assorbire o immettere.
 
-Siccome varie sono le casistiche da controllare, sono state create quattro regole per i calcoli inerenti.\\
+Siccome varie sono le casistiche da controllare, sono state create quattro regole per i calcoli inerenti.
 
+Per leggibilità sono stati inseriti gli screenshot delle regole, la versione testuale è disponibile nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SWRL%20energia%20che%20pu%C3%B2%20realmente%20assorbire%20o%20fornire%20una%20batteria.txt}{\textit{SWRL energia che può realmente assorbire o fornire una batteria.txt}
+} reperibile su \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github}. \\
 
-[\ref*{fig:bothlessorequal}] \texttt{Capacità massima di carica <= Capacità di carica e\\
-    Capacità massima di scarica <= Capacità di scarica}
+[\ref*{fig:bothlessorequal}] \texttt{Potenza massima di carica <= Capacità di carica e
+    Potenza massima di scarica <= Capacità di scarica}
+
+In questo caso la batteria può assorbire la \textit{potenza massima di carica} e può fornire la \textit{potenza massima di scarica}, ovvero .
 
 \begin{figure}[H]
     \centering
@@ -18,7 +22,7 @@ Siccome varie sono le casistiche da controllare, sono state create quattro regol
     \label{fig:bothlessorequal}
 \end{figure}
 
-[\ref*{fig:charginglessorequal}] \texttt{Capacità massima di carica <= Capacità di carica e\\ Capacità massima di scarica > Capacità di scarica}
+[\ref*{fig:charginglessorequal}] \texttt{Potenza massima di carica <= Capacità di carica e\\ Potenza massima di scarica > Capacità di scarica}
 
 \begin{figure}[H]
     \centering
@@ -27,7 +31,7 @@ Siccome varie sono le casistiche da controllare, sono state create quattro regol
     \label{fig:charginglessorequal}
 \end{figure}
 
-[\ref*{fig:charginggreater}] \texttt{Capacità massima di carica > Capacità di carica e\\ Capacità massima di scarica <= Capacità di scarica}
+[\ref*{fig:charginggreater}] \texttt{Potenza massima di carica > Capacità di carica e\\ Potenza massima di scarica <= Capacità di scarica}
 
 \begin{figure}[H]
     \centering
@@ -36,7 +40,7 @@ Siccome varie sono le casistiche da controllare, sono state create quattro regol
     \label{fig:charginggreater}
 \end{figure}
 
-[\ref*{fig:bothgreater}] \texttt{Capacità massima di carica > Capacità di carica e\\ Capacità massima di scarica > Capacità di scarica}
+[\ref*{fig:bothgreater}] \texttt{Potenza massima di carica > Capacità di carica e\\ Potenza massima di scarica > Capacità di scarica}
 
 \begin{figure}[H]
     \centering
@@ -46,6 +50,9 @@ Siccome varie sono le casistiche da controllare, sono state create quattro regol
 \end{figure}
 
 \section{SPARQL}
+Nella seguente sezione verranno mostrate le query SPARQL e relativi risultati applicati agli individui creati nell'ontologia.
+
+Si nota che per praticità, siccome sono query molto lunghe, verranno mostrate solamente parti delle query e i risultati, mentre le query complete sono disponibili nei relativi file di testo che verranno linkati.
 
 \subsection{PREFIX}
 Per leggibilità i prefissi utilizzati per le query SPARQL verranno visionati solamente in questa sezione.
