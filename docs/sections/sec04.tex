@@ -83,7 +83,7 @@ Si può quindi notare l'utilizzo in particolare dell'ontologia \textit{battery},
     \label{fig:prefix}
 \end{figure}
 
-\subsection{Query che calcola l'energia che può fornire o assorbire uno Storage System}
+\subsection{Query che calcola l'energia che può fornire o assorbire uno Storage System} \label{subquery}
 
 Dato uno Storage System composto da una o più batterie, si vuole calcolare l'energia che il sistema nel suo complesso può assorbire o fornire.
 
@@ -96,7 +96,7 @@ Per ogni batteria, c'è un valore che rappresenta l'energia presente in un dato 
     \label{fig:subquery}
 \end{figure}
 
-La query è disponibile nella repository di \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github} nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20energia%20che%20pu%C3%B2%20assorbire%20o%20fornire%20uno%20StorageSystem.txt}{SPARQL energia che può assorbire o fornire uno StorageSystem.txt}
+La query è disponibile nella repository di \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github} nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20energia%20che%20pu%C3%B2%20assorbire%20o%20fornire%20uno%20StorageSystem.txt}{\textit{SPARQL energia che può assorbire o fornire uno StorageSystem.txt}}
 
 Dall'esecuzione della query otteniamo dunque la quantità di energia che ogni Storage System può assorbire e immettere nel relativo timestamp. \ref{fig:subquery_res}
 
@@ -109,8 +109,86 @@ Dall'esecuzione della query otteniamo dunque la quantità di energia che ogni St
 
 \subsection{Query sul calcolo della flessibilità del contatore M1}
 
+Con flessibilità si intende la capacità del sistema di accumulo di gestire le variazioni di carico e produzione di energia elettrica in modo ottimale, tenendo conto delle sue caratteristiche, del livello di carica e della tipologia di collegamento alla rete.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/query_flessibilita.png}
+    \caption{Query per il calcolo della flessibilità del contatore M1.}
+    \label{fig:query_flessibilita}
+\end{figure}
+
+La query utilizza i valori di energia potenzialmente assorbibile o fornibile calcolati con le regole SWRL precedentemente descritte.
+Si vuole notare che la query per come è presentata nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20flessibilit%C3%A0.txt}{SPARQL flessibilità.txt} 
+purtroppo calcola la flessibilità di ogni batteria, e non di ogni Storage System.
+Ciò è dovuto al software che è stato utilizzato per l'implementazione dell'ontologia e delle query, ovvero Protègè,
+che non supporta le subquery nel linguaggio SPARQL.
+Nel caso in cui invece si utilizzasse un software che supporta le subquery, si potrebbe calcolare la flessibilità di ogni Storage System semplicemente inserendo la query \ref*{subquery} immediatamente dopo la clausola \texttt{WHERE}.
+Ciò vale anche per le query successive.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/query_flessibilita_res.png}
+    \caption{Risultati della query per il calcolo della flessibilità del contatore M1.}
+    \label{fig:query_flessibilita_res}
+\end{figure}
+
+Si nota che se il valore di M1 è negativo, indica che l'energia è assorbita dalla rete; se è positivo, indica che l'energia è immessa nella rete.
 
 \subsection{Query per il calcolo di M1 e M2 in prosumer di configurazione 1 e 2}
 
+Le premesse sono le precedenti della query per il calcolo della flessibilità.
+
+Questa query è inerente a prosumer di configurazione 1 e 2, ovvero prosumer che non presentano il contatore M3, in quanto i calcoli sono diversi come sarà mostrato in seguito.
+
+Per entrambe le configurazioni, l'obiettivo è determinare come il sistema di accumulo (batteria) può essere utilizzato per fornire o assorbire energia
+in base al carico equivalente e alla produzione di energia del generatore.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=6cm]{images/query_m1m2_config0102.png}
+    \caption{Query per il calcolo di M1 e M2 in prosumer di configurazione 1 e 2.}
+    \label{fig:query_m1_m2}
+\end{figure}
+
+Il calcolo di M2 dipende dal valore di alpha, la differenza tra la generazione di energia e il consumo.
+
+Se alpha è negativo, viene richiesta energia dalla batteria. Se la batteria ha abbastanza energia da fornire, viene soddisfatta tutta la richiesta; altrimenti, viene prelevata il massimo possibile dall'energia del generatore e dalla batteria.
+Se alpha è positivo, il prosumer produce più energia di quella richiesta. Se la batteria ha abbastanza capacità di carica, viene utilizzata per assorbire tutta l'energia in eccesso; altrimenti, la batteria viene caricata con il massimo possibile.
+Nel calcolo di M1, il valore rappresenta l'energia totale scambiata con la rete, includendo l'energia del generatore, l'energia prelevata e fornita dalla batteria e l'energia assorbita o immessa dalla rete.
+M1 viene ottenuto sommando il valore di M2 al consumo.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/query_m1m2_config0102_res.png}
+    \caption{Risultati della query per il calcolo di M1 e M2 in prosumer di configurazione 1 e 2.}
+    \label{fig:query_m1_m2_res}
+\end{figure}
+
+La query completa si trova nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20M1%20e%20M2%20in%20config01%20e%20config02.txt}{\textit{SPARQL M1 e M2 in config01 e config02.txt}}.
+
 \subsection{Query per il calcolo di M1, M2 e M3 in prosumer di configurazione 3}
+
+Infine si vuole calcolare M1, M2 e M3 per prosumer di configurazione 3.
+
+M2 rappresenta l'energia prodotta dal generatore, mentre M3 M3 rappresenta l'energia scambiata con la batteria ed è determinata dalla differenza tra l'energia prodotta dal generatore e l'energia assorbita dal carico del prosumer.
+Se il prosumer richiede energia dalla batteria, M3 assume il valore dell'energia richiesta, a meno che la batteria non abbia abbastanza energia disponibile, in tal caso assume il massimo di energia scaricabile dalla batteria. Se il prosumer produce più energia di quella richiesta,
+M3 assume il valore dell'energia in eccesso che può essere assorbita dalla batteria, a condizione che abbia abbastanza capacità di carica; altrimenti, assume il massimo valore di capacità di carica della batteria, ma negativo.
+Infine, M1 rappresenta il totale di energia scambiata con la rete, includendo l'energia prodotta dal generatore, l'energia scambiata con la batteria e il valore del carico del prosumer.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=7cm]{images/query_m3.png}
+    \caption{Query per il calcolo di M1, M2 e M3 in prosumer di configurazione 3.}
+    \label{fig:query_m3}
+\end{figure}
+
+La query completa si trova nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20M1%2C%20M2%2C%20M3%20in%20config03.txt}{\textit{SPARQL M1, M2, M3 in config03.txt}}.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{images/query_m3_res.png}
+    \caption{Risultati della query per il calcolo di M1, M2 e M3 in prosumer di configurazione 3.}
+    \label{fig:query_m3_res}
+\end{figure}
