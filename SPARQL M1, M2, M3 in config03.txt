@@ -52,7 +52,7 @@ WHERE {
   ?prosumer :composedBy ?load .
   ?load rdf:type :Load .
   ?prosumer rdf:type ?type .
-  FILTER(?type = :Config01 || ?type = :Config02) 
+  FILTER(?type = :Config03) 
 
   #Prendo il valore del generatore
   ?generator sf2:measuresProperty ?genMeasurement .
