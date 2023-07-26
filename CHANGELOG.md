@@ -1,3 +1,11 @@
+## [3.0.2](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.1...3.0.2) (2023-07-26)
+
+
+### Documentation
+
+* add data property image ([0b19dfa](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/0b19dfa1da7fd3f830acd834cc2f02eebc992f7e))
+* add data property section into chapter 2 ([c4ea749](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/c4ea749d05acc31b24c8f3418dbd4fc4d7cdf9d7))
+
 ## [3.0.1](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.0...3.0.1) (2023-07-26)
 
 
