@@ -1,19 +1,25 @@
 \chapter{Interrogazione dell'ontologia}
 
 \section{SWRL}
-Per permettere al reasoner di inferire maggiori informazioni riguardanti l'ontologia sono state realizzate alcune regole SWRL.
+Sono state utilizzate regole SWRL per consentire al reasoner di inferire ulteriori informazioni sull'ontologia, in particolare riguardo al valore di energia che una batteria può assorbire o immettere.
 
-Le seguenti regole sono state realizzate per permettere al reasoner di inferire il valore di energia che una batteria può effettivamente assorbire o immettere.
+Le regole SWRL implementate affrontano diverse casistiche e consentono al reasoner di dedurre il valore di energia in modo più accurato. In totale, sono state create quattro regole per gestire i calcoli correlati.
 
-Siccome varie sono le casistiche da controllare, sono state create quattro regole per i calcoli inerenti.
 
 Per leggibilità sono stati inseriti gli screenshot delle regole, la versione testuale è disponibile nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SWRL%20energia%20che%20pu%C3%B2%20realmente%20assorbire%20o%20fornire%20una%20batteria.txt}{\textit{SWRL energia che può realmente assorbire o fornire una batteria.txt}
-} reperibile su \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github}. \\
+} reperibile sulla repository di \href{https://github.com/19eddie/SemanticWeb-Assignment02-03}{Github}. \\
 
-[\ref*{fig:bothlessorequal}] \texttt{Potenza massima di carica <= Capacità di carica e
-    Potenza massima di scarica <= Capacità di scarica}
+\subsubsection{Premessa terminologia}
+Con \textit{potenza massima di carica} (nelle regole \texttt{maxChargingPower}) si intende la massima quantità di energia elettrica che la batteria può assorbire per aumentare il suo livello di carica,
+mentre con \textit{potenza massima di scarica} (nelle regole \texttt{maxDischargingPower}) si intende la massima quantità di energia elettrica che la batteria può fornire quando viene utilizzata per alimentare dispositivi o sistemi elettrici.
 
-In questo caso la batteria può assorbire la \textit{potenza massima di carica} e può fornire la \textit{potenza massima di scarica}, ovvero .
+Invece, la \textit{capacità di carica} (nelle regole \texttt{battChargingCapacity}) di una batteria rappresenta la massima quantità di energia elettrica che può essere immagazzinata nella batteria quando viene caricata.
+Mentre la \textit{capacità di scarica} (nelle regole \texttt{battDischargingCapacity}) di una batteria rappresenta la massima quantità di energia elettrica che la batteria può fornire durante il processo di scarica.
+
+
+\subsection{Energia potenzialmente assorbibile = potenza massima di carica e Energia potenzialmente fornibile = potenza massima di scarica}
+[\ref*{fig:bothlessorequal}] In questo caso la batteria può assorbire al massimo la potenza massima di carica siccome è inferiore o uguale alla capacità di carica,
+e può fornire al più la potenza massima di scarica, perchè inferiore o uguale della capacità di scarica.
 
 \begin{figure}[H]
     \centering
@@ -22,7 +28,11 @@ In questo caso la batteria può assorbire la \textit{potenza massima di carica} 
     \label{fig:bothlessorequal}
 \end{figure}
 
-[\ref*{fig:charginglessorequal}] \texttt{Potenza massima di carica <= Capacità di carica e\\ Potenza massima di scarica > Capacità di scarica}
+
+\subsection{Energia potenzialmente assorbibile = potenza massima di carica e Energia potenzialmente fornibile = capacità di scarica}
+[\ref*{fig:charginglessorequal}]  Anche in questo caso la batteria può assorbire al massimo la potenza massima di carica siccome è inferiore o uguale alla capacità di carica,
+e invece può fornire al più la capacità di scarica, perchè la potenza di scarica risulta maggiore della capacità.
+
 
 \begin{figure}[H]
     \centering
@@ -31,7 +41,11 @@ In questo caso la batteria può assorbire la \textit{potenza massima di carica} 
     \label{fig:charginglessorequal}
 \end{figure}
 
-[\ref*{fig:charginggreater}] \texttt{Potenza massima di carica > Capacità di carica e\\ Potenza massima di scarica <= Capacità di scarica}
+
+\subsection{Energia potenzialmente assorbibile = capacità di carica e Energia potenzialmente fornibile = potenza massima di scarica}
+
+[\ref*{fig:charginggreater}] In questo caso invece, la capacità di carica è inferiore alla potenza massima, dunque la batteria può assorbibile al massimo la capacità di carica,
+mentre può fornire al più la potenza massima di scarica, perchè inferiore o uguale alla capacità di scarica.
 
 \begin{figure}[H]
     \centering
@@ -40,7 +54,9 @@ In questo caso la batteria può assorbire la \textit{potenza massima di carica} 
     \label{fig:charginggreater}
 \end{figure}
 
-[\ref*{fig:bothgreater}] \texttt{Potenza massima di carica > Capacità di carica e\\ Potenza massima di scarica > Capacità di scarica}
+\subsection{Energia potenzialmente assorbibile = capacità di carica e Energia potenzialmente fornibile = capacità di scarica}
+
+[\ref*{fig:bothgreater}] Infine c'è il caso in cui la potenza massima sia di carica che di scarica, siano superiori alle rispettive capacità che diventano dunque i valori massimi assorbibili o fornibili dalla batteria.
 
 \begin{figure}[H]
     \centering
@@ -52,10 +68,13 @@ In questo caso la batteria può assorbire la \textit{potenza massima di carica} 
 \section{SPARQL}
 Nella seguente sezione verranno mostrate le query SPARQL e relativi risultati applicati agli individui creati nell'ontologia.
 
-Si nota che per praticità, siccome sono query molto lunghe, verranno mostrate solamente parti delle query e i risultati, mentre le query complete sono disponibili nei relativi file di testo che verranno linkati.
+Si nota che per praticità, siccome sono query molto lunghe, verranno mostrate solamente parti delle query come screenshot e i risultati, mentre le query complete sono disponibili nei relativi file di testo che verranno mostrati.
+
 
 \subsection{PREFIX}
-Per leggibilità i prefissi utilizzati per le query SPARQL verranno visionati solamente in questa sezione.
+Per leggibilità i prefissi utilizzati per le query SPARQL verranno visionati solamente in questa sezione, siccome ripetitivi per ogni query.
+
+Si può quindi notare l'utilizzo in particolare dell'ontologia \textit{battery}, la nuova ontologia \textit{prosumer}, con anche \textit{SAREF} e \textit{Interconnect}.
 
 \begin{figure}[H]
     \centering
