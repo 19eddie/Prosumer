@@ -98,24 +98,22 @@ prosumer:composedBy rdf:type owl:ObjectProperty ;
 ###  http://www.semanticweb.org/prosumer/hasDirection
 prosumer:hasDirection rdf:type owl:ObjectProperty ;
                       rdfs:domain kyrillos-es:StorageSystem ;
-                      rdfs:range prosumer:EnergyDirection .
+                      rdfs:range prosumer:EnergyDirection ;
+                      rdfs:comment "object property utilizzata per indicare se uno StorageSystem è di tipo Monodirezionale o Bidirezionale"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/hasLocation
 prosumer:hasLocation rdf:type owl:ObjectProperty ;
                      rdfs:domain kyrillos-es:StorageSystem ;
-                     rdfs:range prosumer:EnergyStorageLocation .
+                     rdfs:range prosumer:EnergyStorageLocation ;
+                     rdfs:comment "object property utilizzata per indicare se uno StorageSystem è lato Produzione o Post-Produzione"@it .
 
 
 ###  http://www.semanticweb.org/prosumer/hasPowerType
 prosumer:hasPowerType rdf:type owl:ObjectProperty ;
                       rdfs:domain kyrillos-es:StorageSystem ;
-                      rdfs:range prosumer:PowerType .
-
-
-###  http://www.semanticweb.org/prosumer/isConnected
-prosumer:isConnected rdf:type owl:ObjectProperty ,
-                              owl:SymmetricProperty .
+                      rdfs:range prosumer:PowerType ;
+                      rdfs:comment "object property utilizzata per indicare se uno StorageSystem lavora con corrente Alternata AC o Continua DC"@it .
 
 
 ###  https://saref.etsi.org/isMeasuredByDevice
