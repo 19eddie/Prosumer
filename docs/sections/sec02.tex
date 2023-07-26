@@ -53,7 +53,7 @@ Di conseguenza è stato pensato di modellare come classi principali:
     \item Contatore, chiamato \textbf{Energy Meter}, con sottoclassi \textbf{M1}, \textbf{M2} e \textbf{M3}, per modellare il controllo sulla quantità di energia scambiata all'interno di un prosumer;
     \item \textbf{Power Type}, con sottoclassi \textbf{AC} e \textbf{DC}, per modellare la tipologia di corrente;
     \item \textbf{Energy Storage Location}, con sottoclassi \textbf{Production} e \textbf{Post Production}, per modellare la posizione del sistema di accumulo;
-    \item \textbf{Energy Direction}, con sottoclassi \textbf{Monodirectional} e \textbf{Bidirectional}, per modellare la direzione del sistema di accumulo.
+    \item \textbf{Energy Direction}, con sottoclassi \textbf{Monodirectional} e \textbf{Bidirectional}, per modellare la direzione dell'energia per un sistema di accumulo.
 \end{itemize}
 
 Per quanto riguarda la modellazione di \textbf{Storage System} e di \textbf{Battery}, è stata utilizzata l'ontologia \textit{Battery} sviluppata da Kyrillos.
@@ -81,14 +81,14 @@ Nella figura seguente (\ref*{fig:proprieta_prosumer}) si notano molte proprietà
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=6cm]{images/proprieta_prosumer.png}
-    \caption{Proprietà dell'ontologia Prosumer.}
+    \caption{Object properties dell'ontologia Prosumer.}
     \label{fig:proprieta_prosumer}
 \end{figure}
 
 Per quanto riguarda l'ontologia Prosumer, sono state modellate le seguenti proprietà:
 \begin{itemize}
     \item \textbf{composedBy}: modella gli individui principali di cui può essere composto un Prosumer (Storage System, Load, Generator, Energy Meter);
-    \item \textbf{hasDirection}: modella la direzione del sistema di accumulo;
+    \item \textbf{hasDirection}: modella la direzione dell'energia per un sistema di accumulo;
     \item \textbf{hasLocation}: modella la posizione del sistema di accumulo;
     \item \textbf{hasPowerType}: modella la tipologia di corrente.
 \end{itemize}
@@ -99,3 +99,29 @@ Si nota che, date le caratteristiche specifiche di \textit{Storage System}, verr
 
 \section{Data Properties}
 
+Siccome le varie entità presenti in un Prosumer sono caratterizzate da valori numerici, sono state modellate delle \textit{Data Properties} per modellare tali valori.
+Ogni entità può avere più data properties a seconda dell'entità stessa.
+Ad esempio, una batteria può avere data properties che ne indicano la capacità, la potenza massima in carica, la potenza massima in scarica, il massimo e il minimo livello di carica, ecc.
+
+A seguito le data properties presenti all'interno dell'ontologia, comprese di quelle estese dalle ontologie esterne:
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=6cm]{images/datap_prosumer.png}
+    \caption{Data properties dell'ontologia Prosumer.}
+    \label{fig:datap_prosumer}
+\end{figure}
+
+Nello specifico sono state modellate le seguenti data properties:
+\begin{itemize}
+    \item \textbf{hasBatteryChargeableEnergy}: per indicare l'energia che può essere caricata;
+    \item \textbf{hasBatteryDischargeableEnergy}: per indicare l'energia che può essere scaricata;
+    \item \textbf{hasEfficiency}: per indicare l'efficienza del sistema di accumulo;
+    \item \textbf{hasEnergyRequestedOrProvided}: per indicare l'energia richiesta o fornita;
+    \item \textbf{hasMaxChargingPower}: per indicare la potenza massima di carica;
+    \item \textbf{hasMaxDischargingPower}: per indicare la potenza massima di scarica;
+    \item \textbf{hasMinutesInterval}: per indicare l'intervallo di tempo delle misurazioni;
+    \item \textbf{hasValueEnergyAbsorbed}: per indicare l'energia assorbita dal \textit{Load};
+    \item \textbf{hasValueEnergyMeter}: per indicare il valore calcolato dal contatore;
+    \item \textbf{hasValueEnergyProduced}: per indicare l'energia prodotta dal \textit{Generator}.
+\end{itemize}
