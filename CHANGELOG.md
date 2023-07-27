@@ -1,3 +1,11 @@
+## [3.0.10](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.9...3.0.10) (2023-07-27)
+
+
+### Documentation
+
+* add Generator section ([85b3174](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/85b3174e8759a30c7e0733e99398671be278cee6))
+* specify the utility of SWRL rules ([50182f8](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/50182f804a2a6c0c415685c9447cfa9f3f639eef))
+
 ## [3.0.9](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.8...3.0.9) (2023-07-27)
 
 
