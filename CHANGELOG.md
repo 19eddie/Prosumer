@@ -1,3 +1,10 @@
+## [3.0.9](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.8...3.0.9) (2023-07-27)
+
+
+### Documentation
+
+* add conclusions section ([3671929](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/3671929b6e17d05108de062be0aed0b64d36f851))
+
 ## [3.0.8](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.7...3.0.8) (2023-07-26)
 
 
