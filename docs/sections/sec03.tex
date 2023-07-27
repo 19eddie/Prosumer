@@ -78,7 +78,7 @@ L'energia prodotta dal generatore servirà a soddisfare il Load, a caricare lo S
     \label{fig:individual_generator}
 \end{figure}
 
-Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza della classe "Time Series" (figura \ref*{fig:individual_genmeas}), importata dall'ontologia ic-data. In questo modo si può definire un intervallo temporale e creare una sequenza di "Data Point"(anch'essa classe importata da ic-data), uno per ogni intervallo di tempo. Ogni singolo "GeneratorMeasurement" è quindi sottoclasse di Data Point e rappresenta un'osservazione dell'energia prodotta dal generatore in un intervallo di tempo specificato dal timestamp (figura \ref*{fig:individual_genval3}).
+Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza della classe "Time Series" (figura \ref{fig:individual_genmeas}), importata dall'ontologia ic-data. In questo modo si può definire un intervallo temporale e creare una sequenza di "Data Point"(anch'essa classe importata da ic-data), uno per ogni intervallo di tempo. Ogni singolo "GeneratorMeasurement" è quindi sottoclasse di Data Point e rappresenta un'osservazione dell'energia prodotta dal generatore in un intervallo di tempo specificato dal timestamp (figura \ref{fig:individual_genval3}).
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=12cm]{images/individual_genmeas.png}
@@ -96,6 +96,13 @@ Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza d
 \section{Load}
 
 \section{Storage System}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=12cm]{images/individual-batterym3.png}
+    \caption{Istanza di un individuo di tipo StateOfChargeMeasurement.}
+    \label{fig:individual_batterym3}
+\end{figure}
 
 \section{Energy Meter}
 

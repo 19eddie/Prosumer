@@ -1,9 +1,28 @@
 \chapter{Interrogazione dell'ontologia}
 
 \section{SWRL}
-Sono state utilizzate regole SWRL per consentire al reasoner di inferire ulteriori informazioni sull'ontologia, in particolare riguardo al valore di energia che una batteria può assorbire o immettere.
+Sono state utilizzate regole SWRL per consentire al reasoner di inferire ulteriori informazioni sull'ontologia, in particolare riguardo al valore di energia che una batteria può effettivamente assorbire o fornire, in uno specifico intervallo di tempo.
 
-Le regole SWRL implementate affrontano diverse casistiche e consentono al reasoner di dedurre il valore di energia in modo più accurato. In totale, sono state create quattro regole per gestire i calcoli correlati.
+Le regole SWRL implementate permettono di calcolare il valore di queste due Data Property, che saranno utilizzate poi nelle query SPARQL:
+\begin{itemize}
+    \item \texttt{hasBatteryChargeableEnergy}: effettiva capacità di carica di una batteria, ovvero l'energia che la batteria è in grado di immagazzinare in uno specifico intervallo di tempo.
+    \item \texttt{hasBatteryDischargeableEnergy}: effettiva capacità di scarica di una batteria, ovvero l'energia che la batteria è in grado di fornire in uno specifico intervallo di tempo.
+\end{itemize}
+
+Come visibile in figura \ref{fig:individual_batterym3}, le due data property vengono correttamente inserite nell'ontologia.
+
+Per il calcolo si tiene conto dei seguenti valori:
+\begin{itemize}
+    \item Capacità della batteria;
+    \item Potenza massima di carica;
+    \item Potenza massima di scarica;
+    \item Stato di carica attuale;
+    \item Stato di carica massimo;
+    \item Stato di carica minimo;
+\end{itemize}
+
+
+In totale, sono state create quattro regole per gestire i calcoli correlati.
 
 
 Per leggibilità sono stati inseriti gli screenshot delle regole, la versione testuale è disponibile nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SWRL%20energia%20che%20pu%C3%B2%20realmente%20assorbire%20o%20fornire%20una%20batteria.txt}{\textit{SWRL energia che può realmente assorbire o fornire una batteria.txt}
