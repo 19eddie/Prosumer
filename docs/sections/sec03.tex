@@ -9,7 +9,7 @@ Il prosumer è l'entità principale dell'ontologia, ciò che andrà a contenere 
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=12cm]{images/individual_prosumer.png}
-    \caption{Prosumer applicato ad un individuo su Protègè.}
+    \caption{Prosumer applicato a un individuo su Protègè.}
     \label{fig:individual_prosumer}
 \end{figure}
 
@@ -69,6 +69,29 @@ Mentre, in aggiunta per ogni configurazione:
 
 
 \section{Generator}
+IL generatore rappresenta l'entità che produce energia ed è presente in tutti i prosumer.
+L'energia prodotta dal generatore servirà a soddisfare il Load, a caricare lo Storage System e quella in eccesso verrà immessa nella rete.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_generator.png}
+    \caption{Istanza di un individuo di tipo generatore.}
+    \label{fig:individual_generator}
+\end{figure}
+
+Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza della classe "Time Series" (figura \ref*{fig:individual_genmeas}), importata dall'ontologia ic-data. In questo modo si può definire un intervallo temporale e creare una sequenza di "Data Point"(anch'essa classe importata da ic-data), uno per ogni intervallo di tempo. Ogni singolo "GeneratorMeasurement" è quindi sottoclasse di Data Point e rappresenta un'osservazione dell'energia prodotta dal generatore in un intervallo di tempo specificato dal timestamp (figura \ref*{fig:individual_genval3}).
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=12cm]{images/individual_genmeas.png}
+    \caption{Istanza di un individuo di tipo Time Series.}
+    \label{fig:individual_genmeas}
+\end{figure}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=12cm]{images/individual_genval3.png}
+    \caption{Istanza di un individuo di tipo GeneratorMeasurement.}
+    \label{fig:individual_genval3}
+\end{figure}
+
 
 \section{Load}
 
