@@ -1,3 +1,11 @@
+## [3.0.11](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.10...3.0.11) (2023-07-28)
+
+
+### Documentation
+
+* better description of query for StorageSystem energy ([11fe459](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/11fe459df64a582d339c278d48e9cb5d75a9b63e))
+* better explanation of M1 flexibility query ([6213ab1](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/6213ab1ac1289b90485f93e2f1286f9e1bdba048))
+
 ## [3.0.10](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.9...3.0.10) (2023-07-27)
 
 
