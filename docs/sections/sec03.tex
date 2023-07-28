@@ -152,5 +152,31 @@ In figura \ref{fig:individual_batterym3} si possono notare le due Data Property 
 \end{figure}
 
 \section{Energy Meter}
+L'Energy Meter è l'entità che rappresenta il contatore di energia di un prosumer. Come già descritto nella sezione \ref{sec:analisi_dominio} un prosumer deve avere un contatore di tipo M1, un contatore di tipo M2 e, solo per la configurazione tre, un contatore di tipo M3.
+Questi tre tipi di contatori sono stati rappresentati con tre classi distinte, definite come sottoclassi della classe EnergyMeter.
 
+In figura \ref{fig:individual_m1} viene mostrata l'istanza di una classe M1, in questo caso il contatore M1 facente parte del prosumer.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_m1.png}
+    \caption{Istanza di un individuo di tipo M1.}
+    \label{fig:individual_m1}
+\end{figure}
 
+Come per gli altri componenti, anche il contatore ha una sequenza di misurazioni, rappresentata dalla classe Time Series.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_m1meas.png}
+    \caption{Istanza di un individuo di tipo Time Series per M1.}
+    \label{fig:individual_m1meas}
+\end{figure}
+
+Ogni misurazione è rappresentata da un'istanza di EnergyMeterMeasurement, sottoclasse di Data Point. Si può notare dalla figura \ref{fig:individual_m1val3} che nel caso dei contatori nella misurazione è stato inserito solo il valore del timestamp, in quanto il valore dell'energia scambiata è calcolato con le query SPARQL descritte nella sezione \ref{sec:sparql}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_m1val3.png}
+    \caption{Istanza di un individuo di tipo EnergyMeterMeasurement}
+    \label{fig:individual_m1val3}
+\end{figure}
