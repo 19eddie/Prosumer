@@ -1,3 +1,10 @@
+## [3.0.13](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.12...3.0.13) (2023-07-28)
+
+
+### Documentation
+
+* add Energy Meter section ([b01e628](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/b01e628e09e642771b7c2ec43e240d345437254b))
+
 ## [3.0.12](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.11...3.0.12) (2023-07-28)
 
 
