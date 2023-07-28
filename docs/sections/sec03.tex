@@ -119,25 +119,30 @@ In questo modo si va a specificare l'energia consumata dal prosumer in un interv
 \end{figure}
 
 \section{Storage System}
+Lo Storage System è l'entità che rappresenta il sistema di accumulo dell'energia di un prosumer. Viene utilizzato per immagazzinare l'energia ed eventualmente per fornirla al prosumer in caso di necessità.
+In questo caso è stata estesa l'ontologia \textit{Battery} sviluppata da Kyrillos, aggiungendo informazioni quali il tipo di corrente (AC o DC), la direzione del flusso energetico (monodirezionale o bidirezionale) e il posizionamento (produzione o post-produzione), utili per identificare la configurazione del prosumer.
+In figura \ref{fig:individual_storagesystem} viene mostrata l'istanza di una classe StorageSystem, composto da due batterie, il tipo di corrente, la direzione del flusso e il posizionamento.
 \begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual_storagesystem.png}
     \caption{Istanza di un individuo di tipo StorageSystem.}
     \label{fig:individual_storagesystem}
 \end{figure}
+Nella figura \ref{fig:individual_bat1} viene mostrata l'istanza di una classe Battery, in questo caso la Batteria 1 facente parte dello Storage System. Questa classe è utile per specificare le caratteristiche della batteria, salvate come Data Property.
 \begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual_bat1.png}
     \caption{Istanza di un individuo di tipo Battery.}
     \label{fig:individual_bat1}
 \end{figure}
+La classe StateOfCharge è sottoclasse di Time Series, quindi la sua utilità è quella di avere il riferimento a una sequenza di misurazioni.
 \begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual-batterysoc.png}
     \caption{Istanza di un individuo di tipo StateOfCharge.}
     \label{fig:individual-batterysoc}
 \end{figure}
-
+Ogni misurazione è rappresentata da un'istanza di StateOfChargeMeasurement, sottoclasse di Data Point.
 In figura \ref{fig:individual_batterym3} si possono notare le due Data Property inferite grazie alle regole SWRL descritte nella sezione \ref{sec:swrl}.
 \begin{figure}[H]
     \centering
