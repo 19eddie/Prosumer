@@ -159,6 +159,15 @@ Ciò vale anche per le query successive.
 
 Si nota che se il valore di M1 è negativo, indica che l'energia è assorbita dalla rete; se è positivo, indica che l'energia è immessa nella rete.
 
+\subsection{Logica per l'utilizzo del sistema di accumulo}
+Per quanto riguarda la logica di come verranno calcolati i valori dei contatori nelle seguenti query, sono stati individuati i seguenti quattro casi:
+\begin{itemize}
+    \item \texttt{CASO 1:} il generatore produce meno energia di quella richiesta dal carico, la batteria è in grado di fornire quella mancante. Non viene prelevato o immesso nulla nella rete;
+    \item \texttt{CASO 2:} il generatore produce meno energia di quella richiesta dal carico, la batteria non è in grado di fornire tutta quella mancante ma fornisce comunque tutta quella che può. Viene prelevato il restante dalla rete;
+    \item \texttt{CASO 3:} il generatore produce più energia di quella richiesta dal carico, la batteria è in grado di assorbire tutta quella in eccesso. Non viene prelevato o immesso nulla nella rete;
+    \item \texttt{CASO 4:} il generatore produce più energia di quella richiesta dal carico, la batteria non è in grado di assorbire tutta quella in eccesso ma assorbe comunque tutta quella che può. Viene immesso il restante nella rete.
+\end{itemize}
+
 \subsection{Query per il calcolo di M1 e M2 in prosumer di configurazione 1 e 2}
 
 Le premesse sono le precedenti della query per il calcolo della flessibilità.
