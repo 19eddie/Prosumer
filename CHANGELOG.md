@@ -1,3 +1,11 @@
+## [3.0.12](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.11...3.0.12) (2023-07-28)
+
+
+### Documentation
+
+* add Storage System section ([de5e3b8](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/de5e3b89fffc3a543c49a570efe30446f25989d0))
+* refactor of Generator, add figures of Load and StorageSystem, add Load section ([8451e54](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/8451e5467d61e439f0e49dd5d691c825f9a00c94))
+
 ## [3.0.11](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.10...3.0.11) (2023-07-28)
 
 
