@@ -106,7 +106,7 @@ Si può quindi notare l'utilizzo in particolare dell'ontologia \textit{battery},
 
 Dato uno Storage System composto da una o più batterie, si vuole calcolare l'energia che il sistema nel suo complesso può assorbire o fornire.
 
-Per ogni batteria, c'è un valore che rappresenta l'energia presente in un dato timestamp, percìo si sommano i valori delle varie batterie presenti nello storage dello stesso timestamp.
+Questa query in pratica utilizza i valori di energia precedentemente calcolati con le regole SWRL, e raggruppa per ogni intervallo di tempo quelli di tutte le batterie presenti nello Storage System del prosumer, in modo da ottenere l'energia che l'intero Storage System può assorbire o fornire.
 
 \begin{figure}[H]
     \centering
