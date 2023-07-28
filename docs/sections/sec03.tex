@@ -78,14 +78,15 @@ L'energia prodotta dal generatore servirà a soddisfare il Load, a caricare lo S
     \label{fig:individual_generator}
 \end{figure}
 
-Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza della classe "Time Series" (figura \ref{fig:individual_genmeas}), importata dall'ontologia ic-data. In questo modo si può definire un intervallo temporale e creare una sequenza di "Data Point"(anch'essa classe importata da ic-data), uno per ogni intervallo di tempo. Ogni singolo "GeneratorMeasurement" è quindi sottoclasse di Data Point e rappresenta un'osservazione dell'energia prodotta dal generatore in un intervallo di tempo specificato dal timestamp (figura \ref{fig:individual_genval3}).
-\begin{figure}[!ht]
+Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza della classe "Time Series" (figura \ref{fig:individual_genmeas}), importata dall'ontologia ic-data. In questo modo si può definire un intervallo temporale e creare una sequenza di "Data Point"(anch'essa classe importata da ic-data), uno per ogni intervallo di tempo.
+\begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual_genmeas.png}
-    \caption{Istanza di un individuo di tipo Time Series.}
+    \caption{Istanza di un individuo di tipo Time Series per il generatore.}
     \label{fig:individual_genmeas}
 \end{figure}
-\begin{figure}[!ht]
+Ogni singolo "GeneratorMeasurement" è quindi sottoclasse di Data Point e rappresenta un'osservazione dell'energia prodotta dal generatore in un intervallo di tempo specificato dal timestamp (figura \ref{fig:individual_genval3}).
+\begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual_genval3.png}
     \caption{Istanza di un individuo di tipo GeneratorMeasurement.}
@@ -94,10 +95,51 @@ Per monitorare l'energia prodotta dal generatore, è stata definita un'istanza d
 
 
 \section{Load}
+Il Load rappresenta il profilo di carico equivalente, anche detto consumo, del prosumer.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_load.png}
+    \caption{Istanza di un individuo di tipo Load.}
+    \label{fig:individual_load}
+\end{figure}
+Analogamente per quanto fatto per il generatore, anche per il Load è stata definita un'istanza della classe "Time Series" (figura \ref{fig:individual_loadmes}) e ogni singolo "LoadMeasurement"
+è sottoclasse di Data Point (figura \ref{fig:individual_loadval3}).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_loadmes.png}
+    \caption{Istanza di un individuo di tipo Time Series per il Load.}
+    \label{fig:individual_loadmes}
+\end{figure}
+In questo modo si va a specificare l'energia consumata dal prosumer in un intervallo di tempo specificato dal timestamp, fornendo una visione dettagliata dell'utilizzo dell'energia da parte del prosumer nel corso del tempo.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_loadval3.png}
+    \caption{Istanza di un individuo di tipo LoadMeasurement.}
+    \label{fig:individual_loadval3}
+\end{figure}
 
 \section{Storage System}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_storagesystem.png}
+    \caption{Istanza di un individuo di tipo StorageSystem.}
+    \label{fig:individual_storagesystem}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual_bat1.png}
+    \caption{Istanza di un individuo di tipo Battery.}
+    \label{fig:individual_bat1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{images/individual-batterysoc.png}
+    \caption{Istanza di un individuo di tipo StateOfCharge.}
+    \label{fig:individual-batterysoc}
+\end{figure}
 
-\begin{figure}[!ht]
+In figura \ref{fig:individual_batterym3} si possono notare le due Data Property inferite grazie alle regole SWRL descritte nella sezione \ref{sec:swrl}.
+\begin{figure}[H]
     \centering
     \includegraphics[width=12cm]{images/individual-batterym3.png}
     \caption{Istanza di un individuo di tipo StateOfChargeMeasurement.}
