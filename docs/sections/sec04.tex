@@ -87,7 +87,7 @@ mentre può fornire al più la potenza massima di scarica, perchè inferiore o u
 \section{SPARQL}\label{sec:sparql}
 Nella seguente sezione verranno mostrate le query SPARQL e relativi risultati applicati agli individui creati nell'ontologia.
 
-Si nota che per praticità, siccome sono query molto lunghe, verranno mostrate solamente parti delle query come screenshot e i risultati, mentre le query complete sono disponibili nei relativi file di testo che verranno mostrati.
+Si nota che per praticità, in quanto query molto lunghe, verranno mostrate solamente parti delle query come screenshot e i risultati, mentre le query complete sono disponibili nei relativi file di testo che verranno mostrati.
 
 
 \subsection{PREFIX}
@@ -146,7 +146,7 @@ La query utilizza i valori di energia potenzialmente assorbibile o fornibile cal
 Si vuole notare che la query per come è presentata nel file \href{https://github.com/19eddie/SemanticWeb-Assignment02-03/blob/main/SPARQL%20flessibilit%C3%A0.txt}{SPARQL flessibilità.txt} 
 purtroppo calcola la flessibilità di ogni batteria, e non di ogni Storage System.
 Ciò è dovuto al software che è stato utilizzato per l'implementazione dell'ontologia e l'esecuzione delle query, ovvero Protègè,
-che non supporta le subquery nel linguaggio SPARQL.
+che non supporta le subquery nel linguaggio SPARQL \cite{issueprotege}.
 Nel caso in cui invece si utilizzasse un software che supporta le subquery, si potrebbe calcolare la flessibilità di ogni Storage System semplicemente inserendo la query \ref{subquery} come subquery e utilizzando quindi \textit{storageSystemChargeableEnergy} e \textit{storageSystemDischargeableEnergy} al posto di \textit{batChargeableEnergy} e \textit{batDischargeableEnergy}.
 Ciò vale anche per le query successive.
 
