@@ -1,3 +1,17 @@
+## [3.0.14](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.13...3.0.14) (2023-07-28)
+
+
+### Bug Fixes
+
+* correct typo ([f17f23c](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/f17f23c9a1375d56c75f390104d8070bc0285201))
+
+
+### Documentation
+
+* add descriprion on how the storage system is used to calculate energymeter values in the query ([25a1625](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/25a1625c8ef1be606b874c1911670a48586d6da7))
+* add section of imported ontologies ([b30cff5](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/b30cff5aae43210abfa9495401d49134ed8156bf))
+* add subquery issue ref ([4972e4b](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/4972e4bc43fe54ca2a61b3a1728f2a254b6feeb9))
+
 ## [3.0.13](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.12...3.0.13) (2023-07-28)
 
 
