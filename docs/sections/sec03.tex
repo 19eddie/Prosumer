@@ -1,10 +1,19 @@
 \chapter{Modellazione e sviluppo dell'ontologia}
+Durante tutto lo sviluppo dell'ontologia si è cercato il più possibile di utilizzare ontologie già esistenti, in modo da non dover ripetere la modellazione di classi e proprietà già definite e rendere tutto più consistente.
 
-L'ontologia è stata creata partendo da una focalizzazione sulle entità primarie.
+\section{Ontologie importate}
+
+In particolare, le ontologie prese in considerazione sono:
+\begin{itemize}
+    \item \texttt{Battery}\cite{battery_kyrillos}: ontologia sviluppata da Kyrillos per la modellazione di uno Storage System;
+    \item \texttt{SAREF}\cite{saref}: ontologia sviluppata dall'ETSI (European Telecommunications Standards Institute) con l'obiettivo di fornire un riferimento standard per la rappresentazione semantica delle apparecchiature intelligenti (smart appliances) e dei loro dati;
+    \item \texttt{InterConnect}\cite{interconnect}: insieme di ontologie per supportare la modellazione e l'integrazione semantica di dati e informazioni nel settore dell'energia e dell'elettricità. In particolare è stata utilizzata l'ontologia \textit{ic-data}\cite{ic-data} per la modellazione di misurazioni e sequenze di misurazioni;
+\end{itemize}
+
+Considerando lo scopo didattico del progetto e il fallimento nell'importazione automatica di alcune ontologie su Protègè, si è proceduto a semplificare alcune classi importate manualmente da altre ontologie. Ad esempio, sono state rimosse alcune restrizioni non strettamente necessarie nelle classi TimeSeries e DataPoint dell'ontologia ic-data.
 
 \section{Prosumer}
 Il prosumer è l'entità principale dell'ontologia, ciò che andrà a contenere le entità caratterizzanti.
-
 
 \begin{figure}[!ht]
     \centering
