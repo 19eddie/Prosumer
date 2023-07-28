@@ -1,3 +1,10 @@
+## [3.0.15](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.14...3.0.15) (2023-07-28)
+
+
+### Documentation
+
+* fix bibliography element title ([8aa2392](https://github.com/19eddie/SemanticWeb-Assignment02-03/commit/8aa23921d690de6f734e0224f695dcb9548df43a))
+
 ## [3.0.14](https://github.com/19eddie/SemanticWeb-Assignment02-03/compare/3.0.13...3.0.14) (2023-07-28)
 
 
